@@ -1,3 +1,8 @@
+export const SEARCH_EVENTS_TOOL_NAME = "search_events";
+
+export const SEARCH_EVENTS_TOOL_DESCRIPTION =
+  "依關鍵字、日期、地點、費用、類別與難度搜尋目前公開活動，並更新活動列表。使用者想找活動或縮小活動範圍時使用。";
+
 export function detectWebMcpSupport(): Record<string, boolean> {
   const documentWithModelContext = document as Document & {
     modelContext?: unknown;

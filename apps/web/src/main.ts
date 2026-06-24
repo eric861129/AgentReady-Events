@@ -1,6 +1,6 @@
 import type { SearchEventsQuery, SearchEventsResponse } from "../../../packages/contracts/src/index";
 import { fetchEvents } from "./api";
-import { detectWebMcpSupport } from "./webmcp";
+import { SEARCH_EVENTS_TOOL_DESCRIPTION, SEARCH_EVENTS_TOOL_NAME, detectWebMcpSupport } from "./webmcp";
 import "./styles.css";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -93,7 +93,9 @@ function searchFormTemplate(): string {
   const query = state.query;
 
   return `
-    <form id="search-form" class="search-panel" action="/api/events" method="get">
+    <form id="search-form" class="search-panel" action="/api/events" method="get"
+      toolname="${SEARCH_EVENTS_TOOL_NAME}"
+      tooldescription="${SEARCH_EVENTS_TOOL_DESCRIPTION}">
       <div class="field field-wide">
         <label for="query">關鍵字</label>
         <input id="query" name="query" type="search" value="${escapeAttribute(query.query ?? "")}"
@@ -147,7 +149,7 @@ function diagnosticsTemplate(): string {
     <section class="diagnostics">
       <div class="section-heading">
         <h1>WebMCP 狀態</h1>
-        <p>Day 7 的重點是人類可用搜尋，這裡仍只顯示執行環境偵測；Declarative Tool 會從 Day 8 開始加入。</p>
+        <p>Day 8 開始讓既有搜尋表單成為 Declarative Tool，先固定 Tool 名稱與用途描述。</p>
       </div>
       <div class="diagnostics-grid">
         ${diagnosticCard("Secure Context", support.secureContext)}
@@ -156,6 +158,13 @@ function diagnosticsTemplate(): string {
         ${diagnosticCard("getTools()", support.getTools)}
         ${diagnosticCard("executeTool()", support.executeTool)}
       </div>
+      <section class="schema-view" aria-labelledby="tool-title">
+        <h2 id="tool-title">Declarative Tool Snapshot</h2>
+        <dl>
+          <div><dt>toolname</dt><dd>${SEARCH_EVENTS_TOOL_NAME}</dd></div>
+          <div><dt>tooldescription</dt><dd>${SEARCH_EVENTS_TOOL_DESCRIPTION}</dd></div>
+        </dl>
+      </section>
     </section>
   `;
 }
