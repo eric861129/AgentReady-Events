@@ -1,4 +1,4 @@
-import type { SearchEventsQuery, SearchEventsResponse } from "../../../packages/contracts/src/index";
+import type { SearchEventsQuery, SearchEventsResponse, ToolResult } from "../../../packages/contracts/src/index";
 import { fetchEvents } from "./api";
 import {
   SEARCH_EVENTS_TOOL_DESCRIPTION,
@@ -7,6 +7,15 @@ import {
   detectWebMcpSupport
 } from "./webmcp";
 import "./styles.css";
+
+type DeclarativeSubmitEvent = SubmitEvent & {
+  agentInvoked?: boolean;
+  respondWith?: (response: Promise<ToolResult<SearchEventsResponse>>) => void;
+};
+
+type ToolLifecycleEvent = Event & {
+  toolName?: string;
+};
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -100,7 +109,8 @@ function searchFormTemplate(): string {
   return `
     <form id="search-form" class="search-panel" action="/api/events" method="get"
       toolname="${SEARCH_EVENTS_TOOL_NAME}"
-      tooldescription="${SEARCH_EVENTS_TOOL_DESCRIPTION}">
+      tooldescription="${SEARCH_EVENTS_TOOL_DESCRIPTION}"
+      toolautosubmit>
       <div class="field field-wide">
         <label for="query">關鍵字</label>
         <input id="query" name="query" type="search" value="${escapeAttribute(query.query ?? "")}"
@@ -174,6 +184,7 @@ function diagnosticsTemplate(): string {
         <dl>
           <div><dt>toolname</dt><dd>${SEARCH_EVENTS_TOOL_NAME}</dd></div>
           <div><dt>tooldescription</dt><dd>${SEARCH_EVENTS_TOOL_DESCRIPTION}</dd></div>
+          <div><dt>toolautosubmit</dt><dd>enabled</dd></div>
         </dl>
         <h2>Field Schema Snapshot</h2>
         <pre>${escapeHtml(JSON.stringify(schema, null, 2))}</pre>
@@ -236,23 +247,54 @@ function bindHandlers(): void {
   window.addEventListener("hashchange", render, { once: true });
 
   const form = document.querySelector<HTMLFormElement>("#search-form");
-  form?.addEventListener("submit", handleSearchSubmit);
+  if (form) {
+    form.addEventListener("submit", handleSearchSubmit);
+    form.addEventListener("toolactivated", handleToolActivated);
+    form.addEventListener("toolcancel", handleToolCancel);
+  }
 }
 
 function handleSearchSubmit(event: SubmitEvent): void {
   event.preventDefault();
+  const declarativeEvent = event as DeclarativeSubmitEvent;
   const form = event.currentTarget as HTMLFormElement;
-  void runSearch(readQueryFromForm(form), { updateUrl: true });
+  const query = readQueryFromForm(form);
+
+  const task = runSearch(query, { updateUrl: true, agentInvoked: Boolean(declarativeEvent.agentInvoked) })
+    .then((response) => ({
+      ok: true,
+      message: `已更新活動列表，共找到 ${response.total} 場活動。`,
+      data: response
+    }))
+    .catch((error: unknown) => ({
+      ok: false,
+      message: error instanceof Error ? error.message : "搜尋活動時發生錯誤。"
+    }));
+
+  declarativeEvent.respondWith?.(task);
+}
+
+function handleToolActivated(event: Event): void {
+  const toolEvent = event as ToolLifecycleEvent;
+  state.message = `${toolEvent.toolName ?? SEARCH_EVENTS_TOOL_NAME} 已啟動，正在更新搜尋條件。`;
+  state.error = "";
+  render();
+}
+
+function handleToolCancel(): void {
+  state.message = "Agent 已取消本次搜尋，畫面保留目前結果。";
+  state.error = "";
+  render();
 }
 
 async function runSearch(
   query: SearchEventsQuery,
-  options: { updateUrl: boolean } = { updateUrl: false }
+  options: { updateUrl: boolean; agentInvoked?: boolean } = { updateUrl: false }
 ): Promise<SearchEventsResponse> {
   state.loading = true;
   state.query = query;
   state.error = "";
-  state.message = "正在搜尋活動。";
+  state.message = options.agentInvoked ? "Agent 正在協助搜尋活動。" : "正在搜尋活動。";
   render();
 
   try {

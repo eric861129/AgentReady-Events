@@ -24,6 +24,7 @@ test("搜尋表單具備 search_events declarative tool identity", async ({ page
     "tooldescription",
     "依關鍵字、日期、地點、費用、類別與難度搜尋目前公開活動，並更新活動列表。使用者想找活動或縮小活動範圍時使用。"
   );
+  await expect(form).toHaveAttribute("toolautosubmit", "");
 });
 
 test("診斷頁顯示 search_events schema 與欄位描述", async ({ page }) => {
