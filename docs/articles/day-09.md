@@ -10,8 +10,8 @@
 - 程式版本：Field Schema Snapshot、欄位描述
 - 操作畫面：schema/attribute 檢視
 
-## 截圖 / GIF TODO
+## 截圖 / GIF
 
-- [ ] Field Schema Snapshot
-- [ ] `toolparamdescription` attribute 檢視
-- [ ] 搜尋條件對應結果
+- [x] Field Schema Snapshot：`docs/articles/assets/day-09/01-schema-snapshot.png`
+- [x] `toolparamdescription` attribute 檢視：`docs/articles/assets/day-09/02-field-descriptions.png`
+- [x] Schema/attribute 檢視：`docs/articles/assets/day-09/01-schema-snapshot.png`

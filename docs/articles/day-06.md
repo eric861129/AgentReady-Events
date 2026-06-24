@@ -10,8 +10,8 @@
 - 程式版本：monorepo 初版、API health check、診斷頁
 - 操作畫面：首頁、WebMCP 狀態頁
 
-## 截圖 / GIF TODO
+## 截圖 / GIF
 
-- [ ] 首頁初始畫面
-- [ ] `/diagnostics` 或 `#/diagnostics` 診斷頁
-- [ ] secure context 與 `document.modelContext` 狀態
+- [x] 首頁初始畫面：`docs/articles/assets/day-06/01-home.png`
+- [x] `#/diagnostics` 診斷頁：`docs/articles/assets/day-06/02-diagnostics.png`
+- [x] secure context 與 `document.modelContext` 狀態：`docs/articles/assets/day-06/02-diagnostics.png`

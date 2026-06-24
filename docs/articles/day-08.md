@@ -10,8 +10,8 @@
 - 程式版本：`toolname`、`tooldescription`
 - 操作畫面：表單 attribute 檢視、搜尋結果
 
-## 截圖 / GIF TODO
+## 截圖 / GIF
 
-- [ ] `search_events` attribute 檢視
-- [ ] Tool Catalog 對照截圖
-- [ ] 無 WebMCP 支援時仍可搜尋
+- [x] `search_events` 表單畫面：`docs/articles/assets/day-08/01-search-events-form.png`
+- [x] `toolname` / `tooldescription` 檢視：`docs/articles/assets/day-08/02-tool-identity-snapshot.png`
+- [x] 無 WebMCP 支援時仍可搜尋：`docs/articles/assets/day-08/01-search-events-form.png`

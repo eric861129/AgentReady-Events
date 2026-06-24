@@ -10,8 +10,10 @@
 - 程式版本：`toolautosubmit`、`agentInvoked`、`respondWith()`、`toolactivated`、`toolcancel`
 - 操作畫面：Agent active 狀態、搜尋完成狀態、取消狀態
 
-## 截圖 / GIF TODO
+## 截圖 / GIF
 
-- [ ] Agent active 狀態
-- [ ] 搜尋完成回饋
-- [ ] `respondWith()` 回傳結果檢視
+- [x] Agent active 狀態：`docs/articles/assets/day-10/01-agent-activated.png`
+- [x] 搜尋完成回饋：`docs/articles/assets/day-10/02-agent-complete.png`
+- [x] Agent cancel 狀態：`docs/articles/assets/day-10/03-agent-cancel.png`
+- [x] `toolautosubmit` 診斷頁：`docs/articles/assets/day-10/04-autosubmit-diagnostics.png`
+- [x] Agent 搜尋流程 GIF：`docs/articles/assets/day-10/agent-search-flow.gif`

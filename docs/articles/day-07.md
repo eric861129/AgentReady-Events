@@ -10,8 +10,8 @@
 - 程式版本：搜尋表單、活動列表、API 查詢
 - 操作畫面：搜尋前、搜尋後、無結果狀態
 
-## 截圖 / GIF TODO
+## 截圖 / GIF
 
-- [ ] 活動搜尋表單
-- [ ] 搜尋前活動列表
-- [ ] 搜尋後 URL/query 與畫面同步
+- [x] 搜尋前活動列表：`docs/articles/assets/day-07/01-search-before.png`
+- [x] 搜尋後 URL/query 與畫面同步：`docs/articles/assets/day-07/02-search-after.png`
+- [x] 搜尋流程 GIF：`docs/articles/assets/day-07/search-flow.gif`
