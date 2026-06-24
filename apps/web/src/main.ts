@@ -1,3 +1,5 @@
+import type { SearchEventsQuery, SearchEventsResponse } from "../../../packages/contracts/src/index";
+import { fetchEvents } from "./api";
 import { detectWebMcpSupport } from "./webmcp";
 import "./styles.css";
 
@@ -9,11 +11,19 @@ if (!app) {
 
 const root = app;
 
+const state = {
+  events: undefined as SearchEventsResponse | undefined,
+  query: {} as SearchEventsQuery,
+  loading: false,
+  message: "準備好探索近期開發者活動。",
+  error: ""
+};
+
 render();
+void runSearch(readQueryFromUrl(), { updateUrl: false });
 
 function render(): void {
   const route = window.location.hash === "#/diagnostics" ? "diagnostics" : "home";
-
   root.innerHTML = `
     <header class="site-header">
       <a class="brand" href="#/" aria-label="AgentReady Events 首頁">
@@ -22,6 +32,8 @@ function render(): void {
       </a>
       <nav class="site-nav" aria-label="主要導覽">
         <a href="#/" ${route === "home" ? "aria-current=\"page\"" : ""}>活動探索</a>
+        <a href="#featured">精選活動</a>
+        <a href="#saved">我的收藏</a>
         <a href="#/diagnostics" ${route === "diagnostics" ? "aria-current=\"page\"" : ""}>WebMCP 狀態</a>
       </nav>
     </header>
@@ -30,21 +42,101 @@ function render(): void {
     </main>
   `;
 
-  window.addEventListener("hashchange", render, { once: true });
+  bindHandlers();
 }
 
 function homeTemplate(): string {
   return `
     <section class="hero">
       <div class="hero-copy">
-        <h1>AgentReady Events</h1>
-        <p>Day 6 先建立可啟動的活動網站骨架，並把 WebMCP feature detection 放進診斷頁，確認瀏覽器環境是否具備後續 Declarative Tool 所需的基礎能力。</p>
-        <p class="hero-link"><a href="#/diagnostics">查看 WebMCP 狀態</a></p>
+        <h1>找下一場值得參加的開發者活動</h1>
+        <p>搜尋前端、後端、AI、DevOps、安全與資料主題活動。Day 7 先讓表單對人類可用，再準備讓 WebMCP 讀懂這個既有流程。</p>
+        ${searchFormTemplate()}
       </div>
       <figure class="hero-media">
         <img src="/assets/hero-events.png" alt="開發者活動會場與交流場景" />
       </figure>
     </section>
+    <section class="status-row" aria-live="polite">
+      <div>
+        <strong>${escapeHtml(state.loading ? "搜尋中" : "目前狀態")}</strong>
+        <span>${escapeHtml(state.error || state.message)}</span>
+      </div>
+      <a href="#/diagnostics">查看 WebMCP 診斷</a>
+    </section>
+    <section id="events" class="content-grid" aria-labelledby="events-title">
+      <div class="section-heading">
+        <h2 id="events-title">活動搜尋結果</h2>
+        <p>${state.events ? `找到 ${state.events.total} 場活動，顯示 ${state.events.returned} 場。` : "載入近期活動中。"}</p>
+      </div>
+      <div class="event-list">
+        ${eventCardsTemplate(state.events?.events ?? [])}
+      </div>
+    </section>
+    <section id="featured" class="featured-band" aria-labelledby="featured-title">
+      <div class="section-heading">
+        <h2 id="featured-title">精選活動</h2>
+        <p>保留給文章截圖的固定資料，涵蓋搜尋前、搜尋後與篩選狀態。</p>
+      </div>
+      <div class="featured-list">
+        ${eventCardsTemplate((state.events?.events ?? []).filter((event) => event.featured).slice(0, 4))}
+      </div>
+    </section>
+    <section id="saved" class="saved-note" aria-labelledby="saved-title">
+      <h2 id="saved-title">我的收藏</h2>
+      <p>收藏與登入流程保留給後續週次；本週只建立入口與型別擴充點，不把收藏寫入做成 WebMCP Tool。</p>
+    </section>
+  `;
+}
+
+function searchFormTemplate(): string {
+  const query = state.query;
+
+  return `
+    <form id="search-form" class="search-panel" action="/api/events" method="get">
+      <div class="field field-wide">
+        <label for="query">關鍵字</label>
+        <input id="query" name="query" type="search" value="${escapeAttribute(query.query ?? "")}"
+          placeholder="例如：前端、AI、台北" />
+      </div>
+      <div class="field">
+        <label for="start_date">開始日期</label>
+        <input id="start_date" name="start_date" type="date" value="${escapeAttribute(query.start_date ?? "")}" />
+      </div>
+      <div class="field">
+        <label for="end_date">結束日期</label>
+        <input id="end_date" name="end_date" type="date" value="${escapeAttribute(query.end_date ?? "")}" />
+      </div>
+      ${selectTemplate("location", "地點", query.location, [
+        ["all", "所有地點"],
+        ["taipei", "台北"],
+        ["new_taipei", "新北"],
+        ["taichung", "台中"],
+        ["kaohsiung", "高雄"],
+        ["online", "線上"]
+      ])}
+      ${selectTemplate("price", "費用", query.price, [
+        ["all", "不限費用"],
+        ["free", "免費"],
+        ["paid", "付費"]
+      ])}
+      ${selectTemplate("category", "主題", query.category, [
+        ["all", "所有主題"],
+        ["frontend", "Frontend"],
+        ["backend", "Backend"],
+        ["ai", "AI"],
+        ["devops", "DevOps"],
+        ["security", "Security"],
+        ["data", "Data"]
+      ])}
+      ${selectTemplate("level", "難度", query.level, [
+        ["all", "不限難度"],
+        ["beginner", "入門"],
+        ["intermediate", "中階"],
+        ["advanced", "進階"]
+      ])}
+      <button class="primary-action" type="submit">搜尋活動</button>
+    </form>
   `;
 }
 
@@ -55,7 +147,7 @@ function diagnosticsTemplate(): string {
     <section class="diagnostics">
       <div class="section-heading">
         <h1>WebMCP 狀態</h1>
-        <p>Day 6 只檢查執行環境，不註冊任何 Tool。這一頁會成為後續文章追蹤 WebMCP 能力變化的固定入口。</p>
+        <p>Day 7 的重點是人類可用搜尋，這裡仍只顯示執行環境偵測；Declarative Tool 會從 Day 8 開始加入。</p>
       </div>
       <div class="diagnostics-grid">
         ${diagnosticCard("Secure Context", support.secureContext)}
@@ -68,6 +160,141 @@ function diagnosticsTemplate(): string {
   `;
 }
 
+function eventCardsTemplate(events: SearchEventsResponse["events"]): string {
+  if (state.loading && events.length === 0) {
+    return `<p class="empty-state">正在載入活動。</p>`;
+  }
+
+  if (events.length === 0) {
+    return `<p class="empty-state">目前沒有符合條件的活動，請調整搜尋條件。</p>`;
+  }
+
+  return events.map((event) => `
+    <article class="event-card">
+      <div class="event-meta">
+        <span>${escapeHtml(event.categoryLabel)}</span>
+        <span>${escapeHtml(event.levelLabel)}</span>
+        <span>${escapeHtml(event.priceLabel)}</span>
+      </div>
+      <h3>${escapeHtml(event.title)}</h3>
+      <p>${escapeHtml(event.summary)}</p>
+      <dl class="event-facts">
+        <div><dt>時間</dt><dd>${formatDateTime(event.startsAt)}</dd></div>
+        <div><dt>地點</dt><dd>${escapeHtml(event.locationLabel)}・${escapeHtml(event.venue)}</dd></div>
+        <div><dt>名額</dt><dd>剩餘 ${event.remainingCapacity} 位</dd></div>
+      </dl>
+      <div class="event-actions">
+        <a href="${event.detailUrl}" aria-label="查看 ${escapeAttribute(event.title)}">查看活動</a>
+        <button type="button" disabled>登入後收藏</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function selectTemplate(
+  name: keyof SearchEventsQuery,
+  label: string,
+  selected: string | undefined,
+  options: Array<[string, string]>
+): string {
+  return `
+    <div class="field">
+      <label for="${name}">${label}</label>
+      <select id="${name}" name="${name}">
+        ${options.map(([value, text]) => `
+          <option value="${value}" ${selected === value ? "selected" : ""}>${text}</option>
+        `).join("")}
+      </select>
+    </div>
+  `;
+}
+
+function bindHandlers(): void {
+  window.addEventListener("hashchange", render, { once: true });
+
+  const form = document.querySelector<HTMLFormElement>("#search-form");
+  form?.addEventListener("submit", handleSearchSubmit);
+}
+
+function handleSearchSubmit(event: SubmitEvent): void {
+  event.preventDefault();
+  const form = event.currentTarget as HTMLFormElement;
+  void runSearch(readQueryFromForm(form), { updateUrl: true });
+}
+
+async function runSearch(
+  query: SearchEventsQuery,
+  options: { updateUrl: boolean } = { updateUrl: false }
+): Promise<SearchEventsResponse> {
+  state.loading = true;
+  state.query = query;
+  state.error = "";
+  state.message = "正在搜尋活動。";
+  render();
+
+  try {
+    const response = await fetchEvents(query);
+    state.events = response;
+    state.message = `已找到 ${response.total} 場活動。`;
+    if (options.updateUrl) {
+      updateUrl(query);
+    }
+    return response;
+  } catch (error) {
+    state.error = error instanceof Error ? error.message : "搜尋活動時發生錯誤。";
+    throw error;
+  } finally {
+    state.loading = false;
+    render();
+  }
+}
+
+function readQueryFromForm(form: HTMLFormElement): SearchEventsQuery {
+  const formData = new FormData(form);
+  return compactQuery({
+    query: formData.get("query")?.toString(),
+    start_date: formData.get("start_date")?.toString(),
+    end_date: formData.get("end_date")?.toString(),
+    location: formData.get("location")?.toString() as SearchEventsQuery["location"],
+    price: formData.get("price")?.toString() as SearchEventsQuery["price"],
+    category: formData.get("category")?.toString() as SearchEventsQuery["category"],
+    level: formData.get("level")?.toString() as SearchEventsQuery["level"]
+  });
+}
+
+function readQueryFromUrl(): SearchEventsQuery {
+  const params = new URLSearchParams(window.location.search);
+  return compactQuery({
+    query: params.get("query") ?? undefined,
+    start_date: params.get("start_date") ?? undefined,
+    end_date: params.get("end_date") ?? undefined,
+    location: params.get("location") as SearchEventsQuery["location"] | undefined,
+    price: params.get("price") as SearchEventsQuery["price"] | undefined,
+    category: params.get("category") as SearchEventsQuery["category"] | undefined,
+    level: params.get("level") as SearchEventsQuery["level"] | undefined
+  });
+}
+
+function compactQuery(query: SearchEventsQuery): SearchEventsQuery {
+  return Object.fromEntries(
+    Object.entries(query)
+      .map(([key, value]) => [key, value?.trim()])
+      .filter(([, value]) => value && value !== "all")
+  ) as SearchEventsQuery;
+}
+
+function updateUrl(query: SearchEventsQuery): void {
+  const params = new URLSearchParams();
+  Object.entries(query).forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value);
+    }
+  });
+
+  const nextUrl = params.toString() ? `?${params.toString()}${window.location.hash || "#/"}` : `${window.location.pathname}${window.location.hash || "#/"}`;
+  window.history.replaceState(null, "", nextUrl);
+}
+
 function diagnosticCard(label: string, enabled: boolean): string {
   return `
     <article class="diagnostic-card ${enabled ? "is-ok" : "is-muted"}">
@@ -75,4 +302,27 @@ function diagnosticCard(label: string, enabled: boolean): string {
       <h2>${label}</h2>
     </article>
   `;
+}
+
+function formatDateTime(value: string): string {
+  return new Intl.DateTimeFormat("zh-Hant-TW", {
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value: string): string {
+  return escapeHtml(value);
 }
