@@ -25,3 +25,12 @@ test("搜尋表單具備 search_events declarative tool identity", async ({ page
     "依關鍵字、日期、地點、費用、類別與難度搜尋目前公開活動，並更新活動列表。使用者想找活動或縮小活動範圍時使用。"
   );
 });
+
+test("診斷頁顯示 search_events schema 與欄位描述", async ({ page }) => {
+  await page.goto("/#/diagnostics");
+
+  await expect(page.getByRole("heading", { name: "WebMCP 狀態" })).toBeVisible();
+  await expect(page.getByText("document.modelContext")).toBeVisible();
+  await expect(page.getByText("\"name\": \"query\"")).toBeVisible();
+  await expect(page.getByText("活動標題、摘要、場地或主題關鍵字。")).toBeVisible();
+});

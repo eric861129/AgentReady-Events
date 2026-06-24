@@ -1,6 +1,11 @@
 import type { SearchEventsQuery, SearchEventsResponse } from "../../../packages/contracts/src/index";
 import { fetchEvents } from "./api";
-import { SEARCH_EVENTS_TOOL_DESCRIPTION, SEARCH_EVENTS_TOOL_NAME, detectWebMcpSupport } from "./webmcp";
+import {
+  SEARCH_EVENTS_TOOL_DESCRIPTION,
+  SEARCH_EVENTS_TOOL_NAME,
+  buildDeclarativeFieldSchema,
+  detectWebMcpSupport
+} from "./webmcp";
 import "./styles.css";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -99,15 +104,18 @@ function searchFormTemplate(): string {
       <div class="field field-wide">
         <label for="query">關鍵字</label>
         <input id="query" name="query" type="search" value="${escapeAttribute(query.query ?? "")}"
-          placeholder="例如：前端、AI、台北" />
+          placeholder="例如：前端、AI、台北"
+          toolparamdescription="活動標題、摘要、場地或主題關鍵字。" />
       </div>
       <div class="field">
         <label for="start_date">開始日期</label>
-        <input id="start_date" name="start_date" type="date" value="${escapeAttribute(query.start_date ?? "")}" />
+        <input id="start_date" name="start_date" type="date" value="${escapeAttribute(query.start_date ?? "")}"
+          toolparamdescription="活動開始日期下限，格式為 YYYY-MM-DD。" />
       </div>
       <div class="field">
         <label for="end_date">結束日期</label>
-        <input id="end_date" name="end_date" type="date" value="${escapeAttribute(query.end_date ?? "")}" />
+        <input id="end_date" name="end_date" type="date" value="${escapeAttribute(query.end_date ?? "")}"
+          toolparamdescription="活動開始日期上限，格式為 YYYY-MM-DD。" />
       </div>
       ${selectTemplate("location", "地點", query.location, [
         ["all", "所有地點"],
@@ -116,12 +124,12 @@ function searchFormTemplate(): string {
         ["taichung", "台中"],
         ["kaohsiung", "高雄"],
         ["online", "線上"]
-      ])}
+      ], "活動舉辦地點。")}
       ${selectTemplate("price", "費用", query.price, [
         ["all", "不限費用"],
         ["free", "免費"],
         ["paid", "付費"]
-      ])}
+      ], "活動費用類型。")}
       ${selectTemplate("category", "主題", query.category, [
         ["all", "所有主題"],
         ["frontend", "Frontend"],
@@ -130,13 +138,13 @@ function searchFormTemplate(): string {
         ["devops", "DevOps"],
         ["security", "Security"],
         ["data", "Data"]
-      ])}
+      ], "活動技術主題分類。")}
       ${selectTemplate("level", "難度", query.level, [
         ["all", "不限難度"],
         ["beginner", "入門"],
         ["intermediate", "中階"],
         ["advanced", "進階"]
-      ])}
+      ], "活動適合的技術程度。")}
       <button class="primary-action" type="submit">搜尋活動</button>
     </form>
   `;
@@ -144,6 +152,9 @@ function searchFormTemplate(): string {
 
 function diagnosticsTemplate(): string {
   const support = detectWebMcpSupport();
+  const form = document.createElement("form");
+  form.innerHTML = searchFormTemplate();
+  const schema = buildDeclarativeFieldSchema(form.querySelector("form") ?? form);
 
   return `
     <section class="diagnostics">
@@ -164,6 +175,8 @@ function diagnosticsTemplate(): string {
           <div><dt>toolname</dt><dd>${SEARCH_EVENTS_TOOL_NAME}</dd></div>
           <div><dt>tooldescription</dt><dd>${SEARCH_EVENTS_TOOL_DESCRIPTION}</dd></div>
         </dl>
+        <h2>Field Schema Snapshot</h2>
+        <pre>${escapeHtml(JSON.stringify(schema, null, 2))}</pre>
       </section>
     </section>
   `;
@@ -204,12 +217,13 @@ function selectTemplate(
   name: keyof SearchEventsQuery,
   label: string,
   selected: string | undefined,
-  options: Array<[string, string]>
+  options: Array<[string, string]>,
+  description: string
 ): string {
   return `
     <div class="field">
       <label for="${name}">${label}</label>
-      <select id="${name}" name="${name}">
+      <select id="${name}" name="${name}" toolparamdescription="${description}">
         ${options.map(([value, text]) => `
           <option value="${value}" ${selected === value ? "selected" : ""}>${text}</option>
         `).join("")}
