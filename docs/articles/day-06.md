@@ -200,8 +200,8 @@ Day 6 的 diagnostics page 就是這條路徑的起點。
 - [x] 本文沒有宣稱已註冊或呼叫 `search_events`。
 - [x] 本文沒有把 diagnostics 截圖標註為真實 Agent invocation。
 - [x] 本文有說明目前證據層級主要是本地實作與流程素材。
-- [x] 本文保留「實際 Chrome / WebMCP runtime 支援狀態要另外驗證」的邊界。
+- [x] 本文保留「實際 Chrome / WebMCP runtime 支援狀態需另行驗證」的邊界。
 
-標準註記：
+證據層級：
 
-> 本文截圖來自本地 demo 與 diagnostics page，用來說明網站實作與 runtime feature detection；實際 Chrome / WebMCP runtime 支援狀態要另外驗證，並需依目標瀏覽器版本記錄證據。
+> 本文停在本地 demo 與 diagnostics feature detection；真實 Chrome / WebMCP runtime 支援狀態需另行驗證，並記錄目標瀏覽器版本。

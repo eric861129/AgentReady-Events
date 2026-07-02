@@ -11,7 +11,7 @@ Day 6 建 diagnostics baseline。Day 7 做人類可用的 HTML form。Day 8 加�
 
 Day 10 的主題是：當 `search_events` 被 Agent-like 流程提交時，網站如何執行搜尋、更新畫面、回傳結果，並讓使用者看見狀態。
 
-這裡有一個現實邊界要先說清楚：本文使用的截圖與 GIF 來自本地 demo 與 Playwright 流程驗證。它可以說明網站 handler 如何回應 `toolactivated`、`agentInvoked`、`respondWith()` 和 `toolcancel`，但不能寫成真實 Chrome Agent invocation。
+本文先用本地流程驗證呈現這個閉環；真實 Chrome / WebMCP runtime invocation 會在後續另行補證據。
 
 ![Agent active 狀態](assets/day-10/01-agent-activated.png)
 
@@ -289,7 +289,7 @@ Day 10 讓 `search_events` 跑完第一圈。
 
 但這一切仍要守住真實性邊界：目前完成的是本地實作與流程驗證，不是真實 Chrome Agent runtime 的完整實測。
 
-這個邊界不是保守，而是讓後面的文章有可信度。
+這個邊界不是保守，而是讓後面的文章有可信度。下一階段會進入 Imperative API，從 Day 11 開始用程式註冊活動詳情工具。
 
 ## Reality Checklist 自審
 
@@ -302,4 +302,6 @@ Day 10 讓 `search_events` 跑完第一圈。
 - [x] 本文有區分 `toolactivated`、`toolcancel` 是可見狀態回饋，不是安全授權機制。
 - [x] 本文沒有把 `toolautosubmit` 推廣到報名、取消、登入或其他高風險流程。
 
-> 本文截圖與 GIF 來自本地 demo 與 Playwright 流程驗證，用來說明網站實作與 lifecycle handling；實際 Chrome / WebMCP runtime 支援狀態需依目標瀏覽器版本另行驗證。
+證據層級：
+
+> 本文停在本地 Agent-like lifecycle simulation；真實 invocation 需另行補 Chrome 版本、runtime 狀態與可重現呼叫證據。

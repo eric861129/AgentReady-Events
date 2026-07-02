@@ -224,6 +224,8 @@ Day 8 的重點不是寫更多前端功能，而是替 Day 7 的搜尋表單補�
 - [x] 本文沒有宣稱已完成 submit lifecycle。
 - [x] 本文沒有把 Tool name 翻成中文。
 - [x] 本文沒有把 diagnostics snapshot 寫成 Chrome Agent invocation。
-- [x] 本文有說明實際 Chrome / WebMCP runtime 支援狀態需要另外驗證。
+- [x] 本文有說明實際 Chrome / WebMCP runtime 支援狀態需要另行驗證。
 
-> 本文截圖來自本地 demo 與 diagnostics page，用來說明 `search_events` Declarative identity 的靜態實作；實際 Chrome / WebMCP runtime 支援狀態需依目標瀏覽器版本另行驗證。
+證據層級：
+
+> 本文停在 `search_events` Declarative identity 的靜態實作；尚未證明目標 runtime 已完成 discovery 或 invocation。

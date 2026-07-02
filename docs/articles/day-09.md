@@ -306,4 +306,6 @@ Schema snapshot 讓我們能檢查這些語意是否真的存在，但它不是 
 - [x] 本文沒有宣稱 Chrome Agent 已經讀取或使用這份 schema。
 - [x] 本文沒有宣稱 Declarative API 已提供與 Imperative annotations 完全對等的能力。
 
-> 本文截圖來自本地 demo 與 diagnostics page，用來說明專案如何觀察 `search_events` 的欄位語意；實際 Chrome / WebMCP runtime 支援狀態需依目標瀏覽器版本另行驗證。
+證據層級：
+
+> 本文停在 project schema snapshot，用來觀察 `search_events` 的欄位語意；Chrome 實際 schema 合成格式需依目標版本驗證。

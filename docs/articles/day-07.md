@@ -225,4 +225,6 @@ Day 7 做的是一件很樸素的事：把活動搜尋做成一個正常網站�
 - [x] 本文沒有宣稱 Day 7 已加入 `toolname`、`tooldescription` 或 `toolparamdescription`。
 - [x] 本文沒有把搜尋流程寫成 Chrome Agent invocation。
 
-> 本文截圖與 GIF 來自本地 demo 與 Playwright 流程驗證，用來說明一般搜尋流程與後續 Declarative Tool 的基礎；實際 Chrome / WebMCP runtime 支援狀態需依目標瀏覽器版本另行驗證。
+證據層級：
+
+> 本文停在一般使用者搜尋流程與 Playwright 素材；尚未加入 Declarative Tool identity，也不宣稱 runtime discovery。
