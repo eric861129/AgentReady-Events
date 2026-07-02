@@ -66,7 +66,7 @@ WebMCP 嘗試提供另一種方式：網站可以將搜尋、篩選、收藏、�
 
 ## 專案狀態
 
-目前狀態：規劃文件已完成，準備進入 7/1～7/7 基本網站與 Declarative API 實作
+目前狀態：已完成 7/1～7/7 基本活動網站與第一個 WebMCP Declarative Tool 實作，Day 6～Day 10 程式節點與第一批截圖/GIF 已完成並推送到 GitHub。
 
 - [x] 確定主題
 - [x] 建立 GitHub Repository
@@ -75,3 +75,7 @@ WebMCP 嘗試提供另一種方式：網站可以將搜尋、篩選、收藏、�
 - [x] 完成架構圖
 - [x] 完成 Tool Catalog
 - [x] 固定 WebMCP 技術基準版本
+- [x] 完成 7/1～7/7 基本活動網站
+- [x] 完成 `search_events` Declarative API
+- [x] 完成 Day 6～Day 10 程式版本 tags
+- [x] 收集 Day 6～Day 10 第一批截圖與操作 GIF
