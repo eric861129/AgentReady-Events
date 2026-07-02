@@ -1,7 +1,7 @@
 # Day 11｜Imperative API 入門：註冊活動詳情工具
 
-> 素材狀態：可開始寫正式草稿。
-> 對應程式版本：`day-11-event-details-tool`（預計）
+> 素材狀態：Day 11 程式節點已完成，可開始寫正式草稿。
+> 對應程式版本：`day-11-event-details-tool`
 
 ## 核心問題
 
@@ -77,21 +77,25 @@ Input schema：
 }
 ```
 
-## 預計程式素材
+## 程式素材
 
-預計新增或調整：
+本日新增或調整：
 
 | 檔案 | 用途 |
 | --- | --- |
-| `apps/web/src/webmcp.ts` | 補上 Imperative Tool 型別、Adapter 雛形與 feature detection。 |
-| `apps/web/src/eventDetailsTool.ts` | 定義 `get_event_details` Tool。 |
-| `apps/web/src/main.ts` | 顯示活動詳情區，註冊 Tool，處理 UI 同步。 |
+| `apps/web/src/webmcpAdapter.ts` | 建立 Imperative WebMCP Adapter 雛形，集中處理 `document.modelContext.registerTool()`。 |
+| `apps/web/src/tools/getEventDetailsTool.ts` | 定義 `get_event_details` Tool、input schema、annotations 與 execute。 |
+| `apps/web/src/main.ts` | 顯示活動詳情區，註冊 Tool，處理人類點擊與 Tool execute 的 UI 同步。 |
 | `apps/web/src/api.ts` | 新增 `fetchEventDetails(eventId)`。 |
 | `apps/api/src/app.ts` | 新增 `GET /api/events/:eventId`。 |
 | `packages/contracts/src/index.ts` | 新增活動詳情 DTO 與 Tool result 型別。 |
 | `packages/validation/src/eventDetails.ts` | 驗證 `event_id`。 |
+| `apps/api/src/app.test.ts` | 驗證活動詳情 API 成功、validation error 與 not found。 |
+| `apps/web/src/api.test.ts` | 驗證前端活動詳情 API client。 |
+| `apps/web/src/tools/getEventDetailsTool.test.ts` | 驗證 Tool identity、annotations、execute 與錯誤處理。 |
+| `apps/web/src/webmcpAdapter.test.ts` | 驗證 Adapter 支援偵測與註冊行為。 |
 
-這些只是 Day 11 預計素材，不代表目前已完成。
+這些檔案完成的是本地程式路徑與 smoke 驗證，不代表真實 Chrome Agent runtime 已完成 invocation。
 
 ## 文章段落草案
 
@@ -113,20 +117,29 @@ Input schema：
 | `docs/articles/assets/day-11/03-not-found-error.png` | 顯示不存在活動 ID 的錯誤。 | Tool result 要可理解、可修正。 |
 | `docs/articles/assets/day-11/get-event-details-flow.gif` | 串起選活動、呼叫詳情、UI 更新。 | Imperative Tool 的執行閉環。 |
 
+## 已完成驗證
+
+- `npm.cmd run test`
+- `npm.cmd run typecheck`
+- `npm.cmd run build`
+- API smoke：`GET /health/live`
+- API smoke：`GET /api/events/evt-frontend-accessible-ui`
+- Playwright smoke：點擊 `data-event-detail-id="evt-frontend-accessible-ui"` 後，詳情區顯示 Event ID 與「報名開放中」。
+
 ## Reality Checklist
 
-- [ ] 本文只宣稱規劃或實作 `get_event_details` Imperative Tool。
-- [ ] 若沒有目標 Chrome runtime 證據，不宣稱真實 Agent 已完成 invocation。
-- [ ] 若使用 debug panel 或 Playwright，標註為本地流程驗證。
-- [ ] 不把 `readOnlyHint` 寫成安全授權機制。
-- [ ] 不回傳完整 HTML、Markdown 原文或主辦方內容作為可信指令。
-- [ ] 說明不支援 WebMCP 時，人類仍能查看活動詳情。
+- [x] 本文只宣稱規劃或實作 `get_event_details` Imperative Tool。
+- [x] 若沒有目標 Chrome runtime 證據，不宣稱真實 Agent 已完成 invocation。
+- [x] 若使用 debug panel 或 Playwright，標註為本地流程驗證。
+- [x] 不把 `readOnlyHint` 寫成安全授權機制。
+- [x] 不回傳完整 HTML、Markdown 原文或主辦方內容作為可信指令。
+- [x] 說明不支援 WebMCP 時，人類仍能查看活動詳情。
 
 ## 完成標準
 
-- [ ] 使用 `document.modelContext` 作為 Imperative API 入口。
-- [ ] 建立 WebMCP Adapter 雛形。
-- [ ] `get_event_details` 不直接存取 Database。
-- [ ] 不存在活動時回傳可理解錯誤。
-- [ ] 成功時 UI 與 Tool Result 都更新。
-- [ ] 建立 `day-11-event-details-tool` tag。
+- [x] 使用 `document.modelContext` 作為 Imperative API 入口。
+- [x] 建立 WebMCP Adapter 雛形。
+- [x] `get_event_details` 不直接存取 Database。
+- [x] 不存在活動時回傳可理解錯誤。
+- [x] 成功時 UI 與 Tool Result 都更新。
+- [x] 建立 `day-11-event-details-tool` tag。

@@ -28,6 +28,13 @@ export interface EventSummary {
   detailUrl: string;
 }
 
+export type RegistrationState = "open" | "closed";
+
+export interface EventDetail extends EventSummary {
+  registrationDeadline: string;
+  registrationState: RegistrationState;
+}
+
 export interface SearchEventsQuery {
   query?: string;
   start_date?: string;
@@ -45,8 +52,10 @@ export interface SearchEventsResponse {
   events: EventSummary[];
 }
 
+export interface GetEventDetailsResponse extends EventDetail {}
+
 export interface ValidationErrorItem {
-  field: keyof SearchEventsQuery;
+  field: keyof SearchEventsQuery | "event_id";
   message: string;
 }
 

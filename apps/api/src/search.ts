@@ -1,4 +1,9 @@
-import type { EventSummary, SearchEventsQuery, SearchEventsResponse } from "../../../packages/contracts/src/index";
+import type {
+  EventDetail,
+  EventSummary,
+  SearchEventsQuery,
+  SearchEventsResponse
+} from "../../../packages/contracts/src/index";
 
 const MAX_RESULTS = 50;
 
@@ -48,6 +53,19 @@ export function searchEvents(events: EventSummary[], query: SearchEventsQuery): 
   };
 }
 
+export function getEventDetails(events: EventSummary[], eventId: string): EventDetail | undefined {
+  const event = events.find((candidate) => candidate.id === eventId);
+  if (!event) {
+    return undefined;
+  }
+
+  return {
+    ...event,
+    registrationDeadline: buildRegistrationDeadline(event.startsAt),
+    registrationState: "open"
+  };
+}
+
 function matchesKeywords(event: EventSummary, keywords: string): boolean {
   const text = normalize([
     event.title,
@@ -64,4 +82,11 @@ function matchesKeywords(event: EventSummary, keywords: string): boolean {
 
 function normalize(value: string | undefined): string {
   return (value ?? "").trim().toLocaleLowerCase("zh-Hant-TW");
+}
+
+function buildRegistrationDeadline(startsAt: string): string {
+  const startsAtDate = new Date(startsAt);
+  startsAtDate.setDate(startsAtDate.getDate() - 2);
+  startsAtDate.setHours(23, 59, 59, 0);
+  return startsAtDate.toISOString();
 }

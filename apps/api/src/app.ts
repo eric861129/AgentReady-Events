@@ -1,7 +1,7 @@
 import express from "express";
 import { eventFixtures } from "../../../packages/test-fixtures/src/index";
-import { parseSearchEventsQuery } from "../../../packages/validation/src/index";
-import { searchEvents } from "./search";
+import { parseEventDetailsParams, parseSearchEventsQuery } from "../../../packages/validation/src/index";
+import { getEventDetails, searchEvents } from "./search";
 
 export function createApp(): express.Express {
   const app = express();
@@ -22,6 +22,29 @@ export function createApp(): express.Express {
     }
 
     response.json(searchEvents(eventFixtures, parsed.value));
+  });
+
+  app.get("/api/events/:eventId", (request, response) => {
+    const parsed = parseEventDetailsParams({ event_id: request.params.eventId });
+    if (!parsed.ok) {
+      response.status(400).json({
+        error: "validation_error",
+        message: "活動詳情查詢條件不正確。",
+        fieldErrors: parsed.errors
+      });
+      return;
+    }
+
+    const detail = getEventDetails(eventFixtures, parsed.value.event_id);
+    if (!detail) {
+      response.status(404).json({
+        error: "not_found",
+        message: "找不到符合條件的公開活動。"
+      });
+      return;
+    }
+
+    response.json(detail);
   });
 
   return app;

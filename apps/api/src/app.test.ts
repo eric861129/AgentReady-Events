@@ -49,3 +49,50 @@ describe("GET /api/events", () => {
     expect(response.body.fieldErrors[0].field).toBe("category");
   });
 });
+
+describe("GET /api/events/:eventId", () => {
+  const app = createApp();
+
+  it("回傳公開活動詳情並包含報名狀態", async () => {
+    const response = await request(app)
+      .get("/api/events/evt-frontend-accessible-ui")
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      id: "evt-frontend-accessible-ui",
+      title: expect.any(String),
+      summary: expect.any(String),
+      remainingCapacity: expect.any(Number),
+      registrationDeadline: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
+      registrationState: "open",
+      detailUrl: "/events/evt-frontend-accessible-ui"
+    });
+  });
+
+  it("eventId 超過長度限制時回傳 validation error", async () => {
+    const response = await request(app)
+      .get(`/api/events/${"x".repeat(65)}`)
+      .expect(400);
+
+    expect(response.body).toMatchObject({
+      error: "validation_error",
+      fieldErrors: [
+        {
+          field: "event_id",
+          message: "活動識別碼長度不可超過 64 個字元。"
+        }
+      ]
+    });
+  });
+
+  it("找不到公開活動時回傳 not_found", async () => {
+    const response = await request(app)
+      .get("/api/events/evt-missing")
+      .expect(404);
+
+    expect(response.body).toMatchObject({
+      error: "not_found",
+      message: "找不到符合條件的公開活動。"
+    });
+  });
+});

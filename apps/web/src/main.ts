@@ -1,5 +1,15 @@
-import type { SearchEventsQuery, SearchEventsResponse, ToolResult } from "../../../packages/contracts/src/index";
-import { fetchEvents } from "./api";
+import type {
+  GetEventDetailsResponse,
+  SearchEventsQuery,
+  SearchEventsResponse,
+  ToolResult
+} from "../../../packages/contracts/src/index";
+import { fetchEventDetails, fetchEvents } from "./api";
+import {
+  GET_EVENT_DETAILS_TOOL_NAME,
+  createGetEventDetailsTool
+} from "./tools/getEventDetailsTool";
+import { createWebMcpAdapter } from "./webmcpAdapter";
 import {
   SEARCH_EVENTS_TOOL_DESCRIPTION,
   SEARCH_EVENTS_TOOL_NAME,
@@ -27,11 +37,19 @@ const root = app;
 
 const state = {
   events: undefined as SearchEventsResponse | undefined,
+  selectedEvent: undefined as GetEventDetailsResponse | undefined,
   query: {} as SearchEventsQuery,
   loading: false,
+  detailLoading: false,
+  detailError: "",
+  eventDetailsToolStatus: "pending" as "pending" | "registered" | "unsupported" | "failed",
   message: "準備好探索近期開發者活動。",
   error: ""
 };
+
+const webMcpAdapter = createWebMcpAdapter();
+let eventDetailsRegistration: { dispose(): void } | undefined;
+let eventDetailsRegistrationAttempted = false;
 
 render();
 void runSearch(readQueryFromUrl(), { updateUrl: false });
@@ -87,6 +105,7 @@ function homeTemplate(): string {
         ${eventCardsTemplate(state.events?.events ?? [])}
       </div>
     </section>
+    ${eventDetailTemplate()}
     <section id="featured" class="featured-band" aria-labelledby="featured-title">
       <div class="section-heading">
         <h2 id="featured-title">精選活動</h2>
@@ -185,10 +204,62 @@ function diagnosticsTemplate(): string {
           <div><dt>toolname</dt><dd>${SEARCH_EVENTS_TOOL_NAME}</dd></div>
           <div><dt>tooldescription</dt><dd>${SEARCH_EVENTS_TOOL_DESCRIPTION}</dd></div>
           <div><dt>toolautosubmit</dt><dd>enabled</dd></div>
+          <div><dt>imperative tool</dt><dd>${GET_EVENT_DETAILS_TOOL_NAME}: ${state.eventDetailsToolStatus}</dd></div>
         </dl>
         <h2>Field Schema Snapshot</h2>
         <pre>${escapeHtml(JSON.stringify(schema, null, 2))}</pre>
       </section>
+    </section>
+  `;
+}
+
+function eventDetailTemplate(): string {
+  if (state.detailLoading) {
+    return `
+      <section class="detail-panel" aria-live="polite" aria-labelledby="event-detail-title">
+        <h2 id="event-detail-title">活動詳情</h2>
+        <p>正在載入活動詳情。</p>
+      </section>
+    `;
+  }
+
+  if (state.detailError) {
+    return `
+      <section class="detail-panel is-error" aria-live="polite" aria-labelledby="event-detail-title">
+        <h2 id="event-detail-title">活動詳情</h2>
+        <p>${escapeHtml(state.detailError)}</p>
+      </section>
+    `;
+  }
+
+  if (!state.selectedEvent) {
+    return `
+      <section class="detail-panel" aria-live="polite" aria-labelledby="event-detail-title">
+        <h2 id="event-detail-title">活動詳情</h2>
+        <p>從活動列表選一場活動，或由 <code>${GET_EVENT_DETAILS_TOOL_NAME}</code> 更新這裡。</p>
+      </section>
+    `;
+  }
+
+  const event = state.selectedEvent;
+  return `
+    <section class="detail-panel" aria-live="polite" aria-labelledby="event-detail-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Event ID：${escapeHtml(event.id)}</p>
+          <h2 id="event-detail-title">${escapeHtml(event.title)}</h2>
+        </div>
+        <span class="detail-state">${event.registrationState === "open" ? "報名開放中" : "報名已截止"}</span>
+      </div>
+      <p>${escapeHtml(event.summary)}</p>
+      <dl class="detail-facts">
+        <div><dt>時間</dt><dd>${formatDateTime(event.startsAt)} - ${formatDateTime(event.endsAt)}</dd></div>
+        <div><dt>地點</dt><dd>${escapeHtml(event.locationLabel)}，${escapeHtml(event.venue)}</dd></div>
+        <div><dt>費用</dt><dd>${escapeHtml(event.priceLabel)}</dd></div>
+        <div><dt>難度</dt><dd>${escapeHtml(event.levelLabel)}</dd></div>
+        <div><dt>剩餘名額</dt><dd>${event.remainingCapacity} 位</dd></div>
+        <div><dt>報名期限</dt><dd>${formatDateTime(event.registrationDeadline)}</dd></div>
+      </dl>
     </section>
   `;
 }
@@ -217,7 +288,7 @@ function eventCardsTemplate(events: SearchEventsResponse["events"]): string {
         <div><dt>名額</dt><dd>剩餘 ${event.remainingCapacity} 位</dd></div>
       </dl>
       <div class="event-actions">
-        <a href="${event.detailUrl}" aria-label="查看 ${escapeAttribute(event.title)}">查看活動</a>
+        <button type="button" class="detail-action" data-event-detail-id="${escapeAttribute(event.id)}" aria-label="查看 ${escapeAttribute(event.title)}">查看詳情</button>
         <button type="button" disabled>登入後收藏</button>
       </div>
     </article>
@@ -245,6 +316,7 @@ function selectTemplate(
 
 function bindHandlers(): void {
   window.addEventListener("hashchange", render, { once: true });
+  void ensureEventDetailsToolRegistered();
 
   const form = document.querySelector<HTMLFormElement>("#search-form");
   if (form) {
@@ -252,6 +324,20 @@ function bindHandlers(): void {
     form.addEventListener("toolactivated", handleToolActivated);
     form.addEventListener("toolcancel", handleToolCancel);
   }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-event-detail-id]").forEach((button) => {
+    button.addEventListener("click", handleEventDetailClick);
+  });
+}
+
+function handleEventDetailClick(event: MouseEvent): void {
+  const button = event.currentTarget as HTMLButtonElement;
+  const eventId = button.dataset.eventDetailId;
+  if (!eventId) {
+    return;
+  }
+
+  void openEventDetails(eventId).catch(() => undefined);
 }
 
 function handleSearchSubmit(event: SubmitEvent): void {
@@ -310,6 +396,61 @@ async function runSearch(
     throw error;
   } finally {
     state.loading = false;
+    render();
+  }
+}
+
+async function openEventDetails(eventId: string): Promise<GetEventDetailsResponse> {
+  state.detailLoading = true;
+  state.detailError = "";
+  state.message = `正在取得 ${eventId} 的活動詳情。`;
+  render();
+
+  try {
+    const detail = await fetchEventDetails(eventId);
+    showEventDetails(detail);
+    return detail;
+  } catch (error) {
+    state.detailError = error instanceof Error ? error.message : "取得活動詳情時發生錯誤。";
+    state.message = state.detailError;
+    throw error;
+  } finally {
+    state.detailLoading = false;
+    render();
+  }
+}
+
+function showEventDetails(detail: GetEventDetailsResponse): void {
+  state.selectedEvent = detail;
+  state.detailError = "";
+  state.message = `已更新 ${detail.title} 的活動詳情。`;
+  render();
+}
+
+async function ensureEventDetailsToolRegistered(): Promise<void> {
+  if (eventDetailsRegistrationAttempted || eventDetailsRegistration) {
+    return;
+  }
+
+  eventDetailsRegistrationAttempted = true;
+
+  if (!webMcpAdapter.isSupported()) {
+    state.eventDetailsToolStatus = "unsupported";
+    render();
+    return;
+  }
+
+  const tool = createGetEventDetailsTool({
+    loadEventDetails: fetchEventDetails,
+    showEventDetails
+  });
+
+  try {
+    eventDetailsRegistration = await webMcpAdapter.registerTool(tool);
+    state.eventDetailsToolStatus = "registered";
+    render();
+  } catch {
+    state.eventDetailsToolStatus = "failed";
     render();
   }
 }
