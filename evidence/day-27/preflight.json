@@ -1,0 +1,13 @@
+{
+  "date": "2026-07-12",
+  "commit": "debd75059555c1d55b1b630cd913912fcf3c875f",
+  "url": "http://127.0.0.1:43129/events",
+  "mode": "local-production-candidate",
+  "browser": "HeadlessChrome 150.0.0.0",
+  "secureContext": true,
+  "documentModelContext": false,
+  "discoveredTools": [],
+  "classification": "environment",
+  "evidenceLevel": "E3",
+  "notes": "Real Chrome was launched against the production build. Fake ModelContext and direct Tool calls were not used."
+}
