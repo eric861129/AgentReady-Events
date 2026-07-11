@@ -19,7 +19,8 @@ test.beforeEach(async ({ page }) => {
 test("detail registration is disposed when navigation leaves its route", async ({ page }) => {
   await page.goto("/events/evt-webmcp-intro");
   await expect.poll(() => page.evaluate(() => sessionStorage.getItem("registered"))).toContain("get_event_details");
+  const registeredCount = await page.evaluate(() => (JSON.parse(sessionStorage.getItem("registered") ?? "[]") as string[]).length);
   await page.getByRole("link", { name: "回活動列表" }).click();
-  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("aborted"))).toBe("1");
+  await expect.poll(() => page.evaluate(() => Number(sessionStorage.getItem("aborted") ?? 0))).toBe(registeredCount);
   await expect(page.locator('[toolname="search_events"]')).toHaveCount(1);
 });
