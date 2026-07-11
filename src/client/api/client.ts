@@ -1,4 +1,4 @@
-import type { EventDetail, InteractionMode, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
+import type { EventDetail, InteractionMode, RegistrationInput, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
 
 export class ApiClientError extends Error {
   constructor(readonly status: number, message: string) {
@@ -42,4 +42,13 @@ export async function saveEventRequest(eventId: string, context: { mode: Interac
 export async function undoSavedEventRequest(eventId: string): Promise<void> {
   const session = await sessionRequest();
   await readJson(await fetch(`/api/saved-events/${encodeURIComponent(eventId)}`, { method: "DELETE", headers: { "x-csrf-token": session.csrfToken } }));
+}
+
+export async function registrationRequest(input: RegistrationInput, context: { mode: InteractionMode }): Promise<RegistrationResponse> {
+  const session = await sessionRequest();
+  return readJson<RegistrationResponse>(await fetch("/api/registrations", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
+    body: JSON.stringify({ ...input, interactionMode: context.mode })
+  }));
 }

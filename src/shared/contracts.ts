@@ -41,3 +41,20 @@ export type SearchEventsResponse = { events: EventSummary[] };
 
 export type SessionSummary = { csrfToken: string };
 export type SaveEventResponse = { eventId: string; alreadySaved: boolean };
+
+export type RegistrationInput = {
+  eventId: string;
+  attendeeName: string;
+  email: string;
+};
+
+export type RegistrationListItem = {
+  id: string;
+  eventId: string;
+  eventTitle: string;
+  startsAt: string;
+  attendeeName: string;
+  status: "active" | "cancelled";
+};
+
+export type RegistrationResponse = { registration: RegistrationListItem };
