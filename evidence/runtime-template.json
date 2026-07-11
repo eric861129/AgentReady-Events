@@ -1,0 +1,6 @@
+{
+  "date": null, "browser": null, "browserVersion": null, "codexSurface": null,
+  "environment": null, "url": null, "commit": null, "featureState": null,
+  "discoveredSchema": null, "input": null, "result": null, "uiBefore": null,
+  "uiAfter": null, "invocation": null, "cleanReplayTask": null, "evidenceLevel": "E0"
+}

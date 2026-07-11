@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WebMCP EvalCase",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "startPath", "resetSession", "prompt", "expectedTools", "forbiddenTools", "expectedOutcome", "requiresHumanConfirmation"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "category": { "enum": ["tool_selection", "no_tool", "arguments", "ambiguous_intent", "tool_order", "stale_state", "repeat_call", "human_confirmation", "prompt_injection", "recovery"] },
+    "startPath": { "type": "string", "pattern": "^/" },
+    "resetSession": { "type": "boolean" },
+    "prompt": { "type": "string", "minLength": 1 },
+    "expectedTools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "forbiddenTools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "expectedOutcome": { "type": "string", "minLength": 1 },
+    "requiresHumanConfirmation": { "type": "boolean" }
+  }
+}
