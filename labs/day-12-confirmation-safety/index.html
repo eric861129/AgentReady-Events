@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Day 12 Confirmation Safety</title></head>
+  <body>
+    <main>
+      <p>Day 12 · Human-in-the-loop</p>
+      <h1>Agent 能準備，不能替人答應</h1>
+      <table><caption>風險分級</caption><tbody><tr><th>搜尋</th><td>R0</td></tr><tr><th>收藏</th><td>R1</td></tr><tr><th>報名</th><td>R2</td></tr><tr><th>取消</th><td>R3</td></tr></tbody></table>
+      <button id="prepare" type="button">準備取消摘要</button>
+      <p id="count" role="status">Mutation count: 0</p>
+      <dialog id="confirm-dialog" aria-labelledby="dialog-title">
+        <h2 id="dialog-title">確認取消報名</h2>
+        <p id="summary"></p>
+        <p>取消後會釋出名額；本 Lab 不會寄送通知。</p>
+        <button id="keep" type="button">保留報名</button>
+        <button id="confirm" type="button">確認取消</button>
+      </dialog>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
