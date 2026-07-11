@@ -14,7 +14,8 @@
     "test": "vitest run --exclude 'tests/browser/**'",
     "test:api": "vitest run tests/api",
     "test:e2e": "playwright test",
-    "build": "tsc --noEmit && vite build"
+    "build": "tsc --noEmit && vite build",
+    "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {
     "express": "^4.21.2"

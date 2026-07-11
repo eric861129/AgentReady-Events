@@ -1,0 +1,71 @@
+{
+  "commit": "e85334885260b9ee6f94774882db6e7e78c532d3",
+  "node": "v25.4.0",
+  "platform": "darwin-arm64",
+  "startedAt": "2026-07-11T17:37:50.897Z",
+  "completedAt": "2026-07-11T17:38:01.262Z",
+  "success": true,
+  "commands": [
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-07-11T17:37:50.898Z",
+      "completedAt": "2026-07-11T17:37:52.045Z",
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "test"
+      ],
+      "startedAt": "2026-07-11T17:37:52.045Z",
+      "completedAt": "2026-07-11T17:37:53.383Z",
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "test:api"
+      ],
+      "startedAt": "2026-07-11T17:37:53.383Z",
+      "completedAt": "2026-07-11T17:37:54.202Z",
+      "exitCode": 0
+    },
+    {
+      "command": "npx",
+      "args": [
+        "vitest",
+        "run",
+        "tests/security"
+      ],
+      "startedAt": "2026-07-11T17:37:54.202Z",
+      "completedAt": "2026-07-11T17:37:54.930Z",
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "test:e2e"
+      ],
+      "startedAt": "2026-07-11T17:37:54.930Z",
+      "completedAt": "2026-07-11T17:37:59.913Z",
+      "exitCode": 0
+    },
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "build"
+      ],
+      "startedAt": "2026-07-11T17:37:59.913Z",
+      "completedAt": "2026-07-11T17:38:01.262Z",
+      "exitCode": 0
+    }
+  ]
+}
