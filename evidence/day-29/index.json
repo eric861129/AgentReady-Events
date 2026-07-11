@@ -1,0 +1,19 @@
+{
+  "day": 29,
+  "generatedAt": "2026-07-11T17:46:20.035Z",
+  "entries": [
+    {
+      "path": "release-candidate.json",
+      "sha256": "cd7ca1ea98f21c17702df9b249f6d631efd57dc158201a07cb0773ec63f235d6",
+      "evidenceLevel": "E3"
+    }
+  ],
+  "levelCounts": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "E3": 1,
+    "E4": 0,
+    "E5": 0
+  }
+}

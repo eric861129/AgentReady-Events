@@ -1,6 +1,6 @@
 {
   "name": "agent-ready-events-v3",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -20,6 +20,7 @@
     "start": "node server-dist/server.js",
     "smoke:deployment": "tsx scripts/smoke-deployment.ts",
     "evals:validate": "tsx scripts/validate-evals.ts",
+    "evidence:collect": "tsx scripts/collect-evidence.ts",
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {

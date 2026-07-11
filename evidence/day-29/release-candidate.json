@@ -1,0 +1,10 @@
+{
+  "evidenceLevel": "E3",
+  "commit": "00e4fe4ae4a10754ef658267597c3ea261d47ba5",
+  "url": "http://127.0.0.1:43129",
+  "environment": { "mode": "local-production-candidate", "browser": "Chrome 150", "node": "v25.4.0", "dockerDaemon": "unavailable" },
+  "discoveredSchema": null,
+  "invocation": null,
+  "publicDeployment": false,
+  "limitations": ["No author-authorized HTTPS host", "Current browser surface exposed no document.modelContext", "Docker daemon unavailable"]
+}

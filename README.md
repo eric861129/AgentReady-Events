@@ -26,4 +26,9 @@ npm install
 npm run typecheck
 npm test
 npm run build
+npm run verify
+npm run evals:validate
+npm run smoke:deployment
 ```
+
+Runtime proof currently tops out at E3: deterministic and real-browser integration are green, while real Codex WebMCP discovery requires an author-authorized HTTPS deployment and compatible Codex/Chrome surface. See `docs/runtime-evidence.md`; no result is promoted by simulation.
