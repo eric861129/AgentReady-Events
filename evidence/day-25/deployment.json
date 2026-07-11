@@ -1,0 +1,8 @@
+{
+  "date": "2026-07-12",
+  "mode": "local-production-candidate",
+  "nodeSmoke": { "status": "passed", "commands": ["npm run build", "npm run smoke:deployment"] },
+  "dockerSmoke": { "status": "not-run", "classification": "environment", "reason": "Docker CLI could not connect to unix:///var/run/docker.sock because the daemon was unavailable." },
+  "publicUrl": null,
+  "publicDeployment": "pending-author-host-selection-and-authorization"
+}
