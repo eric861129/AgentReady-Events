@@ -15,6 +15,13 @@ if (typeof document !== "undefined") {
     title.textContent = SERIES_TITLE;
     const note = document.createElement("p");
     note.textContent = "Day 1–12 使用獨立 Labs；正式 AgentReady Events 從 Day 13 開始。";
-    app.replaceChildren(title, note);
+    const list = document.createElement("ul");
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = "/labs/day-02-actuation/index.html";
+    link.textContent = "Day 02 · Actuation Failure Lab";
+    item.append(link);
+    list.append(item);
+    app.replaceChildren(title, note, list);
   }
 }
