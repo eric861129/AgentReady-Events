@@ -1,14 +1,14 @@
-import type { EventLevel, EventLocation, EventPrice, SearchEventsQuery } from "../../shared/contracts";
 import { eventDetailsRequest, searchEventsRequest } from "../api/client";
+import { readSearchQuery, SEARCH_EVENTS_TOOL_DESCRIPTION, SEARCH_EVENTS_TOOL_NAME } from "../webmcp/declarative";
 
 export function renderEventsPage(root: HTMLElement): void {
   root.innerHTML = `
     <h1>活動</h1>
-    <form id="event-search">
-      <label for="query">關鍵字</label><input id="query" name="query" maxlength="100">
-      <label for="location">地點</label><select id="location" name="location"><option value="">不限</option><option value="taipei">台北</option><option value="kaohsiung">高雄</option><option value="online">線上</option></select>
-      <label for="price">費用</label><select id="price" name="price"><option value="">不限</option><option value="free">免費</option><option value="paid">付費</option></select>
-      <label for="level">程度</label><select id="level" name="level"><option value="">不限</option><option value="beginner">入門</option><option value="intermediate">中階</option><option value="advanced">進階</option></select>
+    <form id="event-search" toolname="${SEARCH_EVENTS_TOOL_NAME}" tooldescription="${SEARCH_EVENTS_TOOL_DESCRIPTION}">
+      <label for="query">關鍵字</label><input id="query" name="query" maxlength="100" toolparamdescription="公開活動標題或摘要中的關鍵字，最多 100 字。">
+      <label for="location">地點</label><select id="location" name="location" toolparamdescription="活動地點代碼。"><option value="">不限</option><option value="taipei">台北</option><option value="kaohsiung">高雄</option><option value="online">線上</option></select>
+      <label for="price">費用</label><select id="price" name="price" toolparamdescription="免費或付費。"><option value="">不限</option><option value="free">免費</option><option value="paid">付費</option></select>
+      <label for="level">程度</label><select id="level" name="level" toolparamdescription="建議參加者程度。"><option value="">不限</option><option value="beginner">入門</option><option value="intermediate">中階</option><option value="advanced">進階</option></select>
       <button type="submit">搜尋活動</button>
     </form>
     <p id="search-status" role="status">尚未搜尋</p>
@@ -20,14 +20,7 @@ export function renderEventsPage(root: HTMLElement): void {
   const detail = root.querySelector<HTMLElement>("#event-detail");
   form?.addEventListener("submit", async (submitEvent) => {
     submitEvent.preventDefault();
-    const data = new FormData(form);
-    const get = (name: string) => String(data.get(name) ?? "").trim();
-    const query: SearchEventsQuery = {
-      ...(get("query") ? { query: get("query") } : {}),
-      ...(get("location") ? { location: get("location") as EventLocation } : {}),
-      ...(get("price") ? { price: get("price") as EventPrice } : {}),
-      ...(get("level") ? { level: get("level") as EventLevel } : {})
-    };
+    const query = readSearchQuery(new FormData(form));
     try {
       const response = await searchEventsRequest(query);
       list?.replaceChildren(...response.events.map((event) => {

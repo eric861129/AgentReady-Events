@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("human can search with labels and keyboard without WebMCP", async ({ page }) => {
+test("human can search with labels and keyboard without invoking WebMCP", async ({ page }) => {
   await page.goto("/events");
-  await expect(page.locator("[toolname]")).toHaveCount(0);
   await page.getByLabel("地點").selectOption("taipei");
   await page.getByLabel("費用").selectOption("free");
   await page.getByLabel("關鍵字").press("Enter");
