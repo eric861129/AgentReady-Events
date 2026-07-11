@@ -8,6 +8,7 @@ import { AppState } from "./state/app-state";
 import { registerToolAdapter } from "./webmcp/adapter";
 import { WebMcpRegistry } from "./webmcp/registry";
 import { parseRoute } from "./router";
+import { appendActivityTimeline } from "./ui/activity-timeline";
 
 const app = document.querySelector<HTMLElement>("#app");
 
@@ -21,21 +22,25 @@ async function render() {
   if (route.kind === "event-detail") {
     const tools = await renderEventDetailPage(app, route.eventId, actions, state);
     await registry.sync(tools);
+    appendActivityTimeline(app);
     return;
   }
   if (route.kind === "registration") {
     await registry.sync([]);
     await renderRegistrationPage(app, route.eventId);
+    appendActivityTimeline(app);
     return;
   }
   if (route.kind === "registrations") {
     const tools = await renderRegistrationsPage(app);
     await registry.sync(tools);
+    appendActivityTimeline(app);
     return;
   }
   await registry.sync([]);
   if (route.kind === "events") {
     renderEventsPage(app, actions);
+    appendActivityTimeline(app);
     return;
   }
   const heading = document.createElement("h1");
@@ -50,7 +55,9 @@ async function render() {
     nav.append(link, document.createTextNode(" "));
   }
   app.replaceChildren(heading, note, nav);
+  appendActivityTimeline(app);
 }
 
 window.addEventListener("beforeunload", () => void registry.disposeAll(), { once: true });
+window.addEventListener("activity-recorded", () => { if (app) appendActivityTimeline(app); });
 void render();

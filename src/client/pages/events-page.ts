@@ -12,12 +12,10 @@ export function renderEventsPage(root: HTMLElement, actions: EventActions): void
       <button type="submit">搜尋活動</button>
     </form>
     <p id="search-status" role="status">尚未搜尋</p>
-    <ol id="results" aria-label="活動搜尋結果"></ol>
-    <section id="event-detail" aria-live="polite"></section>`;
+    <ol id="results" aria-label="活動搜尋結果"></ol>`;
   const form = root.querySelector<HTMLFormElement>("#event-search");
   const status = root.querySelector<HTMLElement>("#search-status");
   const list = root.querySelector<HTMLOListElement>("#results");
-  const detail = root.querySelector<HTMLElement>("#event-detail");
   form?.addEventListener("submit", async (submitEvent) => {
     submitEvent.preventDefault();
     const query = readSearchQuery(new FormData(form));
@@ -41,12 +39,7 @@ export function renderEventsPage(root: HTMLElement, actions: EventActions): void
   });
   list?.addEventListener("click", async (clickEvent) => {
     const button = (clickEvent.target as Element).closest<HTMLButtonElement>("button[data-event-id]");
-    if (!button || !detail) return;
-    const event = await actions.loadDetails(button.dataset.eventId ?? "", { mode: "human" });
-    const heading = document.createElement("h2");
-    heading.textContent = event.title;
-    const text = document.createElement("p");
-    text.textContent = `${event.venue} · 剩餘 ${event.remainingCapacity} 名`;
-    detail.replaceChildren(heading, text);
+    if (!button) return;
+    location.assign(`/events/${button.dataset.eventId ?? ""}`);
   });
 }

@@ -3,6 +3,7 @@ import { cancellationRequest, cancellationSummaryRequest, registrationsRequest }
 import { createConfirmationDialog } from "../ui/confirmation-dialog";
 import { createPrepareCancellationTool } from "../webmcp/tools/prepare-cancellation";
 import type { AnyProjectTool } from "../webmcp/registry";
+import { recordActivity } from "../ui/activity-timeline";
 
 export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyProjectTool[]> {
   const heading = document.createElement("h1");
@@ -23,6 +24,7 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   };
   dialogApi = createConfirmationDialog(async (summary) => {
     await cancellationRequest(summary.registrationId, { mode: "human" });
+    recordActivity("cancel_registration", "human", "SUCCESS", { eventId: summary.eventId, registrationId: summary.registrationId });
     updateCancelled(summary.registrationId);
   });
   const showSummary = (summary: CancellationSummary, trigger?: HTMLElement) => dialogApi.show(summary, trigger);
@@ -34,7 +36,11 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
       const button = document.createElement("button");
       button.type = "button";
       button.textContent = "準備取消";
-      button.addEventListener("click", async () => showSummary(await cancellationSummaryRequest(registration.id), button));
+      button.addEventListener("click", async () => {
+        const summary = await cancellationSummaryRequest(registration.id);
+        recordActivity("prepare_registration_cancellation", "human", "CONFIRMATION_REQUIRED", { eventId: summary.eventId, registrationId: summary.registrationId });
+        showSummary(summary, button);
+      });
       item.append(document.createTextNode(" "), button);
     }
     list.append(item);

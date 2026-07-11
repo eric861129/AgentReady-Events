@@ -1,6 +1,7 @@
 import type { RegistrationInput } from "../../shared/contracts";
 import { eventDetailsRequest, registrationRequest } from "../api/client";
 import { prepareRegistration, submitRegistration, type RegistrationFields } from "../services/registration-actions";
+import { recordActivity } from "../ui/activity-timeline";
 
 type AgentSubmitEvent = Event & { agentInvoked?: boolean; respondWith?: (promise: Promise<unknown>) => void };
 
@@ -31,11 +32,15 @@ export async function renderRegistrationPage(root: HTMLElement, eventId: string)
     if (submitEvent.agentInvoked) {
       const result = Promise.resolve(prepareRegistration(fields, input()));
       submitEvent.respondWith?.(result);
+      recordActivity("prepare_event_registration", "agent", "CONFIRMATION_REQUIRED", { eventId });
       status.textContent = "資料已準備，請由使用者確認送出。";
       return;
     }
     void submitRegistration(registrationRequest, input(), { mode: "human" })
-      .then(({ registration }) => { status.textContent = `報名完成：${registration.eventTitle}`; })
+      .then(({ registration }) => {
+        recordActivity("submit_registration", "human", "SUCCESS", { eventId, registrationId: registration.id });
+        status.textContent = `報名完成：${registration.eventTitle}`;
+      })
       .catch((error) => { status.textContent = error instanceof Error ? error.message : "報名失敗。"; });
   });
 }
