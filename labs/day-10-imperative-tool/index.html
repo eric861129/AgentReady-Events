@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Day 10 Imperative Tool</title></head>
+  <body>
+    <main>
+      <p>Day 10 · Imperative API</p>
+      <h1>表單以外的活動詳情</h1>
+      <label for="event-id">活動 ID</label>
+      <input id="event-id" value="evt-webmcp-intro" />
+      <button id="execute" type="button">本地執行 Tool</button>
+      <p>E2 local execution：這是專案直接呼叫，不是真實 Agent discovery。</p>
+      <section id="detail" aria-live="polite"></section>
+      <pre id="result" aria-label="執行結果"></pre>
+      <details><summary>Project schema</summary><pre id="schema"></pre></details>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
