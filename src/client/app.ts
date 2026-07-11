@@ -1,15 +1,31 @@
 import { renderEventsPage } from "./pages/events-page";
 import { renderEventDetailPage } from "./pages/event-detail-page";
+import { eventDetailsRequest, searchEventsRequest } from "./api/client";
+import { createEventActions } from "./services/event-actions";
+import { AppState } from "./state/app-state";
+import { registerToolAdapter } from "./webmcp/adapter";
+import { WebMcpRegistry } from "./webmcp/registry";
+import { parseRoute } from "./router";
 
 const app = document.querySelector<HTMLElement>("#app");
 
-const detailMatch = /^\/events\/([a-z0-9_-]+)$/.exec(location.pathname);
+const actions = createEventActions({ search: searchEventsRequest, loadDetails: eventDetailsRequest });
+const state = new AppState();
+const registry = new WebMcpRegistry(registerToolAdapter);
 
-if (app && detailMatch?.[1]) {
-  void renderEventDetailPage(app, detailMatch[1]);
-} else if (app && location.pathname === "/events") {
-  renderEventsPage(app);
-} else if (app) {
+async function render() {
+  if (!app) return;
+  const route = parseRoute(location.pathname);
+  if (route.kind === "event-detail") {
+    const tool = await renderEventDetailPage(app, route.eventId, actions, state);
+    await registry.sync(tool ? [tool] : []);
+    return;
+  }
+  await registry.sync([]);
+  if (route.kind === "events") {
+    renderEventsPage(app, actions);
+    return;
+  }
   const heading = document.createElement("h1");
   heading.textContent = "AgentReady Events";
   const note = document.createElement("p");
@@ -23,3 +39,6 @@ if (app && detailMatch?.[1]) {
   }
   app.replaceChildren(heading, note, nav);
 }
+
+window.addEventListener("beforeunload", () => void registry.disposeAll(), { once: true });
+void render();

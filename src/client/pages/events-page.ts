@@ -1,7 +1,7 @@
-import { eventDetailsRequest, searchEventsRequest } from "../api/client";
+import type { EventActions } from "../services/event-actions";
 import { readSearchQuery, SEARCH_EVENTS_TOOL_DESCRIPTION, SEARCH_EVENTS_TOOL_NAME } from "../webmcp/declarative";
 
-export function renderEventsPage(root: HTMLElement): void {
+export function renderEventsPage(root: HTMLElement, actions: EventActions): void {
   root.innerHTML = `
     <h1>活動</h1>
     <form id="event-search" toolname="${SEARCH_EVENTS_TOOL_NAME}" tooldescription="${SEARCH_EVENTS_TOOL_DESCRIPTION}">
@@ -22,7 +22,7 @@ export function renderEventsPage(root: HTMLElement): void {
     submitEvent.preventDefault();
     const query = readSearchQuery(new FormData(form));
     try {
-      const response = await searchEventsRequest(query);
+      const response = await actions.search(query, { mode: "human" });
       list?.replaceChildren(...response.events.map((event) => {
         const item = document.createElement("li");
         const title = document.createElement("strong");
@@ -42,7 +42,7 @@ export function renderEventsPage(root: HTMLElement): void {
   list?.addEventListener("click", async (clickEvent) => {
     const button = (clickEvent.target as Element).closest<HTMLButtonElement>("button[data-event-id]");
     if (!button || !detail) return;
-    const event = await eventDetailsRequest(button.dataset.eventId ?? "");
+    const event = await actions.loadDetails(button.dataset.eventId ?? "", { mode: "human" });
     const heading = document.createElement("h2");
     heading.textContent = event.title;
     const text = document.createElement("p");

@@ -1,12 +1,11 @@
 import type { EventDetail } from "../../shared/contracts";
-import { eventDetailsRequest } from "../api/client";
-import { registerToolAdapter } from "../webmcp/adapter";
+import type { EventActions } from "../services/event-actions";
+import type { AppState } from "../state/app-state";
 import { createGetEventDetailsTool } from "../webmcp/tools/get-event-details";
+import type { AnyProjectTool } from "../webmcp/registry";
 
-let stateVersion = 0;
-
-function showDetail(root: HTMLElement, event: EventDetail) {
-  stateVersion += 1;
+function showDetail(root: HTMLElement, event: EventDetail, state: AppState) {
+  state.selectEvent(event.id);
   const heading = document.createElement("h1");
   heading.textContent = event.title;
   const summary = document.createElement("p");
@@ -19,15 +18,18 @@ function showDetail(root: HTMLElement, event: EventDetail) {
   root.replaceChildren(heading, summary, venue, back);
 }
 
-export async function renderEventDetailPage(root: HTMLElement, eventId: string): Promise<void> {
+export async function renderEventDetailPage(root: HTMLElement, eventId: string, actions: EventActions, state: AppState): Promise<AnyProjectTool | undefined> {
   root.textContent = "載入活動中…";
   try {
-    const event = await eventDetailsRequest(eventId);
-    showDetail(root, event);
-    const tool = createGetEventDetailsTool({ load: eventDetailsRequest, show: (detail) => showDetail(root, detail), getStateVersion: () => stateVersion });
-    const controller = await registerToolAdapter(tool);
-    if (controller) window.addEventListener("beforeunload", () => controller.abort(), { once: true });
+    const event = await actions.loadDetails(eventId, { mode: "human" });
+    showDetail(root, event, state);
+    return createGetEventDetailsTool({
+      load: (id) => actions.loadDetails(id, { mode: "agent" }),
+      show: (detail) => showDetail(root, detail, state),
+      getStateVersion: () => state.stateVersion()
+    });
   } catch {
     root.textContent = "找不到公開活動。";
+    return undefined;
   }
 }
