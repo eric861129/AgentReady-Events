@@ -6,9 +6,11 @@ import { createRegistrationsRouter } from "./routes/registrations";
 import { MemoryStore } from "./store/memory-store";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import type { FailurePolicy } from "./failure/failure-policy";
 
-export function createApp(): Express {
+export function createApp(options: { failurePolicy?: FailurePolicy } = {}): Express {
   const app = express();
+  app.locals.failurePolicy = options.failurePolicy;
   const store = new MemoryStore();
   app.disable("x-powered-by");
   app.use(express.json({ limit: "16kb" }));

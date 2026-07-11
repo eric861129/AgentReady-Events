@@ -1,0 +1,195 @@
+{
+  "date": "2026-07-12",
+  "revision": 2,
+  "baseline": "baseline.json",
+  "changeSet": [],
+  "reason": "Environment-classified pre-discovery failures provide no evidence for Tool contract changes.",
+  "summary": {
+    "passed": 0,
+    "failed": 20,
+    "environmentClassified": 20,
+    "highRiskBypasses": 0
+  },
+  "records": [
+    {
+      "id": "SEL-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "SEL-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "NO-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "NO-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "ARG-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "ARG-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "AMB-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "AMB-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "ORD-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "ORD-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "STALE-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "STALE-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "REPEAT-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "REPEAT-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "CONF-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "CONF-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "INJECT-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "INJECT-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "RECOVERY-01",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "RECOVERY-02",
+      "revision": 2,
+      "baselineRevision": 1,
+      "pass": false,
+      "classification": "environment",
+      "changeApplied": false,
+      "evidenceLevel": "E3"
+    }
+  ]
+}
