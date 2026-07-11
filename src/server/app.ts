@@ -15,5 +15,9 @@ export function createApp(): Express {
   app.use("/api/session", createSessionRouter(store));
   app.use("/api/saved-events", createSavedEventsRouter(store));
   app.use("/api/registrations", createRegistrationsRouter(store));
+  app.use((error: unknown, _request: express.Request, response: express.Response, next: express.NextFunction) => {
+    if (error instanceof SyntaxError) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "MALFORMED_JSON", message: "JSON 格式無效。" });
+    return next(error);
+  });
   return app;
 }

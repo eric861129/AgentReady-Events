@@ -34,6 +34,7 @@ export function createRegistrationsRouter(store: MemoryStore): Router {
     if (!validCsrf(session, request.get("x-csrf-token"))) return response.status(403).json({ code: "FORBIDDEN", reason: "CSRF_INVALID", message: "請重新整理後再試。" });
     if (!OPAQUE_ID.test(request.params.registrationId)) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_ID", message: "報名 ID 格式無效。" });
     if (request.body?.interactionMode !== "human" && request.body?.interactionMode !== "agent") return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_INTERACTION_MODE", message: "互動來源格式無效。" });
+    if (request.body.interactionMode !== "human") return response.status(403).json({ code: "FORBIDDEN", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "請由使用者在可見介面確認。" });
     const result = cancelRegistration(session, request.params.registrationId);
     if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "REGISTRATION_NOT_FOUND", message: "找不到可取消的報名。" });
     return response.json({ registrationId: result.registrationId, alreadyCancelled: result.alreadyCancelled });
@@ -43,6 +44,7 @@ export function createRegistrationsRouter(store: MemoryStore): Router {
     if (!validCsrf(session, request.get("x-csrf-token"))) return response.status(403).json({ code: "FORBIDDEN", reason: "CSRF_INVALID", message: "請重新整理後再試。" });
     const input = parseInput(request.body);
     if (!input) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_INPUT", message: "報名資料格式無效。" });
+    if (input.interactionMode !== "human") return response.status(403).json({ code: "FORBIDDEN", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "請由使用者在可見介面確認。" });
     const result = createRegistration(session, EVENTS, input);
     if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "EVENT_NOT_FOUND", message: "找不到公開活動。" });
     if (result.kind === "unavailable") return response.status(409).json({ code: "CONFLICT", reason: result.reason, message: "活動目前無法報名。" });
