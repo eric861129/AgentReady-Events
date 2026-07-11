@@ -19,7 +19,8 @@ if (typeof document !== "undefined") {
     const labs = [
       ["/labs/day-02-actuation/index.html", "Day 02 · Actuation Failure Lab"],
       ["/labs/day-07-semantic-form/index.html", "Day 07 · Semantic HTML Search"],
-      ["/labs/day-08-declarative-tool/index.html", "Day 08 · Declarative Tool Identity"]
+      ["/labs/day-08-declarative-tool/index.html", "Day 08 · Declarative Tool Identity"],
+      ["/labs/day-09-declarative-schema/index.html", "Day 09 · Declarative Schema"]
     ] as const;
     for (const [href, label] of labs) {
       const item = document.createElement("li");

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Day 09 Declarative Schema</title></head>
+  <body>
+    <main>
+      <p>Day 09 · Schema clinic</p>
+      <h1>瀏覽器不是通靈師</h1>
+      <form id="event-search" toolname="search_events" tooldescription="依條件搜尋目前公開活動。">
+        <label for="query">關鍵字</label><input id="query" name="query" maxlength="100" toolparamdescription="活動標題或公開摘要中的關鍵字，最多 100 字。" />
+        <label for="location">地點</label><select id="location" name="location" required toolparamdescription="活動舉辦地點；只能使用列出的公開地點代碼。"><option value="taipei">台北</option><option value="kaohsiung">高雄</option><option value="online">線上</option></select>
+        <label for="price">費用</label><select id="price" name="price" toolparamdescription="活動費用類型。"><option value="">不限</option><option value="free">免費</option><option value="paid">付費</option></select>
+        <label for="level">程度</label><select id="level" name="level" toolparamdescription="建議參加者程度。"><option value="">不限</option><option value="beginner">入門</option><option value="intermediate">中階</option><option value="advanced">進階</option></select>
+        <button type="submit">搜尋活動</button>
+      </form>
+      <h2>專案推導快照</h2>
+      <pre aria-label="專案推導的參數快照" id="snapshot"></pre>
+      <p>這是專案 deterministic snapshot，不是真實 Agent discovery。</p>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
