@@ -1,6 +1,7 @@
 import { renderEventsPage } from "./pages/events-page";
 import { renderEventDetailPage } from "./pages/event-detail-page";
 import { renderRegistrationPage } from "./pages/registration-page";
+import { renderRegistrationsPage } from "./pages/registrations-page";
 import { eventDetailsRequest, saveEventRequest, searchEventsRequest, undoSavedEventRequest } from "./api/client";
 import { createEventActions } from "./services/event-actions";
 import { AppState } from "./state/app-state";
@@ -25,6 +26,11 @@ async function render() {
   if (route.kind === "registration") {
     await registry.sync([]);
     await renderRegistrationPage(app, route.eventId);
+    return;
+  }
+  if (route.kind === "registrations") {
+    const tools = await renderRegistrationsPage(app);
+    await registry.sync(tools);
     return;
   }
   await registry.sync([]);

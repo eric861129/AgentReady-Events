@@ -58,3 +58,13 @@ export type RegistrationListItem = {
 };
 
 export type RegistrationResponse = { registration: RegistrationListItem };
+
+export type CancellationSummary = {
+  registrationId: string;
+  eventId: string;
+  eventTitle: string;
+  startsAt: string;
+  effect: string;
+};
+
+export type CancellationResponse = { registrationId: string; alreadyCancelled: boolean };

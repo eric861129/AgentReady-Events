@@ -1,4 +1,4 @@
-import type { EventDetail, InteractionMode, RegistrationInput, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
+import type { CancellationResponse, CancellationSummary, EventDetail, InteractionMode, RegistrationInput, RegistrationListItem, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
 
 export class ApiClientError extends Error {
   constructor(readonly status: number, message: string) {
@@ -50,5 +50,22 @@ export async function registrationRequest(input: RegistrationInput, context: { m
     method: "POST",
     headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
     body: JSON.stringify({ ...input, interactionMode: context.mode })
+  }));
+}
+
+export async function registrationsRequest(): Promise<RegistrationListItem[]> {
+  return (await readJson<{ registrations: RegistrationListItem[] }>(await fetch("/api/registrations"))).registrations;
+}
+
+export async function cancellationSummaryRequest(registrationId: string): Promise<CancellationSummary> {
+  return (await readJson<{ summary: CancellationSummary }>(await fetch(`/api/registrations/${encodeURIComponent(registrationId)}/cancellation-summary`))).summary;
+}
+
+export async function cancellationRequest(registrationId: string, context: { mode: InteractionMode }): Promise<CancellationResponse> {
+  const session = await sessionRequest();
+  return readJson<CancellationResponse>(await fetch(`/api/registrations/${encodeURIComponent(registrationId)}/cancel`, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
+    body: JSON.stringify({ interactionMode: context.mode })
   }));
 }

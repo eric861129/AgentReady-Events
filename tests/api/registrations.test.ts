@@ -26,3 +26,20 @@ it("creates one owned registration without persisting or returning email", async
   expect(duplicate.status).toBe(409);
   expect(duplicate.body.reason).toBe("DUPLICATE_REGISTRATION");
 });
+
+it("lists only owned registrations and cancels idempotently", async () => {
+  const app = createApp();
+  const owner = request.agent(app);
+  const stranger = request.agent(app);
+  const ownerToken = await csrf(owner);
+  const strangerToken = await csrf(stranger);
+  const created = await owner.post("/api/registrations").set("x-csrf-token", ownerToken).send({ eventId: "evt-webmcp-intro", attendeeName: "王小明", email: "reader@example.com", interactionMode: "human" });
+  const id = created.body.registration.id as string;
+  expect((await owner.get("/api/registrations")).body.registrations).toHaveLength(1);
+  expect((await stranger.get("/api/registrations")).body.registrations).toEqual([]);
+  expect((await stranger.post(`/api/registrations/${id}/cancel`).set("x-csrf-token", strangerToken).send({ interactionMode: "human" })).status).toBe(404);
+  const first = await owner.post(`/api/registrations/${id}/cancel`).set("x-csrf-token", ownerToken).send({ interactionMode: "human" });
+  expect(first.body).toMatchObject({ registrationId: id, alreadyCancelled: false });
+  const repeat = await owner.post(`/api/registrations/${id}/cancel`).set("x-csrf-token", ownerToken).send({ interactionMode: "human" });
+  expect(repeat.body.alreadyCancelled).toBe(true);
+});

@@ -3,7 +3,7 @@ import { EVENTS } from "../../shared/fixtures";
 import type { RegistrationInput } from "../../shared/contracts";
 import { OPAQUE_ID } from "../../shared/validation";
 import { ensureSession, validCsrf } from "../session/demo-session";
-import { createRegistration } from "../services/registrations";
+import { cancelRegistration, cancellationSummary, createRegistration, listRegistrations } from "../services/registrations";
 import type { MemoryStore } from "../store/memory-store";
 
 function parseInput(body: unknown): (RegistrationInput & { interactionMode: "human" | "agent" }) | undefined {
@@ -18,6 +18,26 @@ function parseInput(body: unknown): (RegistrationInput & { interactionMode: "hum
 
 export function createRegistrationsRouter(store: MemoryStore): Router {
   const router = Router();
+  router.get("/", (request, response) => {
+    const session = ensureSession(request, response, store);
+    response.json({ registrations: listRegistrations(session) });
+  });
+  router.get("/:registrationId/cancellation-summary", (request, response) => {
+    const session = ensureSession(request, response, store);
+    if (!OPAQUE_ID.test(request.params.registrationId)) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_ID", message: "報名 ID 格式無效。" });
+    const summary = cancellationSummary(session, request.params.registrationId);
+    if (!summary) return response.status(404).json({ code: "NOT_FOUND", reason: "REGISTRATION_NOT_FOUND", message: "找不到可取消的報名。" });
+    return response.json({ summary });
+  });
+  router.post("/:registrationId/cancel", (request, response) => {
+    const session = ensureSession(request, response, store);
+    if (!validCsrf(session, request.get("x-csrf-token"))) return response.status(403).json({ code: "FORBIDDEN", reason: "CSRF_INVALID", message: "請重新整理後再試。" });
+    if (!OPAQUE_ID.test(request.params.registrationId)) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_ID", message: "報名 ID 格式無效。" });
+    if (request.body?.interactionMode !== "human" && request.body?.interactionMode !== "agent") return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_INTERACTION_MODE", message: "互動來源格式無效。" });
+    const result = cancelRegistration(session, request.params.registrationId);
+    if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "REGISTRATION_NOT_FOUND", message: "找不到可取消的報名。" });
+    return response.json({ registrationId: result.registrationId, alreadyCancelled: result.alreadyCancelled });
+  });
   router.post("/", (request, response) => {
     const session = ensureSession(request, response, store);
     if (!validCsrf(session, request.get("x-csrf-token"))) return response.status(403).json({ code: "FORBIDDEN", reason: "CSRF_INVALID", message: "請重新整理後再試。" });
