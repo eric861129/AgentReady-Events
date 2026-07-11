@@ -21,7 +21,8 @@ if (typeof document !== "undefined") {
       ["/labs/day-07-semantic-form/index.html", "Day 07 · Semantic HTML Search"],
       ["/labs/day-08-declarative-tool/index.html", "Day 08 · Declarative Tool Identity"],
       ["/labs/day-09-declarative-schema/index.html", "Day 09 · Declarative Schema"],
-      ["/labs/day-10-imperative-tool/index.html", "Day 10 · Imperative Tool"]
+      ["/labs/day-10-imperative-tool/index.html", "Day 10 · Imperative Tool"],
+      ["/labs/day-11-tool-lifecycle/index.html", "Day 11 · Tool Lifecycle"]
     ] as const;
     for (const [href, label] of labs) {
       const item = document.createElement("li");

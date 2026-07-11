@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Day 11 Tool Lifecycle</title></head>
+  <body>
+    <main>
+      <p>Day 11 · Lifecycle instrumentation</p>
+      <h1>知道何時離場的 Tool</h1>
+      <nav><a href="?route=list" data-route="list">List route</a> · <a href="?route=about" data-route="about">About route</a></nav>
+      <h2 id="route-title"></h2>
+      <p id="active" role="status"></p>
+      <p id="calls"></p>
+      <p>這是 deterministic instrumentation，不是真實 Agent discovery。</p>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
