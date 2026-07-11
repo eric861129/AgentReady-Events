@@ -1,6 +1,10 @@
+import { renderEventsPage } from "./pages/events-page";
+
 const app = document.querySelector<HTMLElement>("#app");
 
-if (app) {
+if (app && location.pathname === "/events") {
+  renderEventsPage(app);
+} else if (app) {
   const heading = document.createElement("h1");
   heading.textContent = "AgentReady Events";
   const note = document.createElement("p");
