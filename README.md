@@ -1,5 +1,7 @@
 # AgentReady Events v3
 
+The Day 22 feature-frozen reference product teaches WebMCP through five deliberately small Tools and three verifiable human–Agent Journeys. See [FEATURE_FREEZE.md](FEATURE_FREEZE.md) for the immutable boundary; Day 23–29 focus on proving, securing, packaging, and evaluating this product rather than adding features.
+
 這是「網站不只給人用：30 天打造 Agent-ready 的 WebMCP 網站」的可執行程式庫。
 
 ## 五部分
