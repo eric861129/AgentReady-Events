@@ -1,8 +1,15 @@
 import type { EventDetail, SearchEventsQuery, SearchEventsResponse } from "../../shared/contracts";
 
+export class ApiClientError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message);
+    this.name = "ApiClientError";
+  }
+}
+
 async function readJson<T>(response: Response): Promise<T> {
   const body = await response.json();
-  if (!response.ok) throw new Error(typeof body?.message === "string" ? body.message : "服務暫時無法使用。");
+  if (!response.ok) throw new ApiClientError(response.status, typeof body?.message === "string" ? body.message : "服務暫時無法使用。");
   return body as T;
 }
 

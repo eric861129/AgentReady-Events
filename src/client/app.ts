@@ -1,8 +1,13 @@
 import { renderEventsPage } from "./pages/events-page";
+import { renderEventDetailPage } from "./pages/event-detail-page";
 
 const app = document.querySelector<HTMLElement>("#app");
 
-if (app && location.pathname === "/events") {
+const detailMatch = /^\/events\/([a-z0-9_-]+)$/.exec(location.pathname);
+
+if (app && detailMatch?.[1]) {
+  void renderEventDetailPage(app, detailMatch[1]);
+} else if (app && location.pathname === "/events") {
   renderEventsPage(app);
 } else if (app) {
   const heading = document.createElement("h1");
