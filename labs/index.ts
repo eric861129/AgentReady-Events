@@ -16,12 +16,18 @@ if (typeof document !== "undefined") {
     const note = document.createElement("p");
     note.textContent = "Day 1–12 使用獨立 Labs；正式 AgentReady Events 從 Day 13 開始。";
     const list = document.createElement("ul");
-    const item = document.createElement("li");
-    const link = document.createElement("a");
-    link.href = "/labs/day-02-actuation/index.html";
-    link.textContent = "Day 02 · Actuation Failure Lab";
-    item.append(link);
-    list.append(item);
+    const labs = [
+      ["/labs/day-02-actuation/index.html", "Day 02 · Actuation Failure Lab"],
+      ["/labs/day-07-semantic-form/index.html", "Day 07 · Semantic HTML Search"]
+    ] as const;
+    for (const [href, label] of labs) {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = href;
+      link.textContent = label;
+      item.append(link);
+      list.append(item);
+    }
     app.replaceChildren(title, note, list);
   }
 }
