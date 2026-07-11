@@ -38,3 +38,6 @@ export type EventDetail = EventSummary & {
 };
 
 export type SearchEventsResponse = { events: EventSummary[] };
+
+export type SessionSummary = { csrfToken: string };
+export type SaveEventResponse = { eventId: string; alreadySaved: boolean };

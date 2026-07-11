@@ -1,6 +1,6 @@
 import { renderEventsPage } from "./pages/events-page";
 import { renderEventDetailPage } from "./pages/event-detail-page";
-import { eventDetailsRequest, searchEventsRequest } from "./api/client";
+import { eventDetailsRequest, saveEventRequest, searchEventsRequest, undoSavedEventRequest } from "./api/client";
 import { createEventActions } from "./services/event-actions";
 import { AppState } from "./state/app-state";
 import { registerToolAdapter } from "./webmcp/adapter";
@@ -9,7 +9,7 @@ import { parseRoute } from "./router";
 
 const app = document.querySelector<HTMLElement>("#app");
 
-const actions = createEventActions({ search: searchEventsRequest, loadDetails: eventDetailsRequest });
+const actions = createEventActions({ search: searchEventsRequest, loadDetails: eventDetailsRequest, save: saveEventRequest, undoSave: undoSavedEventRequest });
 const state = new AppState();
 const registry = new WebMcpRegistry(registerToolAdapter);
 
@@ -17,8 +17,8 @@ async function render() {
   if (!app) return;
   const route = parseRoute(location.pathname);
   if (route.kind === "event-detail") {
-    const tool = await renderEventDetailPage(app, route.eventId, actions, state);
-    await registry.sync(tool ? [tool] : []);
+    const tools = await renderEventDetailPage(app, route.eventId, actions, state);
+    await registry.sync(tools);
     return;
   }
   await registry.sync([]);
