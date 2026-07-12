@@ -1,0 +1,41 @@
+{
+  "commit": "c349a32372d0ca787c1f37976b76dc90dc7c24b1",
+  "imageRef": "agentready-events:azure-candidate",
+  "imageId": "sha256:9d8f697cd2bd36c3adce9e0597b152f98a0046a3e712b87d68c211e39e8c3f6b",
+  "platform": "linux/amd64",
+  "containerName": "agentready-events-smoke-c349a32372d0",
+  "port": 43130,
+  "startedAt": "2026-07-12T02:33:44.075Z",
+  "completedAt": "2026-07-12T02:34:05.058Z",
+  "checks": [
+    {
+      "path": "/health/live",
+      "status": 200,
+      "contains": "\"status\":\"ok\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events/evt-webmcp-intro",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/does-not-exist",
+      "status": 404,
+      "contains": "API_ROUTE_NOT_FOUND",
+      "actualStatus": 404,
+      "passed": true
+    }
+  ],
+  "success": true
+}
