@@ -3,5 +3,5 @@ dist/
 server-dist/
 playwright-report/
 test-results/
+.playwright-cli/
 .DS_Store
-
