@@ -8,7 +8,7 @@ export type RegistrationServiceResult =
   | { kind: "unavailable"; reason: "EVENT_NOT_OPEN" }
   | { kind: "duplicate" };
 
-export function createRegistration(session: DemoSession, events: EventDetail[], input: RegistrationInput): RegistrationServiceResult {
+export function createRegistration(session: DemoSession, events: readonly EventDetail[], input: RegistrationInput): RegistrationServiceResult {
   const event = events.find((candidate) => candidate.id === input.eventId);
   if (!event) return { kind: "not-found" };
   if (event.state !== "open" || event.remainingCapacity < 1) return { kind: "unavailable", reason: "EVENT_NOT_OPEN" };

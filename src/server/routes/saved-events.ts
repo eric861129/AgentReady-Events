@@ -4,8 +4,9 @@ import { OPAQUE_ID } from "../../shared/validation";
 import { ensureSession, validCsrf } from "../session/demo-session";
 import { removeSavedEvent, saveEvent } from "../services/saved-events";
 import type { MemoryStore } from "../store/memory-store";
+import type { EventDetail } from "../../shared/contracts";
 
-export function createSavedEventsRouter(store: MemoryStore): Router {
+export function createSavedEventsRouter(store: MemoryStore, events: readonly EventDetail[] = EVENTS): Router {
   const router = Router();
   router.get("/", (request, response) => {
     const session = ensureSession(request, response, store);
@@ -17,7 +18,7 @@ export function createSavedEventsRouter(store: MemoryStore): Router {
     const eventId = typeof request.body?.eventId === "string" ? request.body.eventId : "";
     const mode = request.body?.interactionMode;
     if (!OPAQUE_ID.test(eventId) || (mode !== "human" && mode !== "agent")) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_SAVE_INPUT", message: "收藏資料格式無效。" });
-    const result = saveEvent(session, EVENTS, eventId);
+    const result = saveEvent(session, events, eventId);
     if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "EVENT_NOT_FOUND", message: "找不到公開活動。" });
     return response.json({ eventId: result.eventId, alreadySaved: result.alreadySaved });
   });

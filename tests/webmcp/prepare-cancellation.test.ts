@@ -19,4 +19,10 @@ it("maps not found and temporary errors", async () => {
   await expect(notFound.execute({ registration_id: "reg-missing" })).resolves.toMatchObject({ code: "NOT_FOUND", retryable: false });
   const temporary = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new Error("private")) });
   await expect(temporary.execute({ registration_id: "reg-1" })).resolves.toMatchObject({ code: "TEMPORARY_FAILURE", retryable: true });
+  const expired = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new ApiClientError(401, "expired")) });
+  await expect(expired.execute({ registration_id: "reg-1" })).resolves.toMatchObject({
+    code: "AUTHENTICATION_REQUIRED",
+    reason: "SESSION_EXPIRED",
+    retryable: false
+  });
 });

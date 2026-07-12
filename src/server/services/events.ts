@@ -5,7 +5,7 @@ function toSummary(event: EventDetail): EventSummary {
   return { id, title, summary, startsAt, location, price, level };
 }
 
-export function searchEvents(events: EventDetail[], query: SearchEventsQuery): EventSummary[] {
+export function searchEvents(events: readonly EventDetail[], query: SearchEventsQuery): EventSummary[] {
   const keyword = query.query?.toLocaleLowerCase("zh-Hant") ?? "";
   return events.filter((event) => {
     if (keyword && !`${event.title} ${event.summary}`.toLocaleLowerCase("zh-Hant").includes(keyword)) return false;
@@ -16,6 +16,6 @@ export function searchEvents(events: EventDetail[], query: SearchEventsQuery): E
   }).map(toSummary);
 }
 
-export function findPublicEvent(events: EventDetail[], id: string): EventDetail | undefined {
+export function findPublicEvent(events: readonly EventDetail[], id: string): EventDetail | undefined {
   return events.find((event) => event.id === id);
 }

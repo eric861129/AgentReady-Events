@@ -1,6 +1,7 @@
 import { createApp } from "./app";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseEvalLab } from "./eval/eval-lab";
 
 export const PRODUCTION_HOST = "0.0.0.0";
 
@@ -15,7 +16,10 @@ export function resolvePort(value: string | undefined): number {
 export function startServer() {
   const port = resolvePort(process.env.PORT);
   const originTrialToken = process.env.WEBMCP_ORIGIN_TRIAL_TOKEN;
-  const app = createApp(originTrialToken === undefined ? {} : { originTrialToken });
+  const evalLab = parseEvalLab(process.env.EVAL_LAB);
+  const app = createApp(
+    originTrialToken === undefined ? { evalLab } : { evalLab, originTrialToken }
+  );
   return app.listen(port, PRODUCTION_HOST, () => console.log(`AgentReady Events listening on http://${PRODUCTION_HOST}:${port}`));
 }
 
