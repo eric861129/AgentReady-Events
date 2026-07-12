@@ -17,7 +17,7 @@ it("defines a scale-to-zero HTTPS-only Container Apps production boundary", () =
   expect(module).toContain("external: true");
   expect(module).toContain("targetPort: 3000");
   expect(module).toContain("activeRevisionsMode: 'Single'");
-  expect(main).toContain("destination: 'none'");
+  expect(main).not.toContain("appLogsConfiguration");
 
   for (const forbidden of [
     "Microsoft.ContainerRegistry",

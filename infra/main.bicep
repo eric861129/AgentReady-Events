@@ -19,11 +19,7 @@ resource environment 'Microsoft.App/managedEnvironments@2024-03-01' = {
     project: 'agentready-events'
     costCenter: 'ithome-2026'
   }
-  properties: {
-    appLogsConfiguration: {
-      destination: 'none'
-    }
-  }
+  properties: {}
 }
 
 module production 'modules/container-app.bicep' = {
