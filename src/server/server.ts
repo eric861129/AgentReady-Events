@@ -14,7 +14,9 @@ export function resolvePort(value: string | undefined): number {
 
 export function startServer() {
   const port = resolvePort(process.env.PORT);
-  return createApp().listen(port, PRODUCTION_HOST, () => console.log(`AgentReady Events listening on http://${PRODUCTION_HOST}:${port}`));
+  const originTrialToken = process.env.WEBMCP_ORIGIN_TRIAL_TOKEN;
+  const app = createApp(originTrialToken === undefined ? {} : { originTrialToken });
+  return app.listen(port, PRODUCTION_HOST, () => console.log(`AgentReady Events listening on http://${PRODUCTION_HOST}:${port}`));
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) startServer();

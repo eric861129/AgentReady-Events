@@ -7,12 +7,22 @@ import { MemoryStore } from "./store/memory-store";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import type { FailurePolicy } from "./failure/failure-policy";
+import { originTrialHeader } from "./security/origin-trial";
 
-export function createApp(options: { failurePolicy?: FailurePolicy } = {}): Express {
+export function createApp(
+  options: { failurePolicy?: FailurePolicy; originTrialToken?: string } = {}
+): Express {
   const app = express();
   app.locals.failurePolicy = options.failurePolicy;
   const store = new MemoryStore();
   app.disable("x-powered-by");
+  const trialToken = originTrialHeader(options.originTrialToken);
+  if (trialToken) {
+    app.use((_request, response, next) => {
+      response.setHeader("Origin-Trial", trialToken);
+      next();
+    });
+  }
   app.use(express.json({ limit: "16kb" }));
   app.get("/health/live", (_request, response) => response.json({ status: "ok" }));
   app.use("/api/events", createEventsRouter());
