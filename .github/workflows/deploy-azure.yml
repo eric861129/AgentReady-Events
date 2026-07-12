@@ -151,7 +151,7 @@ jobs:
       - name: Compile Bicep and run restricted what-if
         shell: bash
         env:
-          ORIGIN_TRIAL_TOKEN: ${{ secrets.ORIGIN_TRIAL_TOKEN }}
+          ORIGIN_TRIAL_TOKEN: ${{ secrets.WEBMCP_ORIGIN_TRIAL_TOKEN }}
         run: |
           test -n "$ORIGIN_TRIAL_TOKEN"
           az bicep build --file infra/main.bicep --outfile "$RUNNER_TEMP/main.json"
@@ -183,7 +183,7 @@ jobs:
         id: deploy
         shell: bash
         env:
-          ORIGIN_TRIAL_TOKEN: ${{ secrets.ORIGIN_TRIAL_TOKEN }}
+          ORIGIN_TRIAL_TOKEN: ${{ secrets.WEBMCP_ORIGIN_TRIAL_TOKEN }}
         run: |
           SHA="${{ needs.build.outputs.sha }}"
           DEPLOYMENT_NAME="agentready-events-${SHA:0:12}"
