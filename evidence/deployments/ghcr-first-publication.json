@@ -1,0 +1,10 @@
+{
+  "status": "package-created-private",
+  "firstSuccessfulRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29177434486",
+  "latestSuccessfulRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29178265729",
+  "image": "ghcr.io/eric861129/agentready-events",
+  "latestDigest": "sha256:66dc9110763750df093e2d45f06df7025fcf6229706cd59b7f6c81428dc6c2c3",
+  "sourceRepositoryVisibility": "private",
+  "packageVisibility": "private",
+  "anonymousPull": false
+}

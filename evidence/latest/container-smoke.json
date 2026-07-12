@@ -1,12 +1,12 @@
 {
-  "commit": "018deb730d452e57fe350e45725579d0dc61f86a",
-  "imageRef": "agentready-events:azure-candidate",
-  "imageId": "sha256:eddf1370abf575d0ac95be32bafb63fa9e96fbfa8531c57091fa6b1565ac6655",
+  "commit": "50488e61ed255dc7077c3a868f422665b4b9c98a",
+  "imageRef": "agentready-events:eval-candidate",
+  "imageId": "sha256:73e53247c35c7005fdfb128a2c997b4cb7cd93dd2e17ada353e5043d53dacb2b",
   "platform": "linux/amd64",
-  "containerName": "agentready-events-smoke-018deb730d45",
+  "containerName": "agentready-events-smoke-50488e61ed25",
   "port": 43130,
-  "startedAt": "2026-07-12T02:46:52.111Z",
-  "completedAt": "2026-07-12T02:47:11.196Z",
+  "startedAt": "2026-07-12T03:26:59.501Z",
+  "completedAt": "2026-07-12T03:27:18.256Z",
   "checks": [
     {
       "path": "/health/live",

@@ -1,0 +1,11 @@
+{
+  "status": "published-private-awaiting-visibility-change",
+  "commit": "50488e61ed255dc7077c3a868f422665b4b9c98a",
+  "tag": "ghcr.io/eric861129/agentready-events:50488e61ed255dc7077c3a868f422665b4b9c98a",
+  "digest": "sha256:66dc9110763750df093e2d45f06df7025fcf6229706cd59b7f6c81428dc6c2c3",
+  "workflowRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29178265729",
+  "localContainerSmoke": true,
+  "githubRunnerContainerSmoke": true,
+  "anonymousPull": false,
+  "productionDeployed": false
+}
