@@ -19,6 +19,7 @@
     "build": "npm run typecheck && npm run build:client && npm run build:server",
     "start": "node server-dist/server.js",
     "smoke:container": "tsx scripts/smoke-container.ts",
+    "smoke:azure": "tsx scripts/smoke-azure.ts",
     "smoke:deployment": "tsx scripts/smoke-deployment.ts",
     "evals:validate": "tsx scripts/validate-evals.ts",
     "evidence:collect": "tsx scripts/collect-evidence.ts",

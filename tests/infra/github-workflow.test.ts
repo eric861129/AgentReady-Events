@@ -26,6 +26,7 @@ it("verifies and publishes a commit-addressed Linux image", () => {
   expect(workflow).toContain("npm run verify");
   expect(workflow).toContain("npm run evals:validate");
   expect(workflow).toContain("npx playwright install --with-deps chromium");
+  expect(workflow.match(/npx playwright install --with-deps chromium/g)).toHaveLength(2);
   expect(workflow).toContain("npm run smoke:container");
   expect(workflow).toContain("s.bind(('127.0.0.1', 0))");
   expect(workflow).toContain('--port "$SMOKE_PORT"');
@@ -38,6 +39,7 @@ it("deploys only a verified digest through the production environment", () => {
   expect(workflow).toContain("environment: production");
   expect(workflow).toContain("if: ${{ inputs.deploy }}");
   expect(workflow).toContain("azure/login@v2");
+  expect(workflow).toContain("az extension add --name containerapp --upgrade");
   expect(workflow).toContain("image_ref=$IMAGE_NAME@$DIGEST");
   expect(workflow).toContain("az deployment group what-if");
   expect(workflow).toContain("az deployment group create");

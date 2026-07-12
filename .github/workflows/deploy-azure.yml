@@ -124,6 +124,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Azure Container Apps CLI
+        run: az extension add --name containerapp --upgrade
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
