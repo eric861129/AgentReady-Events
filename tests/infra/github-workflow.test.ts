@@ -44,6 +44,9 @@ it("deploys only a verified digest through the production environment", () => {
   expect(workflow).toContain("az deployment group what-if");
   expect(workflow).toContain("az deployment group create");
   expect(workflow).toContain("npm run smoke:azure");
+  expect(workflow).toContain("ORIGIN_TRIAL_TOKEN: ${{ secrets.ORIGIN_TRIAL_TOKEN }}");
+  expect(workflow.match(/originTrialToken="\$ORIGIN_TRIAL_TOKEN"/g)).toHaveLength(2);
+  expect(workflow).toContain('test -n "$ORIGIN_TRIAL_TOKEN"');
   expect(workflow).not.toMatch(/AZURE_CLIENT_SECRET|client-secret/i);
   expect(workflow).toContain("password: ${{ secrets.GITHUB_TOKEN }}");
   expect(workflow).not.toContain(":latest");
