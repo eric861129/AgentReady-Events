@@ -1,0 +1,8 @@
+{
+  "status": "dry-run-validated",
+  "runAt": "2026-07-12T03:10:46Z",
+  "resourceGroup": "rg-agentready-events-prod",
+  "containerApp": "ca-agentready-events",
+  "imageRef": "ghcr.io/eric861129/agentready-events@sha256:c12a9f5f41ce3a3d92e8da3912773f246ba9d69a3a81ff5e5ca76983c43f70fe",
+  "productionChanged": false
+}
