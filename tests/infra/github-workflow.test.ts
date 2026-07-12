@@ -25,6 +25,7 @@ it("verifies and publishes a commit-addressed Linux image", () => {
   }
   expect(workflow).toContain("npm run verify");
   expect(workflow).toContain("npm run evals:validate");
+  expect(workflow).toContain("npx playwright install --with-deps chromium");
   expect(workflow).toContain("npm run smoke:container");
   expect(workflow).toContain("IMAGE_NAME: ghcr.io/eric861129/agentready-events");
   expect(workflow).toContain('echo "tag=$IMAGE_NAME:$SHA"');
