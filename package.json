@@ -22,6 +22,7 @@
     "smoke:azure": "tsx scripts/smoke-azure.ts",
     "smoke:deployment": "tsx scripts/smoke-deployment.ts",
     "evals:validate": "tsx scripts/validate-evals.ts",
+    "evals:runtime:validate": "tsx scripts/evals/validate-runtime-result.ts",
     "evidence:collect": "tsx scripts/collect-evidence.ts",
     "evidence:deployment": "tsx scripts/write-deployment-evidence.ts",
     "verify": "tsx scripts/verify.ts"

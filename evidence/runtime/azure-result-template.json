@@ -1,0 +1,13 @@
+{
+  "caseId": "CASE-ID",
+  "datasetHash": "<sha256>",
+  "imageDigest": "sha256:<64-lowercase-hex>",
+  "fqdn": "<azure-container-apps-fqdn>",
+  "codexTask": { "id": "<codex-task-id>", "clean": false },
+  "browser": { "name": "Chrome", "version": "<version>", "secureContext": true },
+  "setup": { "kind": "none", "completed": true, "agentInvocationCount": 0 },
+  "evidenceLevel": "E3",
+  "discoveredTools": [],
+  "invocations": [],
+  "outcome": { "status": "environment-failure", "cause": "<classified-cause>" }
+}
