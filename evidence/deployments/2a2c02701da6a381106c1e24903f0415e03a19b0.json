@@ -1,0 +1,12 @@
+{
+  "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "imageRef": "ghcr.io/eric861129/agentready-events@sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+  "fqdn": "ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "revision": "ca-agentready-events--0000002",
+  "region": "eastasia",
+  "workflowRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29179363328",
+  "anonymousGhcrInspect": true,
+  "originTrialHeaderPresent": true,
+  "productionSmoke": true
+}

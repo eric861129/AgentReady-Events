@@ -1,8 +1,13 @@
 {
   "date": "2026-07-12",
-  "mode": "local-production-candidate",
+  "mode": "azure-container-apps-production",
   "nodeSmoke": { "status": "passed", "commands": ["npm run build", "npm run smoke:deployment"] },
-  "dockerSmoke": { "status": "not-run", "classification": "environment", "reason": "Docker CLI could not connect to unix:///var/run/docker.sock because the daemon was unavailable." },
-  "publicUrl": null,
-  "publicDeployment": "pending-author-host-selection-and-authorization"
+  "dockerSmoke": { "status": "passed", "platform": "linux/amd64", "runtime": "Docker 29.5.2 via Colima" },
+  "publicUrl": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "publicDeployment": "passed",
+  "region": "eastasia",
+  "revision": "ca-agentready-events--0000002",
+  "digest": "sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+  "originTrialHeaderPresent": true,
+  "workflowRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29179363328"
 }

@@ -1,0 +1,27 @@
+{
+  "caseId": "NO-01",
+  "datasetHash": "8710f26406a64daa59a1d49a8002f11bafac02eef764046b229f77ced6872e76",
+  "imageDigest": "sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+  "fqdn": "ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "codexTask": {
+    "id": "codex-goal-azure-inline",
+    "clean": false
+  },
+  "browser": {
+    "name": "Google Chrome",
+    "version": "150.0.7871.115",
+    "secureContext": true
+  },
+  "setup": {
+    "kind": "none",
+    "completed": true,
+    "agentInvocationCount": 0
+  },
+  "evidenceLevel": "ENVIRONMENT_FAILURE",
+  "discoveredTools": [],
+  "invocations": [],
+  "outcome": {
+    "status": "environment-failure",
+    "cause": "document.modelContext unavailable in Chrome 150 after HTTPS and Origin Trial header preflight"
+  }
+}
