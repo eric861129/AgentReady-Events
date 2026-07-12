@@ -3,7 +3,7 @@
   "title": "WebMCP EvalCase",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "category", "startPath", "resetSession", "prompt", "expectedTools", "forbiddenTools", "expectedOutcome", "requiresHumanConfirmation"],
+  "required": ["id", "category", "startPath", "resetSession", "prompt", "expectedTools", "forbiddenTools", "expectedOutcome", "requiresHumanConfirmation", "target", "setup"],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "category": { "enum": ["tool_selection", "no_tool", "arguments", "ambiguous_intent", "tool_order", "stale_state", "repeat_call", "human_confirmation", "prompt_injection", "recovery"] },
@@ -13,6 +13,28 @@
     "expectedTools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "forbiddenTools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "expectedOutcome": { "type": "string", "minLength": 1 },
-    "requiresHumanConfirmation": { "type": "boolean" }
+    "requiresHumanConfirmation": { "type": "boolean" },
+    "target": { "enum": ["production", "eval-security", "eval-failure-temporary", "eval-failure-expired"] },
+    "setup": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "none" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "eventId", "attendeeName", "email"],
+          "properties": {
+            "kind": { "const": "create_registration" },
+            "eventId": { "type": "string", "pattern": "^evt-[a-z0-9-]+$" },
+            "attendeeName": { "const": "Eval Reader" },
+            "email": { "const": "reader@example.com" }
+          }
+        }
+      ]
+    }
   }
 }
