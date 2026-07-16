@@ -3,6 +3,23 @@ import { recordActivity } from "../ui/activity-timeline";
 
 export type ActionContext = { mode: "human" | "agent" };
 
+export type SearchActionFailure = {
+  ok: false;
+  code: "INVALID_INPUT" | "TEMPORARY_FAILURE";
+  message: string;
+  retryable: boolean;
+};
+
+export type SearchActionResult = {
+  count: number;
+  events: SearchEventsResponse["events"];
+} | SearchActionFailure;
+
+function statusFrom(error: unknown): number | undefined {
+  if (!error || typeof error !== "object" || !("status" in error)) return undefined;
+  return typeof error.status === "number" ? error.status : undefined;
+}
+
 export function createEventActions(dependencies: {
   search(query: SearchEventsQuery): Promise<SearchEventsResponse>;
   loadDetails(eventId: string): Promise<EventDetail>;
@@ -11,9 +28,18 @@ export function createEventActions(dependencies: {
 }) {
   return {
     async search(query: SearchEventsQuery, context: ActionContext) {
-      const result = await dependencies.search(query);
-      recordActivity("search_events", context.mode, "SUCCESS");
-      return result;
+      try {
+        const result = await dependencies.search(query);
+        recordActivity("search_events", context.mode, "SUCCESS");
+        return { count: result.events.length, events: result.events } satisfies SearchActionResult;
+      } catch (error) {
+        const invalidInput = statusFrom(error) === 400;
+        const failure: SearchActionFailure = invalidInput
+          ? { ok: false, code: "INVALID_INPUT", message: "搜尋條件格式無效，請檢查欄位值。", retryable: false }
+          : { ok: false, code: "TEMPORARY_FAILURE", message: "活動搜尋暫時無法完成，請稍後再試。", retryable: true };
+        recordActivity("search_events", context.mode, failure.code);
+        return failure;
+      }
     },
     async loadDetails(eventId: string, context: ActionContext) {
       const result = await dependencies.loadDetails(eventId);
