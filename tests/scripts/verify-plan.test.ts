@@ -35,6 +35,7 @@ it("classifies verification as a test harness instead of real Agent invocation",
 
 it("runs deterministic checks in the approved order", () => {
   expect(VERIFY_COMMANDS).toEqual([
+    ["npm", ["run", "lint"]],
     ["npm", ["run", "typecheck"]],
     ["npm", ["run", "test"]],
     ["npm", ["run", "test:api"]],

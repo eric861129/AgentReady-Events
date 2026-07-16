@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const VERIFY_COMMANDS: ReadonlyArray<readonly [string, readonly string[]]> = [
+  ["npm", ["run", "lint"]],
   ["npm", ["run", "typecheck"]],
   ["npm", ["run", "test"]],
   ["npm", ["run", "test:api"]],

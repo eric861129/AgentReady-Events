@@ -8,11 +8,30 @@ test("Journey A: search → details → save keeps one opaque event ID", async (
   await expect(page).toHaveURL(/\/events\/evt-webmcp-intro$/);
   await page.getByRole("button", { name: "收藏活動" }).click();
   await expect(page.getByRole("status")).toContainText("已收藏");
+  await page.getByRole("button", { name: "收藏活動" }).click();
+  await expect(page.getByRole("status")).toContainText("沒有重複新增");
   const timeline = page.getByRole("list", { name: "操作紀錄" });
   await expect(timeline).toContainText("search_events");
   await expect(timeline).toContainText("get_event_details");
   await expect(timeline).toContainText("save_event");
   await expect(timeline).toContainText("evt-webmcp-intro");
+});
+
+test("Tool execution failure is visible in the minimized activity timeline", async ({ page }) => {
+  await page.route("**/api/events?**", async (route) => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ message: "private upstream" })
+  }));
+  await page.goto("/events");
+  await page.evaluate(async () => {
+    const event = new Event("submit", { bubbles: true, cancelable: true });
+    Object.defineProperties(event, { agentInvoked: { value: true }, respondWith: { value: () => undefined } });
+    document.querySelector("form")!.dispatchEvent(event);
+  });
+  const timeline = page.getByRole("list", { name: "操作紀錄" });
+  await expect(timeline).toContainText("agent · search_events · TEMPORARY_FAILURE");
+  await expect(timeline).not.toContainText("private upstream");
 });
 
 test("Journey B: prepare registration → zero POST → human submit", async ({ page }) => {
