@@ -17,3 +17,15 @@ describe("Day 1 reader entry", () => {
     expect(readme).toContain("npm run build");
   });
 });
+
+describe("Day 2 reader entry", () => {
+  it("continues from day-01 and documents the focused Playwright replay", () => {
+    expect(readme).toContain("https://github.com/eric861129/AgentReady-Events/tree/day-02");
+    expect(readme).toContain("https://github.com/eric861129/AgentReady-Events/archive/refs/heads/day-02.zip");
+    expect(readme).toContain("git switch day-02");
+    expect(readme).toContain("tests/browser/day-02-actuation.spec.ts");
+    expect(readme).toContain("--headed");
+    expect(readme).toContain("Timeout 500ms exceeded");
+    expect(readme).toContain("E2 synthetic");
+  });
+});

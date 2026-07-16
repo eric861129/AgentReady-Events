@@ -77,6 +77,11 @@ if (typeof document !== "undefined") {
     seriesNote.className = "series-note";
     seriesNote.textContent = `${SERIES_TITLE}｜Day 1–12 使用隔離 Lab，正式產品從 Day 13 開始。`;
 
-    app.replaceChildren(eyebrow, title, introduction, boundary, roadmap, seriesNote);
+    const dayTwoLink = document.createElement("a");
+    dayTwoLink.className = "day-link";
+    dayTwoLink.href = "/labs/day-02-actuation/index.html";
+    dayTwoLink.textContent = "進入 Day 2 Actuation Failure Lab";
+
+    app.replaceChildren(eyebrow, title, introduction, boundary, roadmap, dayTwoLink, seriesNote);
   }
 }

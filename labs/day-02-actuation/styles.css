@@ -1,0 +1,51 @@
+:root {
+  color: #172033;
+  background: #f2f4f8;
+  font-family: Inter, "Noto Sans TC", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+main {
+  width: min(48rem, calc(100% - 2rem));
+  margin: 3rem auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: #fff;
+  border: 1px solid #dfe3eb;
+  border-radius: 1.25rem;
+  box-shadow: 0 1.25rem 4rem rgb(31 46 77 / 12%);
+}
+
+h1 { margin: .35rem 0 1rem; font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1.1; }
+h2 { margin-top: 0; font-size: 1.1rem; }
+.eyebrow { margin: 0; color: #5146c7; font-weight: 750; letter-spacing: .04em; }
+.introduction { max-width: 42rem; color: #4a5568; line-height: 1.8; }
+
+.variant,
+.boundary {
+  display: grid;
+  gap: .3rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.15rem;
+  border-radius: .8rem;
+  background: #f6f5ff;
+}
+
+form { display: grid; gap: .7rem; }
+label { font-weight: 700; }
+input,
+button { padding: .85rem 1rem; font: inherit; }
+input { border: 1px solid #b8c0ce; border-radius: .65rem; }
+button { border: 0; border-radius: .65rem; color: #fff; background: #5146c7; cursor: pointer; }
+button:hover { background: #3f35a8; }
+.action-shell { padding: .45rem; border: 2px dashed #dd694f; border-radius: .85rem; background: #fff3ed; }
+.action-shell button { width: 100%; }
+#status { min-height: 1.5rem; font-weight: 700; }
+#results { padding-left: 1.4rem; }
+.boundary { margin-bottom: 0; background: #f7f8fa; }
+.boundary p { margin: 0; line-height: 1.7; }
+
+@media (max-width: 40rem) {
+  main { margin: 1rem auto; }
+}

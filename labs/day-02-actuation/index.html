@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="以 Playwright 重播按鈕文案與 DOM 改動造成的 Locator 失敗。"
+    />
+    <title>Day 2 Actuation Failure Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Day 2 · Actuation Failure Lab</p>
+      <h1>按鈕只改四個字，誰迷路了？</h1>
+      <p class="introduction">
+        兩個版本執行同一個搜尋。用網址的 <code>variant</code> 切換畫面，再用 Playwright 重播舊 Locator。
+      </p>
+
+      <aside class="variant" aria-label="目前介面版本">
+        <strong id="variant-name">原始介面</strong>
+        <span id="variant-detail">按鈕名稱：搜尋活動</span>
+      </aside>
+
+      <form
+        id="search-form"
+        toolname="search_events"
+        tooldescription="依關鍵字搜尋公開活動；按鈕文案或 DOM 結構改變時，Tool 契約仍維持不變。"
+        toolautosubmit
+      >
+        <label for="query">關鍵字</label>
+        <input
+          id="query"
+          name="keyword"
+          value="WebMCP"
+          toolparamdescription="比對活動名稱與摘要的關鍵字。"
+        />
+        <button type="submit" data-action="search-events"></button>
+      </form>
+
+      <p id="status" role="status">尚未搜尋</p>
+      <ol id="results" aria-label="活動搜尋結果"></ol>
+
+      <section class="boundary" aria-labelledby="evidence-boundary">
+        <h2 id="evidence-boundary">這一頁能證明什麼？</h2>
+        <p>Playwright 可以證明舊 Locator 失效，也能證明新按鈕仍可操作。Declarative 路徑只用 synthetic event 當對照，不代表真實 Agent 已經發現或呼叫 Tool。</p>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
