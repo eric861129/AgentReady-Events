@@ -4,12 +4,19 @@
   <body>
     <main>
       <p>Day 10 · Imperative API</p>
-      <h1>表單以外的活動詳情</h1>
-      <label for="event-id">活動 ID</label>
-      <input id="event-id" value="evt-webmcp-intro" />
-      <button id="execute" type="button">本地執行 Tool</button>
+      <h1>以程式註冊 search_events</h1>
+      <form id="search-controls">
+        <label for="keyword">關鍵字</label>
+        <input id="keyword" name="keyword" maxlength="100" />
+        <label for="city">城市</label>
+        <select id="city" name="city"><option value="">不限</option><option value="taipei">台北</option><option value="kaohsiung">高雄</option></select>
+        <label for="format">活動形式</label>
+        <select id="format" name="format"><option value="">不限</option><option value="onsite">實體</option><option value="online">線上</option></select>
+        <button id="execute" type="button">本地執行 Tool</button>
+      </form>
       <p>E2 local execution：這是專案直接呼叫，不是真實 Agent discovery。</p>
-      <section id="detail" aria-live="polite"></section>
+      <p id="status" role="status">尚未執行</p>
+      <ol id="results" aria-label="活動搜尋結果"></ol>
       <pre id="result" aria-label="執行結果"></pre>
       <details><summary>Project schema</summary><pre id="schema"></pre></details>
     </main>

@@ -1,18 +1,35 @@
 import { expect, it, vi } from "vitest";
-import { createEventDetailsLabTool } from "../../labs/day-10-imperative-tool/tool";
+import { createSearchEventsLabTool } from "../../labs/day-10-imperative-tool/tool";
+import { executeSearchEvents } from "../../labs/shared/search-tool";
 
-it("loads details with an opaque ID and updates visible UI", async () => {
-  const load = vi.fn().mockResolvedValue({ id: "evt-1", title: "WebMCP 入門" });
-  const show = vi.fn();
-  const tool = createEventDetailsLabTool(load, show);
-  await expect(tool.execute({ event_id: "evt-1" })).resolves.toMatchObject({ ok: true, uiUpdated: true });
-  expect(load).toHaveBeenCalledWith("evt-1");
-  expect(show).toHaveBeenCalledOnce();
+it("defines the complete read-only search_events metadata", () => {
+  const tool = createSearchEventsLabTool(executeSearchEvents, vi.fn());
+  expect(tool).toMatchObject({
+    name: "search_events",
+    description: expect.stringContaining("關鍵字、城市與活動形式"),
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    inputSchema: { type: "object", additionalProperties: false }
+  });
 });
 
-it("rejects invalid IDs before loading", async () => {
-  const load = vi.fn();
-  const tool = createEventDetailsLabTool(load, vi.fn());
-  await expect(tool.execute({ event_id: "../../secret" })).resolves.toMatchObject({ ok: false, code: "VALIDATION_ERROR" });
-  expect(load).not.toHaveBeenCalled();
+it("executes shared validation and renders the normalized result", async () => {
+  const execute = vi.fn(executeSearchEvents);
+  const render = vi.fn();
+  const tool = createSearchEventsLabTool(execute, render);
+  const result = await tool.execute({ keyword: "Agent", format: "online" });
+  expect(result).toMatchObject({ ok: true, count: 1 });
+  expect(execute).toHaveBeenCalledWith({ keyword: "Agent", format: "online" });
+  expect(render).toHaveBeenCalledWith(result);
+});
+
+it("returns validation and temporary failures without throwing", async () => {
+  const tool = createSearchEventsLabTool(executeSearchEvents, vi.fn());
+  await expect(tool.execute({ city: "taichung" })).resolves.toMatchObject({ ok: false, code: "VALIDATION_ERROR", retryable: false });
+  const unavailable = createSearchEventsLabTool(async () => ({
+    ok: false,
+    code: "TEMPORARY_FAILURE",
+    message: "活動搜尋暫時無法完成，請稍後再試。",
+    retryable: true
+  }), vi.fn());
+  await expect(unavailable.execute({})).resolves.toMatchObject({ ok: false, code: "TEMPORARY_FAILURE", retryable: true });
 });
