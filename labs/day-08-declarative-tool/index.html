@@ -7,16 +7,15 @@
   </head>
   <body>
     <main>
-      <p>Day 08 · Declarative identity</p>
-      <h1>兩個 Attribute 的承諾</h1>
-      <form id="event-search" toolname="search_events" tooldescription="依關鍵字、地點、費用與程度搜尋目前公開活動，並更新使用者可見的活動列表。">
-        <label for="query">關鍵字</label><input id="query" name="query" maxlength="100" />
-        <label for="location">地點</label>
-        <select id="location" name="location"><option value="">不限</option><option value="taipei">台北</option><option value="kaohsiung">高雄</option><option value="online">線上</option></select>
-        <label for="price">費用</label>
-        <select id="price" name="price"><option value="">不限</option><option value="free">免費</option><option value="paid">付費</option></select>
-        <label for="level">程度</label>
-        <select id="level" name="level"><option value="">不限</option><option value="beginner">入門</option><option value="intermediate">中階</option><option value="advanced">進階</option></select>
+      <p>Day 08 · Declarative submission</p>
+      <h1>同一張表單，兩種提交路徑</h1>
+      <form id="event-search" toolname="search_events" tooldescription="依關鍵字、城市與活動形式搜尋公開活動；沒有符合項目時回傳空陣列。" toolautosubmit>
+        <label for="keyword">關鍵字</label>
+        <input id="keyword" name="keyword" maxlength="100" toolparamdescription="比對活動名稱與摘要的關鍵字。" />
+        <label for="city">城市</label>
+        <select id="city" name="city" toolparamdescription="實體活動所在城市。"><option value="">不限</option><option value="taipei">台北</option><option value="kaohsiung">高雄</option></select>
+        <label for="format">活動形式</label>
+        <select id="format" name="format" toolparamdescription="活動參與形式。"><option value="">不限</option><option value="onsite">實體</option><option value="online">線上</option></select>
         <button type="submit">搜尋活動</button>
       </form>
       <p id="search-status" role="status">尚未搜尋</p>
