@@ -1,4 +1,5 @@
 import type { EventDetail } from "./contracts";
+import { securityEventFixtures } from "./security-fixtures";
 
 export const EVENTS: EventDetail[] = [
   {
@@ -42,5 +43,6 @@ export const EVENTS: EventDetail[] = [
     remainingCapacity: 24,
     registrationDeadline: "2026-08-12T23:59:59+08:00",
     state: "open"
-  }
+  },
+  ...securityEventFixtures
 ];

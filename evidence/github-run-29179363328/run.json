@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-16T09:06:00+08:00",
+  "sourceCommand": "gh run view 29179363328 --json databaseId,name,workflowName,status,conclusion,headSha,createdAt,updatedAt,url,jobs",
+  "databaseId": 29179363328,
+  "workflowName": "Build GHCR and deploy Azure",
+  "status": "completed",
+  "conclusion": "success",
+  "headSha": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "createdAt": "2026-07-12T04:12:23Z",
+  "updatedAt": "2026-07-12T04:18:54Z",
+  "url": "https://github.com/eric861129/AgentReady-Events/actions/runs/29179363328",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "evidenceSteps": [
+        "Verify application and locked Evals",
+        "Build Linux container",
+        "Publish SHA tag and resolve digest",
+        "Upload build evidence"
+      ]
+    },
+    {
+      "name": "deploy",
+      "conclusion": "success",
+      "evidenceSteps": [
+        "Verify anonymous GHCR access",
+        "Log in to Azure with OIDC",
+        "Deploy immutable image",
+        "Verify public HTTPS production",
+        "Upload deployment evidence"
+      ]
+    }
+  ],
+  "limitations": [
+    "This run verifies commit 2a2c027, not the current local main branch.",
+    "Agent discovery and invocation are not part of this deployment evidence."
+  ]
+}

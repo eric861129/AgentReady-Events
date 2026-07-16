@@ -1,0 +1,42 @@
+{
+  "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "digest": "sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+  "startedAt": "2026-07-12T04:18:30.923Z",
+  "completedAt": "2026-07-12T04:18:50.074Z",
+  "coldStartMs": 657,
+  "httpChecks": [
+    {
+      "path": "/health/live",
+      "status": 200,
+      "contains": "\"status\":\"ok\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events/evt-webmcp-intro",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/does-not-exist",
+      "status": 404,
+      "contains": "API_ROUTE_NOT_FOUND",
+      "actualStatus": 404,
+      "passed": true
+    }
+  ],
+  "sessionIsolation": true,
+  "forgedAgentFinalizationRejected": true,
+  "browserJourneys": true,
+  "success": true
+}
