@@ -5,7 +5,7 @@ export type ProjectTool<TInput extends object, TResult> = {
   description: string;
   inputSchema: Record<string, unknown>;
   annotations?: ToolAnnotations;
-  execute(input: TInput): Promise<TResult>;
+  execute(input: TInput, options?: { signal?: AbortSignal }): Promise<TResult>;
 };
 
 export type DiscoveredTool = {

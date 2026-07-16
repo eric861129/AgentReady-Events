@@ -1,7 +1,7 @@
 import type { CancellationResponse, CancellationSummary, EventDetail, InteractionMode, RegistrationInput, RegistrationListItem, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
 
 export class ApiClientError extends Error {
-  constructor(readonly status: number, message: string) {
+  constructor(readonly status: number, message: string, readonly reason = "HTTP_ERROR") {
     super(message);
     this.name = "ApiClientError";
   }
@@ -9,7 +9,13 @@ export class ApiClientError extends Error {
 
 async function readJson<T>(response: Response): Promise<T> {
   const body = await response.json();
-  if (!response.ok) throw new ApiClientError(response.status, typeof body?.message === "string" ? body.message : "服務暫時無法使用。");
+  if (!response.ok) {
+    throw new ApiClientError(
+      response.status,
+      typeof body?.message === "string" ? body.message : "服務暫時無法使用。",
+      typeof body?.reason === "string" ? body.reason : "HTTP_ERROR"
+    );
+  }
   return body as T;
 }
 

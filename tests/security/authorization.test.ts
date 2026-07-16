@@ -12,6 +12,7 @@ it("rejects forged Agent finalization, missing CSRF, expired session and malform
   expect(forged.body.reason).toBe("HUMAN_CONFIRMATION_REQUIRED");
   expect((await agent.post("/api/registrations").send({ ...input, interactionMode: "human" })).body.reason).toBe("CSRF_INVALID");
   const expired = await request(createApp()).post("/api/registrations").set("Cookie", "are_session=expired").set("x-csrf-token", token).send({ ...input, interactionMode: "human" });
+  expect(expired.status).toBe(403);
   expect(expired.body.reason).toBe("CSRF_INVALID");
   const malformed = await request(createApp()).post("/api/registrations").set("Content-Type", "application/json").send('{"broken"');
   expect(malformed.body).toEqual({ code: "VALIDATION_ERROR", reason: "MALFORMED_JSON", message: "JSON 格式無效。" });
@@ -26,4 +27,5 @@ it("does not reveal or mutate a foreign registration", async () => {
   const response = await stranger.post(`/api/registrations/${created.body.registration.id}/cancel`).set("x-csrf-token", strangerToken).send({ interactionMode: "human" });
   expect(response.status).toBe(404);
   expect(response.body.reason).toBe("REGISTRATION_NOT_FOUND");
+  expect(JSON.stringify(response.body)).not.toMatch(/owner|session|token|stack/i);
 });

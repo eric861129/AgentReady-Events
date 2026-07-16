@@ -20,3 +20,19 @@ it("maps not found and temporary errors", async () => {
   const temporary = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new Error("private")) });
   await expect(temporary.execute({ registration_id: "reg-1" })).resolves.toMatchObject({ code: "TEMPORARY_FAILURE", retryable: true });
 });
+
+it("maps invalid input, authorization, conflict, and abort", async () => {
+  const base = { show: vi.fn(), cancel: vi.fn(), getStateVersion: () => 1 };
+  const tool = createPrepareCancellationTool({ ...base, load: vi.fn() });
+  await expect(tool.execute({} as { registration_id: string })).resolves.toMatchObject({ code: "INVALID_INPUT" });
+  await expect(tool.execute({ registration_id: "../../secret" })).resolves.toMatchObject({ code: "INVALID_INPUT", retryable: false });
+  const unauthorized = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new ApiClientError(401, "private session")) });
+  await expect(unauthorized.execute({ registration_id: "reg-1" })).resolves.toMatchObject({ code: "UNAUTHORIZED", retryable: false });
+  const forbidden = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new ApiClientError(403, "owner private")) });
+  await expect(forbidden.execute({ registration_id: "reg-1" })).resolves.toMatchObject({ code: "FORBIDDEN", retryable: false });
+  const conflict = createPrepareCancellationTool({ ...base, load: vi.fn().mockRejectedValue(new ApiClientError(409, "state private")) });
+  await expect(conflict.execute({ registration_id: "reg-1" })).resolves.toMatchObject({ code: "CONFLICT", retryable: false });
+  const controller = new AbortController();
+  controller.abort();
+  await expect(tool.execute({ registration_id: "reg-1" }, { signal: controller.signal })).resolves.toMatchObject({ code: "ABORTED", retryable: false });
+});
