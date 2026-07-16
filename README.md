@@ -12,6 +12,10 @@ The Day 22 feature-frozen reference product teaches WebMCP through five delibera
 4. Day 23–29：執行 deterministic tests、安全實驗、部署候選、Codex Evals 與 release。
 5. Day 30：作者回顧，不建立程式 branch。
 
+## 文章與程式對照
+
+30 天文章使用的程式、測試、圖片與重現指令，集中維護在文章專案的[文章與範例專案對照表](https://github.com/eric861129/WEBMCP-iThome-2026-Draft/blob/main/docs/article-project-mapping.md)。本機若將兩個 repository 放在同一層，可在文章專案設定 `AGENTREADY_EVENTS_ROOT` 後執行 `npm run validate:mapping`，檢查對照表是否引用不存在的檔案或指令。
+
 ## 邊界
 
 - `labs/` 只服務 Day 1–12 教學；正式產品在 Day 13 才進入 `src/`。
