@@ -12,7 +12,7 @@
     "dev:api": "tsx watch src/server/server.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude 'tests/browser/**'",
+    "test": "vitest run --exclude 'tests/browser/**' --exclude 'tests/evidence/**' --maxWorkers=1",
     "test:api": "vitest run tests/api",
     "test:e2e": "playwright test",
     "evidence:articles": "playwright test --config playwright.article.config.ts",

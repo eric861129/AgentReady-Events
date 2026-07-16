@@ -1,4 +1,5 @@
 import { expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import * as verify from "../../scripts/verify";
 
 const { VERIFY_COMMANDS } = verify;
@@ -43,4 +44,14 @@ it("runs deterministic checks in the approved order", () => {
     ["npm", ["run", "test:e2e"]],
     ["npm", ["run", "build"]]
   ]);
+});
+
+it("keeps Playwright suites out of the Vitest unit-test command", () => {
+  const packageJson = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+
+  expect(packageJson.scripts.test).toContain("--exclude 'tests/browser/**'");
+  expect(packageJson.scripts.test).toContain("--exclude 'tests/evidence/**'");
+  expect(packageJson.scripts.test).toContain("--maxWorkers=1");
 });
