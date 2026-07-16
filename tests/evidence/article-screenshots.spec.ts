@@ -2,6 +2,72 @@ import { expect, test } from "@playwright/test";
 
 import { captureEvidence } from "./support/capture-evidence";
 
+test("Day 02 captures the original locator succeeding", async ({ page }) => {
+  await page.goto("/labs/day-02-actuation/index.html?evidence=1");
+  const locator = page.getByRole("button", { name: "搜尋活動" });
+  await locator.click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成");
+  await page.locator("#locator-expression").evaluate((node) => { node.textContent = 'getByRole("button", { name: "搜尋活動" })'; });
+  await page.locator("#automation-outcome").evaluate((node) => { node.textContent = "Locator resolved one control; click completed and visible status changed."; });
+  await captureEvidence(page, {
+    id: "day-02-button-before-after",
+    day: 2,
+    route: "/labs/day-02-actuation/index.html?evidence=1",
+    fixture: "original-search-button",
+    selector: "body",
+    action: "click the original control with its accessible-name locator",
+    assertion: "the original locator resolves one control and the visible search status changes",
+    finalAsset: "assets/day-02/button-before-after.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This capture proves a Playwright locator against the original UI; it is not an Agent invocation."]
+  });
+});
+
+test("Day 02 captures the real locator failure and synthetic Tool success", async ({ page }) => {
+  await page.goto("/labs/day-02-actuation/index.html?variant=renamed&evidence=1");
+  const oldLocator = page.getByRole("button", { name: "搜尋活動" });
+  let errorMessage = "";
+  try {
+    await oldLocator.click({ timeout: 500 });
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : String(error);
+  }
+  expect(errorMessage).toContain("Timeout 500ms exceeded");
+  const sanitizedError = (errorMessage.split("\n    at ", 1).at(0) ?? errorMessage).slice(0, 900);
+  await page.locator("#locator-expression").evaluate((node) => { node.textContent = 'getByRole("button", { name: "搜尋活動" })'; });
+  await page.locator("#locator-error").evaluate((node, message) => { node.textContent = message; }, sanitizedError);
+  await page.locator("#dom-after").evaluate((node, markup) => { node.textContent = markup; }, await page.getByRole("button", { name: "探索場次" }).evaluate((button) => button.parentElement?.outerHTML ?? button.outerHTML));
+
+  const result = await page.evaluate(async () => {
+    const form = document.querySelector("form")!;
+    let response: Promise<unknown> | undefined;
+    const event = new Event("submit", { bubbles: true, cancelable: true });
+    Object.defineProperties(event, {
+      agentInvoked: { value: true },
+      respondWith: { value: (promise: Promise<unknown>) => { response = promise; } }
+    });
+    form.dispatchEvent(event);
+    return response;
+  });
+  expect(result).toMatchObject({ ok: true, count: 1 });
+  await expect(page.getByRole("status")).toContainText("E2 synthetic Agent submission");
+  await captureEvidence(page, {
+    id: "day-02-locator-failure",
+    day: 2,
+    route: "/labs/day-02-actuation/index.html?variant=renamed&evidence=1",
+    fixture: "renamed-and-wrapped-search-button",
+    selector: "body",
+    action: "run the old accessible-name locator, preserve its error, then dispatch the Declarative form synthetically",
+    assertion: "the old locator times out while search_events returns one result through the E2 synthetic submission path",
+    expectedFailure: "Playwright accessible-name locator times out after the visible label and DOM wrapper change.",
+    finalAsset: "assets/day-02/locator-failure.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The WebMCP comparison uses a synthetic SubmitEvent fixture; it does not prove a real Agent discovered or invoked the Tool."]
+  });
+});
+
 test("Day 07 captures the semantic human form result", async ({ page }) => {
   await page.goto("/labs/day-07-semantic-form/index.html");
   await page.getByLabel("地點").selectOption("taipei");

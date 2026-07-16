@@ -11,12 +11,42 @@
       <p class="eyebrow">Day 02 · Actuation Failure Lab</p>
       <h1>按鈕只改四個字，誰迷路了？</h1>
       <p>切換 query variant 時，穩定語意不變，只有人類看見的文案改變。</p>
-      <form id="search-form">
+      <form
+        id="search-form"
+        toolname="search_events"
+        tooldescription="依關鍵字搜尋公開活動；按鈕文案或 DOM 結構改變時，Tool 契約仍維持不變。"
+        toolautosubmit
+      >
         <label for="query">關鍵字</label>
-        <input id="query" name="query" value="WebMCP" />
+        <input
+          id="query"
+          name="keyword"
+          value="WebMCP"
+          toolparamdescription="比對活動名稱與摘要的關鍵字。"
+        />
         <button type="submit" data-action="search-events"></button>
       </form>
       <p id="status" role="status">尚未搜尋</p>
+      <ol id="results" aria-label="活動搜尋結果"></ol>
+      <section id="evidence-board" class="evidence-board" hidden>
+        <div class="evidence-heading">
+          <p class="eyebrow">Playwright replay evidence</p>
+          <h2>同一個需求，兩種操作契約</h2>
+        </div>
+        <article>
+          <h3>UI locator</h3>
+          <code id="locator-expression">由 Playwright 測試寫入</code>
+          <p id="automation-outcome">等待測試執行</p>
+        </article>
+        <article>
+          <h3>目前 DOM</h3>
+          <pre id="dom-after"></pre>
+        </article>
+        <article class="error-card">
+          <h3>真實錯誤訊息</h3>
+          <pre id="locator-error">原始狀態尚未執行失敗案例</pre>
+        </article>
+      </section>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>
