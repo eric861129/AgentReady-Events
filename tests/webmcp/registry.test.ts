@@ -1,4 +1,11 @@
 import { expect, it, vi } from "vitest";
+import {
+  executeToolAdapter,
+  getToolsAdapter,
+  registerToolAdapter,
+  subscribeToolChanges,
+  type BrowserModelContext
+} from "../../src/client/webmcp/adapter";
 import { WebMcpRegistry } from "../../src/client/webmcp/registry";
 import type { ProjectTool } from "../../src/client/webmcp/types";
 
@@ -19,4 +26,25 @@ it("recovers the queue after a registration rejection", async () => {
   const registry = new WebMcpRegistry(register);
   await expect(registry.sync([tool("details")])).rejects.toThrow("temporary");
   await expect(registry.sync([tool("details")])).resolves.toBeUndefined();
+});
+
+it("keeps document.modelContext access inside the formal adapter", async () => {
+  const descriptor = { name: "details", description: "details", inputSchema: "{}", origin: "https://events.example" };
+  const context = new EventTarget() as BrowserModelContext;
+  context.registerTool = vi.fn(async () => undefined);
+  context.getTools = vi.fn(async () => [descriptor]);
+  context.executeTool = vi.fn(async () => ({ ok: true }));
+  const source = { modelContext: context };
+  const controller = await registerToolAdapter(tool("details"), { exposedTo: ["https://agent.example"] }, source);
+  expect(context.registerTool).toHaveBeenCalledWith(expect.objectContaining({ name: "details" }), {
+    signal: controller?.signal,
+    exposedTo: ["https://agent.example"]
+  });
+  await expect(getToolsAdapter({ fromOrigins: ["https://agent.example"] }, source)).resolves.toEqual([descriptor]);
+  await expect(executeToolAdapter(descriptor, "{}", {}, source)).resolves.toEqual({ ok: true });
+  const listener = vi.fn();
+  const unsubscribe = subscribeToolChanges(listener, source);
+  context.dispatchEvent(new Event("toolchange"));
+  expect(listener).toHaveBeenCalledOnce();
+  unsubscribe();
 });

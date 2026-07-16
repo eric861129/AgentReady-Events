@@ -7,3 +7,22 @@ export type ProjectTool<TInput extends object, TResult> = {
   annotations?: ToolAnnotations;
   execute(input: TInput): Promise<TResult>;
 };
+
+export type DiscoveredTool = {
+  name: string;
+  description: string;
+  inputSchema: string;
+  origin: string;
+  annotations?: ToolAnnotations;
+  window?: Window;
+};
+
+export type ModelContextRegisterOptions = { signal?: AbortSignal; exposedTo?: string[] };
+export type ModelContextDiscoveryOptions = { fromOrigins?: string[] };
+export type ModelContextExecuteOptions = { signal?: AbortSignal };
+
+export type BrowserModelContext = EventTarget & {
+  registerTool(tool: ProjectTool<object, unknown>, options?: ModelContextRegisterOptions): Promise<void>;
+  getTools?(options?: ModelContextDiscoveryOptions): Promise<DiscoveredTool[]>;
+  executeTool?(tool: DiscoveredTool, input: string, options?: ModelContextExecuteOptions): Promise<unknown | null>;
+};

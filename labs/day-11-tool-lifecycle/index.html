@@ -9,7 +9,11 @@
       <h2 id="route-title"></h2>
       <p id="active" role="status"></p>
       <p id="calls"></p>
-      <p>這是 deterministic instrumentation，不是真實 Agent discovery。</p>
+      <p id="runtime"></p>
+      <p id="discovered"></p>
+      <button id="execute-discovered" type="button">執行已發現 Tool</button>
+      <pre id="execution-result" aria-label="Tool 執行結果"></pre>
+      <p>這是以 project harness 觀察 API 表面，最多屬於 E2；只有相容瀏覽器實際回傳的 discovery 與 invocation 證據才能提高等級。</p>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>
