@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-07-16T09:30:50.906Z",
+  "capturedAt": "2026-07-16T19:47:51+08:00",
   "evidenceLevel": "E3",
-  "captured_at": "2026-07-16T09:30:50.906Z",
+  "captured_at": "2026-07-16T19:47:51+08:00",
   "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
   "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
   "environment": {
@@ -20,7 +20,7 @@
   "test_harness": "record_replay",
   "localVerification": {
     "evidenceLevel": "E2",
-    "commit": "e1cbe348d458a44f30f96e28b7172e0c6bc8f43d",
+    "commit": "8773eff3c79a1c2dbe4ade5bbb5e6e9dfed66dd6",
     "node": "v24.15.0",
     "platform": "win32-x64",
     "command": "npm run verify",
@@ -51,7 +51,7 @@
   "invocation": null,
   "cleanReplayTask": null,
   "limitations": [
-    "Local verification commit e1cbe34 and deployed commit 2a2c027 are different version coordinates.",
+    "Local verification commit 8773eff and deployed commit 2a2c027 are different version coordinates.",
     "The current browser capability probe exposed no document.modelContext.",
     "No real Agent discovery, invocation, or E5 clean replay was observed.",
     "Local Docker and Azure CLI are unavailable; container and Azure claims come from GitHub workflow artifacts."
