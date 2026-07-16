@@ -1,0 +1,20 @@
+{
+  "commit": "ba796439c747efc0694048fd5350c620d226c9b5",
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "startedAt": "2026-07-16T05:19:21.494Z",
+  "completedAt": "2026-07-16T05:19:21.498Z",
+  "success": false,
+  "commands": [
+    {
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "startedAt": "2026-07-16T05:19:21.496Z",
+      "completedAt": "2026-07-16T05:19:21.498Z",
+      "exitCode": 1
+    }
+  ]
+}
