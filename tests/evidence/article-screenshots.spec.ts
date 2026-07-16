@@ -576,6 +576,7 @@ const publicSiteUrl = process.env.PUBLIC_SITE_URL?.replace(/\/$/, "");
 const publicDeploymentCommit = process.env.PUBLIC_DEPLOYMENT_COMMIT;
 
 test("Day 25 captures the current public HTTPS site", async ({ page }) => {
+  test.setTimeout(60_000);
   test.skip(!publicSiteUrl || !publicDeploymentCommit, "PUBLIC_SITE_URL and PUBLIC_DEPLOYMENT_COMMIT are required for production evidence capture");
   const deploymentCommit = publicDeploymentCommit!;
   await page.goto(`${publicSiteUrl}/events`, { waitUntil: "domcontentloaded" });
