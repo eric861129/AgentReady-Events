@@ -19,6 +19,20 @@ it("keeps direct executables on non-Windows platforms", () => {
   });
 });
 
+it("classifies verification as a test harness instead of real Agent invocation", () => {
+  expect(verify.createVerificationEvidenceMetadata).toBeTypeOf("function");
+  expect(verify.createVerificationEvidenceMetadata?.("abc", "2026-07-16T06:30:00.000Z")).toMatchObject({
+    evidenceLevel: "E2",
+    captured_at: "2026-07-16T06:30:00.000Z",
+    commit: "abc",
+    command: "npm run verify",
+    source_type: "test_output",
+    webmcp_capability: "not_tested",
+    agent_invocation: "not_tested",
+    test_harness: "browser_automation"
+  });
+});
+
 it("runs deterministic checks in the approved order", () => {
   expect(VERIFY_COMMANDS).toEqual([
     ["npm", ["run", "typecheck"]],

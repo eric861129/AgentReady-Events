@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentready.events/schemas/evidence.schema.json",
+  "title": "AgentReady Events evidence record",
+  "type": "object",
+  "required": [
+    "evidenceLevel",
+    "captured_at",
+    "commit",
+    "url",
+    "environment",
+    "browser_version",
+    "command",
+    "source_type",
+    "result",
+    "limitations",
+    "runtime_integration",
+    "webmcp_capability",
+    "agent_invocation",
+    "test_harness"
+  ],
+  "properties": {
+    "evidenceLevel": { "enum": ["E0", "E1", "E2", "E3", "E4", "E5"] },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "commit": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "minLength": 1 },
+    "environment": { "type": "object" },
+    "browser_version": { "type": "string", "minLength": 1 },
+    "command": { "type": "string", "minLength": 1 },
+    "source_type": {
+      "enum": ["browser_capture", "test_output", "generated_diagram", "live_capture", "record_replay", "narrative", "official_source"]
+    },
+    "result": { "enum": ["passed", "failed", "blocked"] },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "runtime_integration": { "$ref": "#/$defs/status" },
+    "webmcp_capability": { "$ref": "#/$defs/status" },
+    "agent_invocation": { "$ref": "#/$defs/status" },
+    "test_harness": {
+      "enum": ["none", "unit", "direct_execution", "synthetic_submit", "record_replay", "browser_automation"]
+    }
+  },
+  "$defs": {
+    "status": { "enum": ["not_tested", "passed", "failed", "blocked"] }
+  }
+}

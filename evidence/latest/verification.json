@@ -1,9 +1,27 @@
 {
-  "commit": "018deb730d452e57fe350e45725579d0dc61f86a",
-  "node": "v25.4.0",
-  "platform": "darwin-arm64",
-  "startedAt": "2026-07-12T02:44:07.837Z",
-  "completedAt": "2026-07-12T02:44:20.281Z",
+  "evidenceLevel": "E2",
+  "captured_at": "2026-07-16T06:27:50.401Z",
+  "commit": "2200735fe06ae0438a91474db7a3a7a416fe2d50",
+  "url": "local://playwright-web-server",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32-x64"
+  },
+  "browser_version": "Playwright-managed Chromium; see command output",
+  "command": "npm run verify",
+  "source_type": "test_output",
+  "result": "passed",
+  "limitations": [
+    "This harness does not observe real WebMCP discovery or Agent invocation."
+  ],
+  "runtime_integration": "passed",
+  "webmcp_capability": "not_tested",
+  "agent_invocation": "not_tested",
+  "test_harness": "browser_automation",
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "startedAt": "2026-07-16T06:27:50.401Z",
+  "completedAt": "2026-07-16T06:28:07.966Z",
   "success": true,
   "commands": [
     {
@@ -12,8 +30,8 @@
         "run",
         "typecheck"
       ],
-      "startedAt": "2026-07-12T02:44:07.838Z",
-      "completedAt": "2026-07-12T02:44:09.152Z",
+      "startedAt": "2026-07-16T06:27:50.402Z",
+      "completedAt": "2026-07-16T06:27:52.745Z",
       "exitCode": 0
     },
     {
@@ -22,8 +40,8 @@
         "run",
         "test"
       ],
-      "startedAt": "2026-07-12T02:44:09.152Z",
-      "completedAt": "2026-07-12T02:44:11.107Z",
+      "startedAt": "2026-07-16T06:27:52.745Z",
+      "completedAt": "2026-07-16T06:27:54.554Z",
       "exitCode": 0
     },
     {
@@ -32,8 +50,8 @@
         "run",
         "test:api"
       ],
-      "startedAt": "2026-07-12T02:44:11.107Z",
-      "completedAt": "2026-07-12T02:44:11.929Z",
+      "startedAt": "2026-07-16T06:27:54.554Z",
+      "completedAt": "2026-07-16T06:27:55.662Z",
       "exitCode": 0
     },
     {
@@ -43,8 +61,8 @@
         "run",
         "tests/security"
       ],
-      "startedAt": "2026-07-12T02:44:11.929Z",
-      "completedAt": "2026-07-12T02:44:12.783Z",
+      "startedAt": "2026-07-16T06:27:55.662Z",
+      "completedAt": "2026-07-16T06:27:59.152Z",
       "exitCode": 0
     },
     {
@@ -53,8 +71,8 @@
         "run",
         "test:e2e"
       ],
-      "startedAt": "2026-07-12T02:44:12.783Z",
-      "completedAt": "2026-07-12T02:44:18.021Z",
+      "startedAt": "2026-07-16T06:27:59.152Z",
+      "completedAt": "2026-07-16T06:28:05.367Z",
       "exitCode": 0
     },
     {
@@ -63,8 +81,8 @@
         "run",
         "build"
       ],
-      "startedAt": "2026-07-12T02:44:18.021Z",
-      "completedAt": "2026-07-12T02:44:20.281Z",
+      "startedAt": "2026-07-16T06:28:05.367Z",
+      "completedAt": "2026-07-16T06:28:07.966Z",
       "exitCode": 0
     }
   ]
