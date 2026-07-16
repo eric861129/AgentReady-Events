@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "HARNESS-NAV-01",
+  "capturedAt": "2026-07-16T17:21:00+08:00",
+  "evidenceAxis": "test_harness",
+  "taskPrompt": "Open the configured public events page and capture a traceable HTTPS runtime screenshot.",
+  "fixture": {
+    "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events",
+    "deployedCommit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+    "test": "Day 25 captures the current public HTTPS site"
+  },
+  "rubric": [
+    {
+      "criterion": "The browser reaches the page and verifies stable visible UI within the 30-second test timeout.",
+      "points": 1
+    }
+  ],
+  "baseline": {
+    "score": 0,
+    "maxScore": 1,
+    "result": "failed",
+    "error": "page.goto timed out while waiting for networkidle; the public page itself was not proven unavailable."
+  },
+  "change": {
+    "file": "tests/evidence/article-screenshots.spec.ts",
+    "before": "page.goto(url, { waitUntil: \"networkidle\" })",
+    "after": "page.goto(url, { waitUntil: \"domcontentloaded\" }) followed by visible heading and search button assertions",
+    "reason": "A public page can keep background requests active. DOM readiness plus product-specific assertions measures the required evidence more directly."
+  },
+  "after": {
+    "score": 1,
+    "maxScore": 1,
+    "result": "passed",
+    "command": "npm run evidence:articles -- --grep \"Day 25\"",
+    "summary": "1 passed"
+  },
+  "limitations": [
+    "This is not an Agent evaluation and does not measure Tool selection quality.",
+    "This is not WebMCP capability or invocation evidence; it only validates the public browser capture harness.",
+    "The deployed commit differs from the current local main branch."
+  ]
+}
