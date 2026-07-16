@@ -46,6 +46,15 @@ async function dispatchSyntheticAgentForm(page: Page) {
   });
 }
 
+async function redactDynamicRegistrationIds(page: Page) {
+  const activityItems = page.getByRole("list", { name: "操作紀錄" }).locator("li");
+  await activityItems.evaluateAll((items) => {
+    for (const item of items) {
+      item.textContent = item.textContent?.replace(/reg-[0-9a-f-]{36}/gi, "reg-evidence-redacted") ?? "";
+    }
+  });
+}
+
 test("Day 02 captures the original locator succeeding", async ({ page }) => {
   await page.goto("/labs/day-02-actuation/index.html?evidence=1");
   const locator = page.getByRole("button", { name: "搜尋活動" });
@@ -448,6 +457,7 @@ test("Day 19 captures the single human registration POST", async ({ page }) => {
   await page.getByRole("button", { name: "我確認並送出報名" }).click();
   await expect.poll(() => posts).toBe(1);
   await expect(page.getByRole("status")).toContainText("報名完成");
+  await redactDynamicRegistrationIds(page);
   await showEvidence(page, "Human authority result", "POST /api/registrations = 1\nvisible status = 報名完成");
   await captureEvidence(page, {
     id: "day-19-human-submit",
@@ -476,6 +486,7 @@ test("Day 20 captures cancellation summary before mutation", async ({ page }) =>
   await page.getByRole("button", { name: "準備取消" }).click();
   await expect(page.getByRole("dialog", { name: "確認取消報名" })).toBeVisible();
   expect(cancelPosts).toBe(0);
+  await redactDynamicRegistrationIds(page);
   await showEvidence(page, "Cancellation boundary", "dialog = visible\nfocus = 保留報名\nPOST /cancel = 0");
   await captureEvidence(page, {
     id: "day-20-cancellation-dialog",
