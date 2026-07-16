@@ -1,38 +1,202 @@
-# AgentReady Events v3
+# AgentReady Events
 
-The Day 22 feature-frozen reference product teaches WebMCP through five deliberately small Tools and three verifiable human–Agent Journeys. See [FEATURE_FREEZE.md](FEATURE_FREEZE.md) for the immutable boundary; Day 23–29 focus on proving, securing, packaging, and evaluating this product rather than adding features.
+AgentReady Events 是《網站不只給人用：30 天打造 AI Agent 看得懂的 WebMCP 網站》的可執行範例專案。Day 7–12 使用隔離 Lab 說明 Semantic HTML、Declarative API 與 Imperative API；Day 13–22 把相同觀念放進正式活動網站；Day 23–29 再處理測試、安全、部署與 Eval。
 
-這是「網站不只給人用：30 天打造 Agent-ready 的 WebMCP 網站」的可執行程式庫。
+文章不是另一套示意程式。文章中的檔案路徑、Tool 名稱、命令與錯誤結果都以這個 repository 為準，雙向對照見文章專案的 `docs/article-project-mapping.md`。
 
-## 五部分
+## 目前產品邊界
 
-1. Day 1–6：理解 WebMCP 在 AI Agent 時代的價值。
-2. Day 7–12：以隔離 Labs 學習 Semantic HTML、Declarative 與 Imperative WebMCP。
-3. Day 13–22：由 Codex 建立 AgentReady Events，完成五個 Tool 與三條 Journey。
-4. Day 23–29：執行 deterministic tests、安全實驗、部署候選、Codex Evals 與 release。
-5. Day 30：作者回顧，不建立程式 branch。
+正式 catalog 固定五項 Tool：
 
-## 文章與程式對照
+1. `search_events`
+2. `get_event_details`
+3. `save_event`
+4. `prepare_event_registration`
+5. `prepare_registration_cancellation`
 
-30 天文章使用的程式、測試、圖片與重現指令，集中維護在文章專案的[文章與範例專案對照表](https://github.com/eric861129/WEBMCP-iThome-2026-Draft/blob/main/docs/article-project-mapping.md)。本機若將兩個 repository 放在同一層，可在文章專案設定 `AGENTREADY_EVENTS_ROOT` 後執行 `npm run validate:mapping`，檢查對照表是否引用不存在的檔案或指令。
+報名與取消只有 prepare Tool。最後 mutation 必須由人類在可見介面確認；`submit_registration` 與 `cancel_registration` 不屬於正式 catalog。完整 freeze 見 [FEATURE_FREEZE.md](FEATURE_FREEZE.md)。
 
-## 邊界
+## 技術架構
 
-- `labs/` 只服務 Day 1–12 教學；正式產品在 Day 13 才進入 `src/`。
-- 沒有 WebMCP 時，人類操作仍需完整可用。
-- Fake ModelContext 與直接呼叫 Tool 只能算 deterministic E2，不等於真實 Agent discovery／invocation。
-- v2 與 legacy repositories 均保留，不在本 repo 改寫。
+- Client：TypeScript、Vite、原生 DOM API
+- Server：Express、TypeScript
+- WebMCP：Declarative form、Imperative Tool factory、registry adapter
+- Tests：Vitest、Supertest、Playwright
+- Build：Vite client bundle、esbuild server bundle
+- Deployment：Docker、GHCR、GitHub Actions OIDC、Azure Container Apps
+- Evidence：JSON schema、raw browser capture、machine-readable verification record
 
-## 開始
+人類 UI 與 Tool 共用 `src/client/services/` 的 action。REST API 仍是資料來源；WebMCP 沒有取代 server authorization，也沒有讓 client 取得額外權限。
 
-```bash
-npm install
+## 環境需求
+
+- Node.js `>= 22.12.0`
+- npm（隨 Node 安裝）
+- Git
+- Playwright 管理的 Chromium
+
+目前 `package.json` 鎖定 `@playwright/test 1.61.1`。瀏覽器實際版本以 `npx playwright --version` 與當次 evidence 為準，不要把文章截圖中的版本當成永久需求。
+
+Docker 與 Azure CLI 只在本機重播 container／Azure 流程時需要。一般 Lab、開發、build 與測試不依賴 Azure credential。
+
+## 從零安裝
+
+```powershell
+git clone https://github.com/eric861129/AgentReady-Events.git
+Set-Location AgentReady-Events
+npm ci
+npx playwright install chromium
+```
+
+第一次先跑快速檢查：
+
+```powershell
 npm run typecheck
 npm test
 npm run build
-npm run verify
-npm run evals:validate
-npm run smoke:deployment
 ```
 
-Runtime proof currently tops out at E3: deterministic and real-browser integration are green, while real Codex WebMCP discovery requires an author-authorized HTTPS deployment and compatible Codex/Chrome surface. See `docs/runtime-evidence.md`; no result is promoted by simulation.
+## 啟動網站
+
+```powershell
+npm run dev
+```
+
+啟動後可開啟：
+
+- Web：`http://127.0.0.1:5173/events`
+- API health：`http://127.0.0.1:3000/health/live`
+- Production build：先執行 `npm run build`，再執行 `npm start`
+
+Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 已被占用，先停止既有 process；不要隨意改 port 後仍沿用文章中的 URL。
+
+## Day 7–12 Labs
+
+執行 `npm run dev` 後，可由 Vite 直接開啟：
+
+| Day | URL | 重點 |
+| ---: | --- | --- |
+| 02 | `/labs/day-02-actuation/` | Locator 成功、改名失敗、Declarative 對照 |
+| 07 | `/labs/day-07-semantic-form/` | Semantic form 與 human fallback |
+| 08 | `/labs/day-08-declarative-tool/` | `toolautosubmit` 與 synthetic `respondWith()` |
+| 09 | `/labs/day-09-declarative-schema/` | HTML constraint 到 schema snapshot |
+| 10 | `/labs/day-10-imperative-tool/` | 同需求 Imperative `search_events` |
+| 11 | `/labs/day-11-tool-lifecycle/` | register、route leave、abort、toolchange |
+| 12 | `/labs/day-12-confirmation-safety/` | prepare-only 與 zero mutation |
+
+Lab 的 synthetic event 與直接 `execute()` 都是 E2 test harness，不是瀏覽器或 Codex 的真實 Agent invocation。
+
+## 常用命令
+
+| 命令 | 用途 |
+| --- | --- |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript no-emit check |
+| `npm test` | Unit、contract、integration、security 等 Vitest tests，不含 browser/evidence |
+| `npm run test:api` | API tests |
+| `npm run test:e2e` | 產品與 Labs 的 Playwright browser tests |
+| `npm run build` | Client 與 server production build |
+| `npm run verify` | 依固定順序執行 lint、typecheck、tests、security、E2E、build，並寫入 verification JSON |
+| `npm run evals:validate` | 驗證固定 20 題 Eval dataset 與結果格式 |
+| `npm run evidence:articles` | 產生文章用 raw browser captures 與 assertion JSON |
+| `npm run evidence:collect -- --day 29` | 驗證並彙整 evidence，不補寫缺少的成功 |
+| `npm run smoke:container` | 在已啟動 container 上執行 smoke plan |
+| `npm run smoke:azure` | 對指定 Azure URL 執行 HTTPS checks |
+
+完整驗證：
+
+```powershell
+npm run verify
+npm run evals:validate
+```
+
+## 測試 Fixtures
+
+- 活動：`src/shared/fixtures.ts`
+- 惡意活動文案：`src/shared/security-fixtures.ts`
+- Failure Lab：`src/server/failure/failure-policy.ts`
+- Eval dataset：`evals/dataset/webmcp-evals.json`
+- Browser Journey：`tests/browser/journeys.spec.ts`
+
+Failure Lab 只能由 test code 注入。Query string 或 request header 不能啟用它，避免公開網站出現測試後門。
+
+## 環境變數
+
+[.env.example](.env.example) 是變數清單，不會被應用程式自動載入。請在 PowerShell、CI 或啟動工具中設定需要的值。
+
+主要變數：
+
+- `PORT`：production server port，預設 3000
+- `PLAYWRIGHT_BASE_URL`：讓 browser tests 指向外部已啟動環境
+- `ARTICLE_REPO_ROOT`：把 article evidence 寫入文章 repository
+- `PUBLIC_SITE_URL`：公開 HTTPS origin，用於 Day 25–27 evidence capture
+- `PUBLIC_DEPLOYMENT_COMMIT`：上述公開站對應的完整 commit SHA
+- `DEPLOYMENT_*`：CI 產生 deployment evidence 時使用的版本座標
+
+不要把 Origin Trial token、Azure credential、cookie 或 bearer token 寫入 `.env.example`、article evidence 或 commit。
+
+## 目錄
+
+```text
+labs/          Day 2、7–12 的隔離教學
+src/client/    人類頁面、shared actions、WebMCP adapter 與 Tools
+src/server/    Express routes、services、authorization
+src/shared/    contract、validation、fixtures、activity types
+tests/         Unit、API、security、browser、evidence 與 infra tests
+evals/         固定 dataset、baseline、受阻與 reliability 結果
+evidence/      Verification、runtime、deployment 與 screenshot evidence
+infra/         Azure Container Apps Bicep
+.github/       GHCR／Azure deployment workflow
+```
+
+## 文章 Day 對應
+
+- Day 1–6：基礎概念、Browser Automation、catalog、evidence axes
+- Day 7–12：`labs/`
+- Day 13–17：產品骨架、搜尋、詳情、shared actions
+- Day 18–22：收藏、報名／取消準備、Journey、feature freeze
+- Day 23–29：verification、安全、container、Azure、capability preflight、Eval、release evidence
+- Day 30：作者回顧，不建立新的程式 branch 或第六個 Tool
+
+精確檔案與測試請查文章專案的 mapping，不要複製 30 份相同程式碼。
+
+## Evidence 與目前限制
+
+Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`agent_invocation`、`test_harness`。詳見 [evidence/README.md](evidence/README.md)。
+
+目前可查核狀態：
+
+- 本機 verification record 是 E2 test harness，不代表 Agent invocation。
+- GitHub run 29179363328 與 Azure 公開站對應 commit `2a2c027`，不是目前 local `main`。
+- 公開站可由 HTTPS 開啟，Origin-Trial header 已出現。
+- `document.modelContext` 未出現，20 題正式 Eval 因此是 environment failure；discovery 與 invocation 都是 0。
+
+如果未來 runtime 支援恢復，先重跑 preflight，再執行 `getTools()`／`executeTool()` 與真實 Agent task。不要用 fake ModelContext 把 E2 改名成 E4。
+
+## 本機與 Azure 權限界線
+
+- 本機開發不需要 Azure credential。
+- GitHub Actions 透過 OIDC 登入 Azure，不使用長效 client secret。
+- Infrastructure deployment 只允許核准的 resource type 與 immutable public GHCR digest。
+- Browser input、Tool annotation 與 `interactionMode` 都不是 authorization。
+- Server 必須重新驗證 session、ownership、state 與 mutation 條件。
+
+## 常見問題
+
+### Playwright 找不到瀏覽器
+
+```powershell
+npx playwright install chromium
+```
+
+### `npm run dev` 啟動後 API 失敗
+
+先開 `http://127.0.0.1:3000/health/live`。若無回應，檢查 3000 port 是否被占用與 `dev:api` 的 terminal output。
+
+### 公開站 evidence test 被 skip
+
+Day 25 需要同時設定 `PUBLIC_SITE_URL` 與 `PUBLIC_DEPLOYMENT_COMMIT`；Day 26、27 至少需要 `PUBLIC_SITE_URL`。Skip 代表缺少 capture coordinate，不是成功。
+
+### E2E 全綠，為什麼文章仍寫 Agent invocation 未測？
+
+Playwright 驗證 browser behavior。只有相容 Agent 實際發現、選擇並呼叫 Tool，才能建立 E4 evidence。

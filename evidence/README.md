@@ -26,4 +26,28 @@ $env:ARTICLE_REPO_ROOT = "D:\path\to\WEBMCP-iThome-2026-Draft"
 npm run evidence:articles -- --grep "Day 08"
 ```
 
+Day 25–27 會讀取公開站座標。Day 25 需要 URL 與部署 commit 同時存在，避免把 mutable URL 誤配到錯誤原始碼：
+
+```powershell
+$env:ARTICLE_REPO_ROOT = "D:\path\to\WEBMCP-iThome-2026-Draft"
+$env:PUBLIC_SITE_URL = "https://example.azurecontainerapps.io"
+$env:PUBLIC_DEPLOYMENT_COMMIT = "完整 40 字元 commit SHA"
+npm run evidence:articles -- --grep "Day (25|26|27)"
+```
+
 Each capture records Day, route, fixture, selector, action, assertion, expected failure, raw output, final asset, evidence axis, browser version, commit and limitations. A passing Playwright assertion remains E2／`test_harness`; it must not be relabeled as real Agent discovery or invocation.
+
+## Deployment evidence
+
+CI 透過 `npm run evidence:deployment` 寫入 commit、immutable GHCR digest、Azure FQDN、revision、region 與 workflow run URL。`scripts/write-deployment-evidence.ts` 會拒絕 mutable tag、非 GHCR image 與敏感 key。
+
+目前保留的 GitHub run 29179363328 對應 commit `2a2c027`。Artifact 可以證明該 commit 的 container smoke 與 Azure deployment，不能代表目前 local `main` 已部署。
+
+## 不可寫入 Evidence 的資料
+
+- Azure client secret、access token、Origin Trial token
+- Cookie、Authorization header、Session ID
+- 使用者真實 email 或報名個資
+- 只有截圖、沒有 command／commit／limitations 的成功宣告
+
+若外部環境無法使用，請保存 `blocked` 或 `not_tested`。Collector 的工作是驗證現有紀錄，不是補出 E4／E5。
