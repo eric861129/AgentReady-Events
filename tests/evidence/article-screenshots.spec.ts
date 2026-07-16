@@ -1,6 +1,50 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 import { captureEvidence } from "./support/capture-evidence";
+
+async function showEvidence(page: Page, heading: string, content: string) {
+  await page.evaluate(({ heading, content }) => {
+    document.querySelector("[data-article-evidence]")?.remove();
+    const panel = document.createElement("aside");
+    panel.dataset.articleEvidence = "true";
+    panel.setAttribute("aria-label", heading);
+    panel.innerHTML = `<strong></strong><pre></pre>`;
+    panel.querySelector("strong")!.textContent = heading;
+    panel.querySelector("pre")!.textContent = content;
+    Object.assign(panel.style, {
+      position: "fixed",
+      inset: "24px 24px auto auto",
+      width: "460px",
+      maxHeight: "calc(100vh - 48px)",
+      overflow: "auto",
+      padding: "20px",
+      border: "3px solid #0f766e",
+      borderRadius: "16px",
+      background: "#ffffff",
+      color: "#14213d",
+      boxShadow: "0 16px 48px rgba(20, 33, 61, .22)",
+      zIndex: "9999"
+    });
+    const pre = panel.querySelector("pre")!;
+    Object.assign(pre.style, { whiteSpace: "pre-wrap", overflowWrap: "anywhere", fontSize: "15px", lineHeight: "1.55" });
+    document.body.append(panel);
+    document.body.style.paddingRight = "520px";
+  }, { heading, content });
+}
+
+async function dispatchSyntheticAgentForm(page: Page) {
+  return page.evaluate(async () => {
+    const form = document.querySelector("form")!;
+    let response: Promise<unknown> | undefined;
+    const event = new Event("submit", { bubbles: true, cancelable: true });
+    Object.defineProperties(event, {
+      agentInvoked: { value: true },
+      respondWith: { value: (promise: Promise<unknown>) => { response = promise; } }
+    });
+    form.dispatchEvent(event);
+    return response;
+  });
+}
 
 test("Day 02 captures the original locator succeeding", async ({ page }) => {
   await page.goto("/labs/day-02-actuation/index.html?evidence=1");
@@ -167,5 +211,336 @@ test("Day 11 captures Tool discovery lifecycle through the browser fixture", asy
     evidenceAxis: "test_harness",
     evidenceLevel: "E2",
     limitations: ["The discovery surface is a deterministic browser fixture, not the Chrome implementation or a real Agent."]
+  });
+});
+
+test("Day 14 captures the formal product after a human search", async ({ page }) => {
+  await page.goto("/events");
+  await page.getByLabel("地點").selectOption("taipei");
+  await page.getByLabel("費用").selectOption("free");
+  await page.getByLabel("關鍵字").press("Enter");
+  await expect(page.getByRole("list", { name: "活動搜尋結果" }).getByRole("listitem")).toHaveCount(1);
+  await captureEvidence(page, {
+    id: "day-14-ui-before-after",
+    day: 14,
+    route: "/events",
+    fixture: "formal-events-page-human-search",
+    selector: "body",
+    action: "submit taipei and free through the semantic human form",
+    assertion: "the formal product renders one public event after a human search",
+    finalAsset: "assets/day-14/ui-before-after.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This is a Playwright replay of the human product path, not an Agent invocation."]
+  });
+});
+
+test("Day 14 captures the human search journey and shared activity", async ({ page }) => {
+  await page.goto("/events");
+  await page.getByLabel("關鍵字").fill("WebMCP");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await expect(page.getByText("WebMCP 入門工作坊")).toBeVisible();
+  await expect(page.getByRole("list", { name: "操作紀錄" })).toContainText("human · search_events · SUCCESS");
+  await captureEvidence(page, {
+    id: "day-14-human-search-journey",
+    day: 14,
+    route: "/events",
+    fixture: "formal-events-page-shared-action",
+    selector: "body",
+    action: "search for WebMCP through the visible human control",
+    assertion: "the visible result and activity timeline both record the shared search_events action",
+    finalAsset: "assets/day-14/human-search-journey.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The activity entry proves the human path used the shared action; it does not prove Tool discovery."]
+  });
+});
+
+test("Day 15 captures actual Declarative attributes from the formal form", async ({ page }) => {
+  await page.goto("/events");
+  const metadata = await page.locator("form").evaluate((form) => ({
+    toolname: form.getAttribute("toolname"),
+    tooldescription: form.getAttribute("tooldescription"),
+    toolautosubmit: form.hasAttribute("toolautosubmit"),
+    queryDescription: form.querySelector("[name='query']")?.getAttribute("toolparamdescription")
+  }));
+  expect(metadata).toMatchObject({ toolname: "search_events", toolautosubmit: true });
+  await showEvidence(page, "實際 DOM metadata", JSON.stringify(metadata, null, 2));
+  await captureEvidence(page, {
+    id: "day-15-search-form-annotation",
+    day: 15,
+    route: "/events",
+    fixture: "formal-declarative-search-metadata",
+    selector: "body",
+    action: "read the live form and parameter metadata from the DOM",
+    assertion: "the formal form exposes search_events, autosubmit, description, and parameter description",
+    finalAsset: "assets/day-15/search-form-annotation.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The capture reads the page DOM; it does not prove browser-native WebMCP discovery."]
+  });
+});
+
+test("Day 15 captures the formal respondWith result", async ({ page }) => {
+  await page.goto("/events");
+  await page.getByLabel("地點").selectOption("taipei");
+  const result = await dispatchSyntheticAgentForm(page);
+  expect(result).toMatchObject({ count: 1, events: [{ id: "evt-webmcp-intro" }] });
+  await expect(page.getByRole("status")).toContainText("Agent 搜尋已完成");
+  await showEvidence(page, "E2 synthetic respondWith result", JSON.stringify(result, null, 2));
+  await captureEvidence(page, {
+    id: "day-15-search-tool-result",
+    day: 15,
+    route: "/events",
+    fixture: "formal-declarative-respondwith-success",
+    selector: "body",
+    action: "dispatch the Declarative form with the controlled synthetic Agent event",
+    assertion: "respondWith returns one event with opaque ID and the same result is visible in the UI",
+    finalAsset: "assets/day-15/search-tool-result.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This is a synthetic SubmitEvent fixture and is not a real Agent discovery or invocation."]
+  });
+});
+
+test("Day 16 captures the direct opaque-ID detail route", async ({ page }) => {
+  await page.goto("/events/evt-webmcp-intro");
+  await expect(page.getByRole("heading", { name: "WebMCP 入門工作坊" })).toBeVisible();
+  await expect(page.getByText("台北前端共學空間")).toBeVisible();
+  await captureEvidence(page, {
+    id: "day-16-detail-page",
+    day: 16,
+    route: "/events/evt-webmcp-intro",
+    fixture: "formal-public-event-detail",
+    selector: "body",
+    action: "open the event detail route with the opaque public ID",
+    assertion: "the opaque ID resolves to the public event title, venue, and visible actions",
+    finalAsset: "assets/day-16/detail-page.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This proves the browser route and public API response, not an Agent Tool call."]
+  });
+});
+
+test("Day 16 captures opaque ID handoff in the visible timeline", async ({ page }) => {
+  await page.goto("/events");
+  await page.getByLabel("地點").selectOption("taipei");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await page.getByRole("button", { name: "查看詳情" }).click();
+  await expect(page).toHaveURL(/\/events\/evt-webmcp-intro$/);
+  const timeline = page.getByRole("list", { name: "操作紀錄" });
+  await expect(timeline).toContainText("search_events");
+  await expect(timeline).toContainText("get_event_details");
+  await expect(timeline).toContainText("evt-webmcp-intro");
+  await showEvidence(page, "Opaque ID relay", "search_events → evt-webmcp-intro → get_event_details");
+  await captureEvidence(page, {
+    id: "day-16-opaque-id-relay",
+    day: 16,
+    route: "/events/evt-webmcp-intro",
+    fixture: "formal-search-to-detail-id-handoff",
+    selector: "body",
+    action: "search, follow the visible detail action, and inspect the shared activity timeline",
+    assertion: "the same opaque event ID is handed from search_events to get_event_details",
+    finalAsset: "assets/day-16/opaque-id-relay.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This is a human browser journey through shared actions, not a real Agent invocation."]
+  });
+});
+
+test("Day 18 captures save feedback and an available Undo action", async ({ page }) => {
+  await page.goto("/events/evt-webmcp-intro");
+  await page.getByRole("button", { name: "收藏活動" }).click();
+  await expect(page.getByRole("status")).toContainText("已收藏");
+  await expect(page.getByRole("button", { name: "Undo" })).toBeVisible();
+  await captureEvidence(page, {
+    id: "day-18-save-undo-sequence",
+    day: 18,
+    route: "/events/evt-webmcp-intro",
+    fixture: "formal-save-with-undo",
+    selector: "body",
+    action: "save the current event through the visible human action",
+    assertion: "save success is visible and an Undo control is available for the same opaque event ID",
+    finalAsset: "assets/day-18/save-undo-sequence.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The screenshot captures the post-save state; the Playwright assertion is the reproducible evidence."]
+  });
+});
+
+test("Day 18 captures idempotent duplicate save behavior", async ({ page }) => {
+  await page.goto("/events/evt-webmcp-intro");
+  await page.getByRole("button", { name: "收藏活動" }).click();
+  await expect(page.getByRole("status")).toContainText("已收藏");
+  await page.getByRole("button", { name: "收藏活動" }).click();
+  await expect(page.getByRole("status")).toContainText("沒有重複新增");
+  await showEvidence(page, "Playwright assertion", "second save → alreadySaved=true\nvisible status → 沒有重複新增");
+  await captureEvidence(page, {
+    id: "day-18-save-tests",
+    day: 18,
+    route: "/events/evt-webmcp-intro",
+    fixture: "formal-idempotent-save",
+    selector: "body",
+    action: "save the same event twice in one browser session",
+    assertion: "the second save is idempotent and the UI reports that no duplicate was added",
+    finalAsset: "assets/day-18/save-tests.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This is a deterministic browser test state, not a production or Agent invocation result."]
+  });
+});
+
+test("Day 19 captures prepare-only registration state", async ({ page }) => {
+  let posts = 0;
+  page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/api/registrations")) posts += 1; });
+  await page.goto("/events/evt-webmcp-intro/register");
+  await page.getByLabel("姓名").fill("王小明");
+  await page.getByLabel("Email（不保存）").fill("reader@example.com");
+  const result = await dispatchSyntheticAgentForm(page);
+  expect(result).toMatchObject({ code: "CONFIRMATION_REQUIRED" });
+  expect(posts).toBe(0);
+  await showEvidence(page, "Preparation result", `${JSON.stringify(result, null, 2)}\n\nPOST /api/registrations = ${posts}`);
+  await captureEvidence(page, {
+    id: "day-19-prepared-registration",
+    day: 19,
+    route: "/events/evt-webmcp-intro/register",
+    fixture: "formal-registration-prepare-only",
+    selector: "body",
+    action: "dispatch the controlled synthetic preparation event without human confirmation",
+    assertion: "preparation returns CONFIRMATION_REQUIRED and performs zero registration POST requests",
+    finalAsset: "assets/day-19/prepared-registration.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The preparation event is synthetic and is not a real Agent invocation."]
+  });
+});
+
+test("Day 19 captures zero POST before the human submit", async ({ page }) => {
+  let posts = 0;
+  page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/api/registrations")) posts += 1; });
+  await page.goto("/events/evt-webmcp-intro/register");
+  await page.getByLabel("姓名").fill("王小明");
+  await page.getByLabel("Email（不保存）").fill("reader@example.com");
+  await dispatchSyntheticAgentForm(page);
+  expect(posts).toBe(0);
+  await showEvidence(page, "Observed network boundary", "GET event detail = completed\nPOST /api/registrations = 0\nmutation = none");
+  await captureEvidence(page, {
+    id: "day-19-zero-post-network",
+    day: 19,
+    route: "/events/evt-webmcp-intro/register",
+    fixture: "formal-registration-network-boundary",
+    selector: "body",
+    action: "observe registration POST requests after preparation and before the human click",
+    assertion: "the Playwright request observer records zero registration POST requests before human confirmation",
+    finalAsset: "assets/day-19/zero-post-network.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The request count is observed inside this isolated browser test session."]
+  });
+});
+
+test("Day 19 captures the single human registration POST", async ({ page }) => {
+  let posts = 0;
+  page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/api/registrations")) posts += 1; });
+  await page.goto("/events/evt-webmcp-intro/register");
+  await page.getByLabel("姓名").fill("王小明");
+  await page.getByLabel("Email（不保存）").fill("reader@example.com");
+  await page.getByRole("button", { name: "我確認並送出報名" }).click();
+  await expect.poll(() => posts).toBe(1);
+  await expect(page.getByRole("status")).toContainText("報名完成");
+  await showEvidence(page, "Human authority result", "POST /api/registrations = 1\nvisible status = 報名完成");
+  await captureEvidence(page, {
+    id: "day-19-human-submit",
+    day: 19,
+    route: "/events/evt-webmcp-intro/register",
+    fixture: "formal-registration-human-submit",
+    selector: "body",
+    action: "click the explicit human confirmation control once",
+    assertion: "one human click performs exactly one registration POST and renders completion feedback",
+    finalAsset: "assets/day-19/human-submit.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This proves the controlled browser journey and does not claim a real Agent prepared the form."]
+  });
+});
+
+test("Day 20 captures cancellation summary before mutation", async ({ page }) => {
+  await page.goto("/events/evt-webmcp-intro/register");
+  await page.getByLabel("姓名").fill("王小明");
+  await page.getByLabel("Email（不保存）").fill("reader@example.com");
+  await page.getByRole("button", { name: "我確認並送出報名" }).click();
+  await expect(page.getByRole("status")).toContainText("報名完成");
+  let cancelPosts = 0;
+  page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/cancel")) cancelPosts += 1; });
+  await page.goto("/registrations");
+  await page.getByRole("button", { name: "準備取消" }).click();
+  await expect(page.getByRole("dialog", { name: "確認取消報名" })).toBeVisible();
+  expect(cancelPosts).toBe(0);
+  await showEvidence(page, "Cancellation boundary", "dialog = visible\nfocus = 保留報名\nPOST /cancel = 0");
+  await captureEvidence(page, {
+    id: "day-20-cancellation-dialog",
+    day: 20,
+    route: "/registrations",
+    fixture: "formal-cancellation-confirmation-dialog",
+    selector: "body",
+    action: "prepare cancellation and stop before the explicit human confirmation",
+    assertion: "the accessible consequence dialog is visible while cancel POST count remains zero",
+    finalAsset: "assets/day-20/cancellation-dialog.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The registration belongs to this isolated test session; authorization failures are covered separately."]
+  });
+});
+
+test("Day 21 captures a complete browser journey without Agent claims", async ({ page }) => {
+  await page.goto("/events");
+  await page.getByLabel("地點").selectOption("taipei");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await page.getByRole("button", { name: "查看詳情" }).click();
+  await page.getByRole("button", { name: "收藏活動" }).click();
+  const timeline = page.getByRole("list", { name: "操作紀錄" });
+  await expect(timeline).toContainText("search_events");
+  await expect(timeline).toContainText("get_event_details");
+  await expect(timeline).toContainText("save_event");
+  await showEvidence(page, "E2 browser journey", "human search → human details → human save\nagent invocation = not tested");
+  await captureEvidence(page, {
+    id: "day-21-codex-journey",
+    day: 21,
+    route: "/events/evt-webmcp-intro",
+    fixture: "formal-browser-journey-a",
+    selector: "body",
+    action: "complete search, detail, and save through human browser controls",
+    assertion: "the E2 browser journey records all three formal action names and one opaque event ID",
+    finalAsset: "assets/day-21/codex-journey.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This is a Playwright human browser journey; agent_invocation remains not tested."]
+  });
+});
+
+test("Day 21 captures a minimized Tool failure timeline", async ({ page }) => {
+  await page.route("**/api/events?**", async (route) => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ message: "private upstream" })
+  }));
+  await page.goto("/events");
+  await dispatchSyntheticAgentForm(page);
+  const timeline = page.getByRole("list", { name: "操作紀錄" });
+  await expect(timeline).toContainText("agent · search_events · TEMPORARY_FAILURE");
+  await expect(timeline).not.toContainText("private upstream");
+  await showEvidence(page, "Minimized activity", "agent · search_events · TEMPORARY_FAILURE\nprivate upstream detail = hidden");
+  await captureEvidence(page, {
+    id: "day-21-activity-timeline",
+    day: 21,
+    route: "/events",
+    fixture: "formal-minimized-failure-activity",
+    selector: "body",
+    action: "force a controlled 503 and dispatch the synthetic Agent form event",
+    assertion: "the activity timeline exposes the safe failure code without leaking the private upstream message",
+    finalAsset: "assets/day-21/activity-timeline.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["The failure and Agent event are controlled test fixtures, not a production incident or real Agent invocation."]
   });
 });
