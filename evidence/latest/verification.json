@@ -1,7 +1,7 @@
 {
   "evidenceLevel": "E2",
-  "captured_at": "2026-07-16T07:16:23.566Z",
-  "commit": "6fa2b76cca477e92758d1ff9e413f9f89df735eb",
+  "captured_at": "2026-07-16T08:13:05.239Z",
+  "commit": "ecd2f100b174079501e7c9bf4012ffb4139cd696",
   "url": "local://playwright-web-server",
   "environment": {
     "node": "v24.15.0",
@@ -20,8 +20,8 @@
   "test_harness": "browser_automation",
   "node": "v24.15.0",
   "platform": "win32-x64",
-  "startedAt": "2026-07-16T07:16:23.566Z",
-  "completedAt": "2026-07-16T07:17:10.935Z",
+  "startedAt": "2026-07-16T08:13:05.239Z",
+  "completedAt": "2026-07-16T08:14:21.226Z",
   "success": true,
   "commands": [
     {
@@ -30,8 +30,8 @@
         "run",
         "lint"
       ],
-      "startedAt": "2026-07-16T07:16:23.569Z",
-      "completedAt": "2026-07-16T07:16:36.199Z",
+      "startedAt": "2026-07-16T08:13:05.242Z",
+      "completedAt": "2026-07-16T08:13:23.594Z",
       "exitCode": 0
     },
     {
@@ -40,8 +40,8 @@
         "run",
         "typecheck"
       ],
-      "startedAt": "2026-07-16T07:16:36.199Z",
-      "completedAt": "2026-07-16T07:16:39.973Z",
+      "startedAt": "2026-07-16T08:13:23.594Z",
+      "completedAt": "2026-07-16T08:13:28.646Z",
       "exitCode": 0
     },
     {
@@ -50,8 +50,8 @@
         "run",
         "test"
       ],
-      "startedAt": "2026-07-16T07:16:39.973Z",
-      "completedAt": "2026-07-16T07:16:45.070Z",
+      "startedAt": "2026-07-16T08:13:28.646Z",
+      "completedAt": "2026-07-16T08:13:52.791Z",
       "exitCode": 0
     },
     {
@@ -60,8 +60,8 @@
         "run",
         "test:api"
       ],
-      "startedAt": "2026-07-16T07:16:45.070Z",
-      "completedAt": "2026-07-16T07:16:47.250Z",
+      "startedAt": "2026-07-16T08:13:52.791Z",
+      "completedAt": "2026-07-16T08:13:55.412Z",
       "exitCode": 0
     },
     {
@@ -71,8 +71,8 @@
         "run",
         "tests/security"
       ],
-      "startedAt": "2026-07-16T07:16:47.250Z",
-      "completedAt": "2026-07-16T07:16:52.798Z",
+      "startedAt": "2026-07-16T08:13:55.412Z",
+      "completedAt": "2026-07-16T08:14:01.531Z",
       "exitCode": 0
     },
     {
@@ -81,8 +81,8 @@
         "run",
         "test:e2e"
       ],
-      "startedAt": "2026-07-16T07:16:52.798Z",
-      "completedAt": "2026-07-16T07:17:06.003Z",
+      "startedAt": "2026-07-16T08:14:01.531Z",
+      "completedAt": "2026-07-16T08:14:15.278Z",
       "exitCode": 0
     },
     {
@@ -91,8 +91,8 @@
         "run",
         "build"
       ],
-      "startedAt": "2026-07-16T07:17:06.003Z",
-      "completedAt": "2026-07-16T07:17:10.935Z",
+      "startedAt": "2026-07-16T08:14:15.278Z",
+      "completedAt": "2026-07-16T08:14:21.225Z",
       "exitCode": 0
     }
   ]
