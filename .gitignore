@@ -4,4 +4,5 @@ server-dist/
 playwright-report/
 test-results/
 .playwright-cli/
+evidence/article-screenshots/.playwright/
 .DS_Store
