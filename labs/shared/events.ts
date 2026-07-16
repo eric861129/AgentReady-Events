@@ -3,6 +3,8 @@ export type LabEvent = {
   title: string;
   summary: string;
   location: "taipei" | "kaohsiung" | "online";
+  city: "taipei" | "kaohsiung" | null;
+  format: "onsite" | "online";
   price: "free" | "paid";
   level: "beginner" | "intermediate" | "advanced";
 };
@@ -17,6 +19,8 @@ export const LAB_EVENTS: LabEvent[] = [
     title: "WebMCP 入門工作坊",
     summary: "從語意表單開始，讓網站主動介紹能力。",
     location: "taipei",
+    city: "taipei",
+    format: "onsite",
     price: "free",
     level: "beginner"
   },
@@ -25,6 +29,8 @@ export const LAB_EVENTS: LabEvent[] = [
     title: "Agent 測試實戰",
     summary: "用固定案例檢驗 Tool 選擇、參數與失敗復原。",
     location: "online",
+    city: null,
+    format: "online",
     price: "paid",
     level: "advanced"
   },
@@ -33,6 +39,8 @@ export const LAB_EVENTS: LabEvent[] = [
     title: "語意 HTML 不老派",
     summary: "用 label、name 與原生控制項建立穩定介面。",
     location: "kaohsiung",
+    city: "kaohsiung",
+    format: "onsite",
     price: "free",
     level: "intermediate"
   }
