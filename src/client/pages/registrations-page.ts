@@ -14,7 +14,6 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   list.setAttribute("aria-label", "我的報名列表");
   const registrations = await registrationsRequest();
   let stateVersion = 1;
-  let dialogApi: ReturnType<typeof createConfirmationDialog>;
   const updateCancelled = (registrationId: string) => {
     const item = list.querySelector<HTMLElement>(`[data-registration-id="${registrationId}"]`);
     item?.querySelector("button")?.remove();
@@ -22,7 +21,7 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
     status.textContent = "已取消報名";
     stateVersion += 1;
   };
-  dialogApi = createConfirmationDialog(async (summary) => {
+  const dialogApi = createConfirmationDialog(async (summary) => {
     await cancellationRequest(summary.registrationId, { mode: "human" });
     recordActivity("cancel_registration", "human", "SUCCESS", { eventId: summary.eventId, registrationId: summary.registrationId });
     updateCancelled(summary.registrationId);

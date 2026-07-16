@@ -12,13 +12,27 @@ export const VERIFY_COMMANDS: ReadonlyArray<readonly [string, readonly string[]]
   ["npm", ["run", "build"]]
 ];
 
+export function resolveSpawnCommand(
+  command: string,
+  args: readonly string[],
+  platform = process.platform,
+  commandShell = process.env.ComSpec
+) {
+  if (platform !== "win32") return { command, args: [...args] };
+  return {
+    command: commandShell || "cmd.exe",
+    args: ["/d", "/s", "/c", command, ...args]
+  };
+}
+
 export function runVerification(): number {
   const commit = spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8", shell: false }).stdout.trim();
   const report = { commit, node: process.version, platform: `${process.platform}-${process.arch}`, startedAt: new Date().toISOString(), completedAt: "", success: false, commands: [] as Array<Record<string, unknown>> };
   let exitCode = 0;
   for (const [command, args] of VERIFY_COMMANDS) {
     const startedAt = new Date().toISOString();
-    const result = spawnSync(command, [...args], { stdio: "inherit", shell: false });
+    const resolvedCommand = resolveSpawnCommand(command, args);
+    const result = spawnSync(resolvedCommand.command, resolvedCommand.args, { stdio: "inherit", shell: false });
     const commandExitCode = result.status ?? 1;
     report.commands.push({ command, args, startedAt, completedAt: new Date().toISOString(), exitCode: commandExitCode });
     if (commandExitCode !== 0) { exitCode = commandExitCode; break; }

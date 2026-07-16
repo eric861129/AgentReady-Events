@@ -3,8 +3,20 @@ import { expect, it } from "vitest";
 
 const workflow = readFileSync(".github/workflows/deploy-azure.yml", "utf8");
 
+function expectManualWorkflowDispatch(value: string) {
+  const normalized = value.replace(/\r\n?/g, "\n");
+  expect(normalized).toMatch(/\non:\n\s+workflow_dispatch:/);
+}
+
+it.each([
+  ["LF", "name: Deploy\non:\n  workflow_dispatch:\n"],
+  ["CRLF", "name: Deploy\r\non:\r\n  workflow_dispatch:\r\n"]
+])("recognizes workflow_dispatch with %s line endings", (_label, value) => {
+  expectManualWorkflowDispatch(value);
+});
+
 it("is manually triggered and grants only required permissions", () => {
-  expect(workflow).toMatch(/\non:\n\s+workflow_dispatch:/);
+  expectManualWorkflowDispatch(workflow);
   for (const forbiddenTrigger of ["push:", "pull_request:", "schedule:"]) {
     expect(workflow).not.toContain(forbiddenTrigger);
   }

@@ -1,6 +1,6 @@
 import type { ProjectTool } from "./types";
 
-export type AnyProjectTool = ProjectTool<any, any>;
+export type AnyProjectTool = ProjectTool<never, unknown>;
 type Register = (tool: AnyProjectTool) => Promise<AbortController | undefined>;
 
 export class WebMcpRegistry {
