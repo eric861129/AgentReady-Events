@@ -12,6 +12,11 @@ const EVIDENCE_STATUSES = new Set(["not_tested", "passed", "failed", "blocked"])
 const SOURCE_TYPES = new Set(["browser_capture", "test_output", "generated_diagram", "live_capture", "record_replay", "narrative", "official_source"]);
 const TEST_HARNESSES = new Set(["none", "unit", "direct_execution", "synthetic_submit", "record_replay", "browser_automation"]);
 
+export function isEvidenceRecordPath(path: string): boolean {
+  const normalized = path.replace(/\\/g, "/");
+  return normalized.endsWith(".json") && normalized.split("/").at(-1) !== "index.json";
+}
+
 function requireString(record: EvidenceRecord, field: string): string {
   const value = record[field];
   if (typeof value !== "string" || !value.trim()) throw new Error(`Evidence requires ${field}.`);
@@ -57,7 +62,7 @@ export function validateEvidenceRecord(record: EvidenceRecord): void {
 export function collect(day: string): void {
   if (!/^\d{1,2}$/.test(day)) throw new Error("Day must be numeric.");
   const directory = resolve(`evidence/day-${day.padStart(2, "0")}`);
-  const files = readdirSync(directory, { recursive: true }).filter((name) => String(name).endsWith(".json")).map(String).sort();
+  const files = readdirSync(directory, { recursive: true }).map(String).filter(isEvidenceRecordPath).sort();
   const entries = files.map((file) => {
     const bytes = readFileSync(resolve(directory, file));
     const record = JSON.parse(bytes.toString()) as EvidenceRecord;

@@ -1,10 +1,59 @@
 {
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-16T09:30:50.906Z",
   "evidenceLevel": "E3",
-  "commit": "00e4fe4ae4a10754ef658267597c3ea261d47ba5",
-  "url": "http://127.0.0.1:43129",
-  "environment": { "mode": "local-production-candidate", "browser": "Chrome 150", "node": "v25.4.0", "dockerDaemon": "unavailable" },
+  "captured_at": "2026-07-16T09:30:50.906Z",
+  "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "environment": {
+    "localVerificationPlatform": "win32-x64",
+    "deployedPlatform": "linux/amd64",
+    "azureRegion": "eastasia"
+  },
+  "browser_version": "Playwright-managed Chromium 149.0.7827.55 for current capability preflight",
+  "command": "npm run verify; inspect GitHub run 29179363328; replay public capability preflight",
+  "source_type": "record_replay",
+  "result": "blocked",
+  "runtime_integration": "passed",
+  "webmcp_capability": "blocked",
+  "agent_invocation": "blocked",
+  "test_harness": "record_replay",
+  "localVerification": {
+    "evidenceLevel": "E2",
+    "commit": "e1cbe348d458a44f30f96e28b7172e0c6bc8f43d",
+    "node": "v24.15.0",
+    "platform": "win32-x64",
+    "command": "npm run verify",
+    "status": "passed",
+    "commandCount": 7,
+    "sourceArtifact": "evidence/latest/verification.json"
+  },
+  "deployedRuntime": {
+    "evidenceLevel": "E3",
+    "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+    "workflowRunId": 29179363328,
+    "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+    "imageRef": "ghcr.io/eric861129/agentready-events@sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+    "revision": "ca-agentready-events--0000002",
+    "containerSmoke": "passed",
+    "publicHttpsSmoke": "passed"
+  },
+  "capabilityPreflight": {
+    "capturedAt": "2026-07-16T09:27:50.771Z",
+    "browser": "Playwright-managed Chromium 149.0.7827.55",
+    "secureContext": true,
+    "originTrialHeader": "present",
+    "documentModelContext": false,
+    "webmcpCapability": "blocked",
+    "agentInvocation": "blocked"
+  },
   "discoveredSchema": null,
   "invocation": null,
-  "publicDeployment": false,
-  "limitations": ["No author-authorized HTTPS host", "Current browser surface exposed no document.modelContext", "Docker daemon unavailable"]
+  "cleanReplayTask": null,
+  "limitations": [
+    "Local verification commit e1cbe34 and deployed commit 2a2c027 are different version coordinates.",
+    "The current browser capability probe exposed no document.modelContext.",
+    "No real Agent discovery, invocation, or E5 clean replay was observed.",
+    "Local Docker and Azure CLI are unavailable; container and Azure claims come from GitHub workflow artifacts."
+  ]
 }

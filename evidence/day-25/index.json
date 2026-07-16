@@ -1,0 +1,24 @@
+{
+  "day": 25,
+  "generatedAt": "2026-07-16T11:17:47.352Z",
+  "entries": [
+    {
+      "path": "deployment.json",
+      "sha256": "34ef47923497080205218a82098fd007fc3a96db47d07bb5c26809151e4f3152",
+      "evidenceLevel": "E3",
+      "result": "passed",
+      "runtime_integration": "passed",
+      "webmcp_capability": "not_tested",
+      "agent_invocation": "not_tested",
+      "test_harness": "record_replay"
+    }
+  ],
+  "levelCounts": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "E3": 1,
+    "E4": 0,
+    "E5": 0
+  }
+}

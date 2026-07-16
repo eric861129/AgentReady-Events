@@ -1,8 +1,54 @@
 {
-  "date": "2026-07-12",
-  "mode": "local-production-candidate",
-  "nodeSmoke": { "status": "passed", "commands": ["npm run build", "npm run smoke:deployment"] },
-  "dockerSmoke": { "status": "not-run", "classification": "environment", "reason": "Docker CLI could not connect to unix:///var/run/docker.sock because the daemon was unavailable." },
-  "publicUrl": null,
-  "publicDeployment": "pending-author-host-selection-and-authorization"
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-16T09:06:00+08:00",
+  "evidenceLevel": "E3",
+  "captured_at": "2026-07-16T09:06:00+08:00",
+  "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "environment": {
+    "workflowRunId": 29179363328,
+    "platform": "linux/amd64",
+    "azureRegion": "eastasia"
+  },
+  "browser_version": "GitHub Actions browser journey; exact version retained in workflow artifact",
+  "command": "gh run view 29179363328 and inspect downloaded build/deployment artifacts",
+  "source_type": "record_replay",
+  "result": "passed",
+  "runtime_integration": "passed",
+  "webmcp_capability": "not_tested",
+  "agent_invocation": "not_tested",
+  "test_harness": "record_replay",
+  "mode": "versioned-public-deployment",
+  "deployment": {
+    "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+    "workflowRunId": 29179363328,
+    "workflowRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/29179363328",
+    "imageRef": "ghcr.io/eric861129/agentready-events@sha256:7f6e33bc3e0d79a2effb8e9896de6d395c9b7b899493e2e51220c61b46483252",
+    "revision": "ca-agentready-events--0000002",
+    "region": "eastasia",
+    "publicUrl": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io"
+  },
+  "containerSmoke": {
+    "status": "passed",
+    "platform": "linux/amd64",
+    "checks": 4,
+    "sourceArtifact": "evidence/github-run-29179363328/container/container-smoke.json"
+  },
+  "publicHttpsSmoke": {
+    "status": "passed",
+    "checks": 4,
+    "sessionIsolation": true,
+    "forgedAgentFinalizationRejected": true,
+    "browserJourneys": true,
+    "sourceArtifact": "evidence/github-run-29179363328/azure/latest/azure-smoke.json"
+  },
+  "localTooling": {
+    "dockerCli": "unavailable",
+    "azureCli": "unavailable"
+  },
+  "limitations": [
+    "The deployment proves commit 2a2c027, not the current local main branch.",
+    "Local Docker and Azure CLI checks remain unavailable on this Windows host.",
+    "Deployment success does not prove WebMCP capability, Tool discovery, or Agent invocation."
+  ]
 }

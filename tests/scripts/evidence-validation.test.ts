@@ -1,5 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { expect, it } from "vitest";
-import { validateEvidenceRecord } from "../../scripts/collect-evidence";
+import { isEvidenceRecordPath, validateEvidenceRecord } from "../../scripts/collect-evidence";
 import { createVerificationEvidenceMetadata } from "../../scripts/verify";
 
 const base = {
@@ -45,4 +47,45 @@ it("accepts verification metadata only as E2 harness evidence", () => {
   const verification = createVerificationEvidenceMetadata("abc", "2026-07-16T06:30:00.000Z");
   expect(() => validateEvidenceRecord(verification)).not.toThrow();
   expect(verification.agent_invocation).toBe("not_tested");
+});
+
+it("keeps the Day 25, 27 and 29 release records on the shared evidence contract", () => {
+  const records = [
+    "evidence/day-25/deployment.json",
+    "evidence/day-27/preflight.json",
+    "evidence/day-29/release-candidate.json"
+  ].map((path) => JSON.parse(readFileSync(resolve(path), "utf8")) as Record<string, unknown>);
+
+  for (const record of records) {
+    expect(() => validateEvidenceRecord(record)).not.toThrow();
+  }
+
+  expect(records[0]).toMatchObject({
+    evidenceLevel: "E3",
+    runtime_integration: "passed",
+    webmcp_capability: "not_tested",
+    agent_invocation: "not_tested"
+  });
+  expect(records[1]).toMatchObject({
+    evidenceLevel: "E3",
+    runtime_integration: "passed",
+    webmcp_capability: "blocked",
+    agent_invocation: "blocked"
+  });
+  expect(records[2]).toMatchObject({
+    evidenceLevel: "E3",
+    runtime_integration: "passed",
+    webmcp_capability: "blocked",
+    agent_invocation: "blocked",
+    discoveredSchema: null,
+    invocation: null
+  });
+});
+
+it("keeps generated indexes out of repeatable evidence collection", () => {
+  expect(isEvidenceRecordPath("release-candidate.json")).toBe(true);
+  expect(isEvidenceRecordPath("nested/result.json")).toBe(true);
+  expect(isEvidenceRecordPath("index.json")).toBe(false);
+  expect(isEvidenceRecordPath("nested/index.json")).toBe(false);
+  expect(isEvidenceRecordPath("notes.md")).toBe(false);
 });

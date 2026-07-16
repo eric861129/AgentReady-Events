@@ -1,13 +1,42 @@
 {
-  "date": "2026-07-12",
-  "commit": "debd75059555c1d55b1b630cd913912fcf3c875f",
-  "url": "http://127.0.0.1:43129/events",
-  "mode": "local-production-candidate",
-  "browser": "HeadlessChrome 150.0.0.0",
-  "secureContext": true,
-  "documentModelContext": false,
-  "discoveredTools": [],
-  "classification": "environment",
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-16T09:27:50.771Z",
   "evidenceLevel": "E3",
-  "notes": "Real Chrome was launched against the production build. Fake ModelContext and direct Tool calls were not used."
+  "captured_at": "2026-07-16T09:27:50.771Z",
+  "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "deployedCommit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events",
+  "environment": {
+    "platform": "win32",
+    "browser": "chromium",
+    "publicDeployment": "Azure Container Apps"
+  },
+  "browser_version": "Playwright-managed Chromium 149.0.7827.55",
+  "command": "npm run evidence:articles -- --grep \"Day 26\"",
+  "source_type": "browser_capture",
+  "result": "blocked",
+  "runtime_integration": "passed",
+  "webmcp_capability": "blocked",
+  "agent_invocation": "blocked",
+  "test_harness": "browser_automation",
+  "mode": "public-production-capability-preflight",
+  "browser": {
+    "name": "Playwright-managed Chromium",
+    "version": "149.0.7827.55",
+    "platform": "win32"
+  },
+  "secureContext": true,
+  "originTrialHeader": "present",
+  "documentModelContext": false,
+  "getTools": "not-run-capability-unavailable",
+  "discoveredTools": [],
+  "invocations": [],
+  "classification": "environment",
+  "sourceCommand": "npm run evidence:articles -- --grep \"Day 26\"",
+  "sourceArtifact": "../WEBMCP-iThome-2026-Draft/evidence/article-screenshots/day-26-origin-trial.evidence.json",
+  "limitations": [
+    "The Browser capability probe found no document.modelContext, so getTools and executeTool were not attempted.",
+    "Playwright browser automation is not an Agent surface and does not prove Tool discovery or invocation.",
+    "The public deployment is commit 2a2c027, not the current local main branch."
+  ]
 }

@@ -1,11 +1,16 @@
 {
   "day": 29,
-  "generatedAt": "2026-07-11T17:46:20.035Z",
+  "generatedAt": "2026-07-16T11:17:49.250Z",
   "entries": [
     {
       "path": "release-candidate.json",
-      "sha256": "cd7ca1ea98f21c17702df9b249f6d631efd57dc158201a07cb0773ec63f235d6",
-      "evidenceLevel": "E3"
+      "sha256": "99c18dfbb7e630a15b42ba6f53f38355c2c079b0d8467e865fee4e62c7fd731f",
+      "evidenceLevel": "E3",
+      "result": "blocked",
+      "runtime_integration": "passed",
+      "webmcp_capability": "blocked",
+      "agent_invocation": "blocked",
+      "test_harness": "record_replay"
     }
   ],
   "levelCounts": {
