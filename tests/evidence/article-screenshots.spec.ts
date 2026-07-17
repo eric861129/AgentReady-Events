@@ -1,6 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 import { captureEvidence } from "./support/capture-evidence";
+import {
+  buildDay02EvidenceMatrixHtml,
+  type Day02EvidenceMatrixCase
+} from "./support/day-02-evidence-matrix";
 
 async function showEvidence(page: Page, heading: string, content: string) {
   await page.evaluate(({ heading, content }) => {
@@ -61,7 +65,7 @@ test("Day 02 captures the original locator succeeding", async ({ page }) => {
   await locator.click();
   await expect(page.getByRole("status")).toContainText("人類操作已完成");
   await page.locator("#locator-expression").evaluate((node) => { node.textContent = 'getByRole("button", { name: "搜尋活動" })'; });
-  await page.locator("#automation-outcome").evaluate((node) => { node.textContent = "Locator resolved one control; click completed and visible status changed."; });
+  await page.locator("#automation-outcome").evaluate((node) => { node.textContent = "Locator 找到唯一控制項；click 完成後，可見狀態已更新。"; });
   await captureEvidence(page, {
     id: "day-02-button-before-after",
     day: 2,
@@ -69,7 +73,7 @@ test("Day 02 captures the original locator succeeding", async ({ page }) => {
     fixture: "original-search-button",
     selector: "body",
     action: "click the original control with its accessible-name locator",
-    assertion: "the original locator resolves one control and the visible search status changes",
+    assertion: "原始 Locator 找到唯一按鈕，click 後搜尋狀態與結果同步更新。",
     finalAsset: "assets/day-02/button-before-after.webp",
     evidenceAxis: "test_harness",
     evidenceLevel: "E2",
@@ -77,7 +81,7 @@ test("Day 02 captures the original locator succeeding", async ({ page }) => {
   });
 });
 
-test("Day 02 captures the real locator failure and synthetic Tool success", async ({ page }) => {
+test("Day 02 captures the real accessible-name timeout and updated locator success", async ({ page }) => {
   await page.goto("/labs/day-02-actuation/index.html?variant=renamed&evidence=1");
   const oldLocator = page.getByRole("button", { name: "搜尋活動" });
   let errorMessage = "";
@@ -89,35 +93,141 @@ test("Day 02 captures the real locator failure and synthetic Tool success", asyn
   expect(errorMessage).toContain("Timeout 500ms exceeded");
   const sanitizedError = (errorMessage.split("\n    at ", 1).at(0) ?? errorMessage).slice(0, 900);
   await page.locator("#locator-expression").evaluate((node) => { node.textContent = 'getByRole("button", { name: "搜尋活動" })'; });
+  await page.locator("#automation-outcome").evaluate((node) => { node.textContent = "舊 accessible name 等待逾時；改用目前名稱後，搜尋仍能完成。"; });
   await page.locator("#locator-error").evaluate((node, message) => { node.textContent = message; }, sanitizedError);
   await page.locator("#dom-after").evaluate((node, markup) => { node.textContent = markup; }, await page.getByRole("button", { name: "探索場次" }).evaluate((button) => button.parentElement?.outerHTML ?? button.outerHTML));
 
-  const result = await page.evaluate(async () => {
-    const form = document.querySelector("form")!;
-    let response: Promise<unknown> | undefined;
-    const event = new Event("submit", { bubbles: true, cancelable: true });
-    Object.defineProperties(event, {
-      agentInvoked: { value: true },
-      respondWith: { value: (promise: Promise<unknown>) => { response = promise; } }
-    });
-    form.dispatchEvent(event);
-    return response;
-  });
-  expect(result).toMatchObject({ ok: true, count: 1 });
-  await expect(page.getByRole("status")).toContainText("E2 synthetic Agent submission");
+  await page.getByRole("button", { name: "探索場次" }).click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成：1 場");
   await captureEvidence(page, {
     id: "day-02-locator-failure",
     day: 2,
     route: "/labs/day-02-actuation/index.html?variant=renamed&evidence=1",
-    fixture: "renamed-and-wrapped-search-button",
+    fixture: "renamed-search-button",
     selector: "body",
-    action: "run the old accessible-name locator, preserve its error, then dispatch the Declarative form synthetically",
-    assertion: "the old locator times out while search_events returns one result through the E2 synthetic submission path",
-    expectedFailure: "Playwright accessible-name locator times out after the visible label and DOM wrapper change.",
+    action: "run the old accessible-name locator, preserve its error, then click with the current accessible name",
+    assertion: "舊 accessible name 逾時；改用目前名稱後，同一個搜尋仍可完成。",
+    expectedFailure: "Playwright accessible-name locator times out after the visible label changes.",
     finalAsset: "assets/day-02/locator-failure.webp",
     evidenceAxis: "test_harness",
     evidenceLevel: "E2",
-    limitations: ["The WebMCP comparison uses a synthetic SubmitEvent fixture; it does not prove a real Agent discovered or invoked the Tool."]
+    limitations: ["This capture proves a Playwright locator failure and recovery path; it is not an Agent invocation."]
+  });
+});
+
+test("Day 02 captures four distinct locator experiments in one runtime matrix", async ({ page }) => {
+  const screenshotDataUrl = async () => {
+    const mainBox = await page.locator("main").boundingBox();
+    const startBox = await page.locator(".variant").boundingBox();
+    const endBox = await page.locator("#results").boundingBox();
+    if (!mainBox || !startBox || !endBox) throw new Error("Day 02 runtime screenshot region is unavailable");
+    const screenshot = await page.screenshot({
+      animations: "disabled",
+      clip: {
+        x: mainBox.x,
+        y: startBox.y,
+        width: mainBox.width,
+        height: endBox.y + endBox.height - startBox.y + 8
+      }
+    });
+    return `data:image/png;base64,${screenshot.toString("base64")}`;
+  };
+  const timeoutMessage = async (action: () => Promise<void>) => {
+    try {
+      await action();
+      return "";
+    } catch (error) {
+      return error instanceof Error ? error.message : String(error);
+    }
+  };
+  const cases: Day02EvidenceMatrixCase[] = [];
+
+  await page.goto("/labs/day-02-actuation/index.html");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成：1 場");
+  cases.push({
+    number: "01",
+    title: "原始介面",
+    mutation: "沒有修改；使用 Day 1 基準介面",
+    locator: 'getByRole("button", { name: "搜尋活動" })',
+    primaryOutcome: "click 成功，畫面顯示 1 場",
+    recoveryOutcome: null,
+    detail: "Playwright 找到唯一按鈕，這是後續三個實驗的比較基準。",
+    screenshotDataUrl: await screenshotDataUrl(),
+    tone: "success"
+  });
+
+  await page.goto("/labs/day-02-actuation/index.html?variant=wrapped");
+  await expect(page.locator(".action-shell")).toBeVisible();
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成：1 場");
+  cases.push({
+    number: "02",
+    title: "DOM 包裝",
+    mutation: "button 外層新增 .action-shell",
+    locator: 'getByRole("button", { name: "搜尋活動" })',
+    primaryOutcome: "role 與名稱不變，click 仍成功",
+    recoveryOutcome: null,
+    detail: "橘色虛線就是新增的 DOM 包裝；語意 Locator 不依賴直接父子關係。",
+    screenshotDataUrl: await screenshotDataUrl(),
+    tone: "success"
+  });
+
+  await page.goto("/labs/day-02-actuation/index.html?variant=renamed");
+  const renamedTimeout = await timeoutMessage(() => page.getByRole("button", { name: "搜尋活動" }).click({ timeout: 500 }));
+  expect(renamedTimeout).toContain("Timeout 500ms exceeded");
+  await page.getByRole("button", { name: "探索場次" }).click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成：1 場");
+  cases.push({
+    number: "03",
+    title: "文案改名",
+    mutation: "搜尋活動 → 探索場次",
+    locator: 'getByRole("button", { name: "搜尋活動" })',
+    primaryOutcome: "舊名稱 Timeout 500ms",
+    recoveryOutcome: "改用「探索場次」後 click 成功",
+    detail: `實際錯誤：${renamedTimeout.split("\n", 1)[0]}`,
+    screenshotDataUrl: await screenshotDataUrl(),
+    tone: "expected-failure"
+  });
+
+  await page.goto("/labs/day-02-actuation/index.html?variant=wrapped");
+  const cssTimeout = await timeoutMessage(() => page.locator("#search-form > button").click({ timeout: 500 }));
+  expect(cssTimeout).toContain("Timeout 500ms exceeded");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+  await expect(page.getByRole("status")).toContainText("人類操作已完成：1 場");
+  cases.push({
+    number: "04",
+    title: "CSS 結構",
+    mutation: "button 不再是 form 的直接子元素",
+    locator: "#search-form > button",
+    primaryOutcome: "CSS Timeout 500ms",
+    recoveryOutcome: "改用 role Locator 後 click 成功",
+    detail: `實際錯誤：${cssTimeout.split("\n", 1)[0]}`,
+    screenshotDataUrl: await screenshotDataUrl(),
+    tone: "expected-failure"
+  });
+
+  await page.setViewportSize({ width: 1420, height: 900 });
+  await page.setContent(buildDay02EvidenceMatrixHtml(cases));
+  await captureEvidence(page, {
+    id: "day-02-four-experiments-matrix",
+    day: 2,
+    route: "/labs/day-02-actuation/index.html",
+    fixture: "four-runtime-locator-experiments",
+    selector: ".matrix",
+    action: "replay baseline, wrapped DOM, renamed accessible name, and direct-child CSS cases",
+    assertion: "四格皆取自實際 Playwright 執行；兩個成功案例完成搜尋，兩個預期失敗案例捕捉 500ms Timeout 後以正確 Locator 完成搜尋。",
+    finalAsset: "assets/day-02/playwright-four-experiments-matrix.webp",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    sourceFiles: [
+      "labs/day-02-actuation/index.html",
+      "labs/day-02-actuation/main.ts",
+      "labs/day-02-actuation/styles.css",
+      "tests/evidence/article-screenshots.spec.ts",
+      "tests/evidence/support/day-02-evidence-matrix.ts"
+    ],
+    limitations: ["This matrix proves four Playwright browser replays and their recovery paths; it is not an Agent or WebMCP invocation."]
   });
 });
 

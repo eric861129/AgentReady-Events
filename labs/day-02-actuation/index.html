@@ -3,26 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Day 02 Actuation Failure Lab</title>
+    <title>Day 02 Playwright Locator Lab</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main>
-      <p class="eyebrow">Day 02 · Actuation Failure Lab</p>
+      <p class="eyebrow">Day 02 · Playwright Locator Lab</p>
       <h1>按鈕只改四個字，誰迷路了？</h1>
-      <p>切換 query variant 時，穩定語意不變，只有人類看見的文案改變。</p>
-      <form
-        id="search-form"
-        toolname="search_events"
-        tooldescription="依關鍵字搜尋公開活動；按鈕文案或 DOM 結構改變時，Tool 契約仍維持不變。"
-        toolautosubmit
-      >
+      <p>三個 variant 共用同一個搜尋功能，每次只改一個 UI 條件，方便判斷 Locator 為什麼成功或失敗。</p>
+      <aside class="variant" aria-label="目前介面版本">
+        <strong id="variant-name">原始介面</strong>
+        <span id="variant-detail">按鈕名稱與 DOM 結構都維持 Day 1 基準。</span>
+      </aside>
+      <form id="search-form">
         <label for="query">關鍵字</label>
         <input
           id="query"
           name="keyword"
           value="WebMCP"
-          toolparamdescription="比對活動名稱與摘要的關鍵字。"
         />
         <button type="submit" data-action="search-events"></button>
       </form>
@@ -31,7 +29,7 @@
       <section id="evidence-board" class="evidence-board" hidden>
         <div class="evidence-heading">
           <p class="eyebrow">Playwright replay evidence</p>
-          <h2>同一個需求，兩種操作契約</h2>
+          <h2>Locator 與目前頁面的實際落差</h2>
         </div>
         <article>
           <h3>UI locator</h3>

@@ -20,6 +20,8 @@ export interface CaptureRequest {
   evidenceAxis: EvidenceAxis;
   evidenceLevel: "E1" | "E2" | "E3" | "E4" | "E5";
   limitations: string[];
+  sourceCommand?: string;
+  sourceFiles?: string[];
 }
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -57,8 +59,8 @@ export async function captureEvidence(page: Page, request: CaptureRequest) {
     id: request.id,
     day: request.day,
     source_type: "browser_capture",
-    source_command: `npm run evidence:articles -- --grep "Day ${String(request.day).padStart(2, "0")}"`,
-    source_files: [
+    source_command: request.sourceCommand ?? `npm run evidence:articles -- --grep "Day ${String(request.day).padStart(2, "0")}"`,
+    source_files: request.sourceFiles ?? [
       "tests/evidence/article-screenshots.spec.ts",
       "tests/evidence/support/capture-evidence.ts"
     ],

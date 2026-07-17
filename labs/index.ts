@@ -17,7 +17,7 @@ if (typeof document !== "undefined") {
     note.textContent = "Day 1–12 使用獨立 Labs；正式 AgentReady Events 從 Day 13 開始。";
     const list = document.createElement("ul");
     const labs = [
-      ["/labs/day-02-actuation/index.html", "Day 02 · Actuation Failure Lab"],
+      ["/labs/day-02-actuation/index.html", "Day 02 · Playwright Locator Lab"],
       ["/labs/day-07-semantic-form/index.html", "Day 07 · Semantic HTML Search"],
       ["/labs/day-08-declarative-tool/index.html", "Day 08 · Declarative Tool Identity"],
       ["/labs/day-09-declarative-schema/index.html", "Day 09 · Declarative Schema"],

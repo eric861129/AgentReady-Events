@@ -1,6 +1,6 @@
 # AgentReady Events
 
-AgentReady Events 是《網站不只給人用：30 天打造 AI Agent 看得懂的 WebMCP 網站》的可執行範例專案。Day 7–12 使用隔離 Lab 說明 Semantic HTML、Declarative API 與 Imperative API；Day 13–22 把相同觀念放進正式活動網站；Day 23–29 再處理測試、安全、部署與 Eval。
+AgentReady Events 是《網站不只給人用：30 天打造 AI Agent 看得懂的 WebMCP 網站》的可執行範例專案。Day 2 先用 Playwright 拆解 UI Locator；Day 7–12 使用隔離 Lab 說明 Semantic HTML、Declarative API 與 Imperative API；Day 13–22 把相同觀念放進正式活動網站；Day 23–29 再處理測試、安全、部署與 Eval。
 
 文章不是另一套示意程式。文章中的檔案路徑、Tool 名稱、命令與錯誤結果都以這個 repository 為準，雙向對照見文章專案的 `docs/article-project-mapping.md`。
 
@@ -45,6 +45,8 @@ Docker 與 Azure CLI 只在本機重播 container／Azure 流程時需要。一�
 git clone https://github.com/eric861129/AgentReady-Events.git
 Set-Location AgentReady-Events
 npm ci
+npx playwright --version
+npx playwright install --list
 npx playwright install chromium
 ```
 
@@ -70,13 +72,13 @@ npm run dev
 
 Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 已被占用，先停止既有 process；不要隨意改 port 後仍沿用文章中的 URL。
 
-## Day 7–12 Labs
+## Day 2、Day 7–12 Labs
 
 執行 `npm run dev` 後，可由 Vite 直接開啟：
 
 | Day | URL | 重點 |
 | ---: | --- | --- |
-| 02 | `/labs/day-02-actuation/` | Locator 成功、改名失敗、Declarative 對照 |
+| 02 | `/labs/day-02-actuation/` | role Locator、accessible name 與 CSS Selector 修改前後實驗 |
 | 07 | `/labs/day-07-semantic-form/` | Semantic form 與 human fallback |
 | 08 | `/labs/day-08-declarative-tool/` | `toolautosubmit` 與 synthetic `respondWith()` |
 | 09 | `/labs/day-09-declarative-schema/` | HTML constraint 到 schema snapshot |
@@ -84,7 +86,26 @@ Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 
 | 11 | `/labs/day-11-tool-lifecycle/` | register、route leave、abort、toolchange |
 | 12 | `/labs/day-12-confirmation-safety/` | prepare-only 與 zero mutation |
 
-Lab 的 synthetic event 與直接 `execute()` 都是 E2 test harness，不是瀏覽器或 Codex 的真實 Agent invocation。
+Day 8 之後部分 Lab 會使用 synthetic event 或直接 `execute()` 固定 Tool 行為。它們屬於 E2 test harness，不是瀏覽器或 Codex 的真實 Agent invocation。Day 2 沒有 Tool submission，只驗證 Playwright 對 UI 的操作。
+
+Day 2 focused spec：
+
+```powershell
+npx playwright test tests/browser/day-02-actuation.spec.ts --reporter=line
+npx playwright test tests/browser/day-02-actuation.spec.ts --headed --workers=1
+npx playwright test tests/browser/day-02-actuation.spec.ts --debug --workers=1
+```
+
+四個案例分開比較原始介面、只增加 DOM wrapper、只修改 visible name，以及直接子元素 CSS Selector。兩個預期失敗都會留下 Playwright 的真實 TimeoutError attachment。
+
+若要重新產生文章第 7 節使用的 2×2 實測矩陣，先把文章 repository 路徑交給 evidence test：
+
+```powershell
+$env:ARTICLE_REPO_ROOT = (Resolve-Path "..\WEBMCP-iThome-2026-Draft").Path
+npm run evidence:articles -- --grep "four distinct locator experiments"
+```
+
+這個命令會依序重播原始介面、DOM 包裝、文案改名與直接子元素 CSS Selector 四個案例。矩陣裡的頁面、Timeout 與修正結果都來自這次執行，並連同 evidence JSON 寫入文章 repository。
 
 ## 常用命令
 
@@ -186,6 +207,7 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 ### Playwright 找不到瀏覽器
 
 ```powershell
+npx playwright install --list
 npx playwright install chromium
 ```
 
