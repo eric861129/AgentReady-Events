@@ -13,6 +13,11 @@ export function createApp(options: { failurePolicy?: FailurePolicy } = {}): Expr
   app.locals.failurePolicy = options.failurePolicy;
   const store = new MemoryStore();
   app.disable("x-powered-by");
+  app.use((_request, response, next) => {
+    response.setHeader("Origin-Agent-Cluster", "?1");
+    response.setHeader("Permissions-Policy", "tools=(self)");
+    next();
+  });
   app.use(express.json({ limit: "16kb" }));
   app.get("/health/live", (_request, response) => response.json({ status: "ok" }));
   app.use("/api/events", createEventsRouter());

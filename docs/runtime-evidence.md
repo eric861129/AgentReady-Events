@@ -1,3 +1,5 @@
 # Runtime evidence status
 
-The release has deterministic E2 tests and real-browser E3 integration. Chrome 150 local-production preflight was a secure context but did not expose `document.modelContext`; therefore E4 discovery/invocation and E5 Codex clean replay are not claimed. The immutable Day 27 baseline and unchanged revision 2 make that limitation reviewable.
+The release has deterministic E2 tests and real-browser E3 integration. The Day 27 preflight did not expose `document.modelContext` in its recorded browser configuration; the immutable 0/20 environment-classified Codex baseline therefore remains valid and E4/E5 were not claimed.
+
+On 2026-07-27, a separate Chrome 150 rerun with the official WebMCP testing flags observed one `search_events` tool through the browser testing surface. That supplements the E3 capability record only: it is not Agent discovery or invocation, and it does not alter the Day 27 baseline. See [webmcp-runtime-rerun.md](webmcp-runtime-rerun.md) for version, deployment-drift, and rerun requirements.

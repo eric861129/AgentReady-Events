@@ -26,6 +26,7 @@
     "evals:validate": "tsx scripts/validate-evals.ts",
     "evidence:collect": "tsx scripts/collect-evidence.ts",
     "evidence:deployment": "tsx scripts/write-deployment-evidence.ts",
+    "probe:webmcp": "tsx scripts/probe-webmcp-runtime.ts",
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 # AgentReady Events
 
-AgentReady Events 是《網站不只給人用：30 天打造 AI Agent 看得懂的 WebMCP 網站》的可執行範例專案。Day 2 先用 Playwright 拆解 UI Locator；Day 7–12 使用隔離 Lab 說明 Semantic HTML、Declarative API 與 Imperative API；Day 13–22 把相同觀念放進正式活動網站；Day 23–29 再處理測試、安全、部署與 Eval。
+AgentReady Events 是《網站不只給人用：30 天做一個 Agent-ready 網站，驗證 WebMCP 到底做得到哪裡》的可執行範例專案。Day 2 先用 Playwright 拆解 UI Locator；Day 7–12 使用隔離 Lab 說明 Semantic HTML、Declarative API 與 Imperative API；Day 13–22 把相同觀念放進正式活動網站；Day 23–29 再處理測試、安全、部署與 Eval。
 
 文章不是另一套示意程式。文章中的檔案路徑、Tool 名稱、命令與錯誤結果都以這個 repository 為準，雙向對照見文章專案的 `docs/article-project-mapping.md`。
 
@@ -192,7 +192,7 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 - 公開站可由 HTTPS 開啟，Origin-Trial header 已出現。
 - `document.modelContext` 未出現，20 題正式 Eval 因此是 environment failure；discovery 與 invocation 都是 0。
 
-如果未來 runtime 支援恢復，先重跑 preflight，再執行 `getTools()`／`executeTool()` 與真實 Agent task。不要用 fake ModelContext 把 E2 改名成 E4。
+目前 Chrome testing surface 已能列出 `search_events`，屬於 E3 capability evidence；真實 Agent discovery／invocation 仍未驗證。請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 的乾淨環境流程重跑，不要用 fake ModelContext、testing API 或直接 `executeTool()` 把 E2／E3 改名成 E4。
 
 ## 本機與 Azure 權限界線
 
