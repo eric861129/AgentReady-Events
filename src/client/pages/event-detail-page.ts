@@ -4,6 +4,7 @@ import type { AppState } from "../state/app-state";
 import { createGetEventDetailsTool } from "../webmcp/tools/get-event-details";
 import { createSaveEventTool } from "../webmcp/tools/save-event";
 import type { AnyProjectTool } from "../webmcp/registry";
+import { appendActivityTimeline } from "../ui/activity-timeline";
 
 function showDetail(root: HTMLElement, event: EventDetail, state: AppState) {
   state.selectEvent(event.id);
@@ -49,8 +50,9 @@ export async function renderEventDetailPage(root: HTMLElement, eventId: string, 
     bindHumanSave();
     const detailsTool = createGetEventDetailsTool({
       load: (id) => actions.loadDetails(id, { mode: "agent" }),
-      show: (detail) => { showDetail(root, detail, state); bindHumanSave(); },
-      getStateVersion: () => state.stateVersion()
+      show: (detail) => { showDetail(root, detail, state); bindHumanSave(); appendActivityTimeline(root); },
+      getStateVersion: () => state.stateVersion(),
+      getCurrentEventId: () => eventId
     });
     const saveTool = createSaveEventTool({ getCurrentEventId: () => state.selectedEventId, save: actions.saveEvent, show: renderSaved, getStateVersion: () => state.stateVersion() });
     return [detailsTool, saveTool];

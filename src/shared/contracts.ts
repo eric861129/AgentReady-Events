@@ -21,6 +21,7 @@ export type SearchEventsQuery = {
 
 export type EventSummary = {
   id: string;
+  url?: string;
   title: string;
   summary: string;
   startsAt: string;

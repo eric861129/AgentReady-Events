@@ -6,7 +6,8 @@ it("returns filtered public event summaries", async () => {
   const response = await request(createApp()).get("/api/events?location=taipei&price=free");
   expect(response.status).toBe(200);
   expect(response.body.events).toHaveLength(1);
-  expect(Object.keys(response.body.events[0]).sort()).toEqual(["id", "level", "location", "price", "startsAt", "summary", "title"]);
+  expect(Object.keys(response.body.events[0]).sort()).toEqual(["id", "level", "location", "price", "startsAt", "summary", "title", "url"]);
+  expect(response.body.events[0].url).toBe("/events/evt-webmcp-intro");
 });
 
 it("rejects an invalid enum", async () => {

@@ -2,7 +2,7 @@ import type { EventDetail, EventSummary, SearchEventsQuery } from "../../shared/
 
 function toSummary(event: EventDetail): EventSummary {
   const { id, title, summary, startsAt, location, price, level } = event;
-  return { id, title, summary, startsAt, location, price, level };
+  return { id, url: `/events/${id}`, title, summary, startsAt, location, price, level };
 }
 
 export function searchEvents(events: EventDetail[], query: SearchEventsQuery): EventSummary[] {

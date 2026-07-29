@@ -41,3 +41,53 @@ it("updates visible detail and returns the same opaque ID", async () => {
   await expect(tool.execute({ event_id: "evt-webmcp-intro" })).resolves.toMatchObject({ ok: true, data: { event: detail }, uiUpdated: true, stateVersion: 7 });
   expect(show).toHaveBeenCalledWith(detail);
 });
+
+it("reads the event already bound to the current detail page without an ID", async () => {
+  const detail = { id: "evt-webmcp-intro", title: "WebMCP 入門" } as never;
+  const load = vi.fn().mockResolvedValue(detail);
+  const show = vi.fn();
+  const tool = createGetEventDetailsTool({
+    load,
+    show,
+    getStateVersion: () => 7,
+    getCurrentEventId: () => "evt-webmcp-intro"
+  });
+
+  await expect(tool.execute({})).resolves.toMatchObject({
+    ok: true,
+    data: { event: detail },
+    uiUpdated: true,
+    stateVersion: 7
+  });
+  expect(load).toHaveBeenCalledWith("evt-webmcp-intro");
+  expect(show).toHaveBeenCalledWith(detail);
+});
+
+it("publishes the current-detail Tool without requiring an event ID", () => {
+  const tool = createGetEventDetailsTool({
+    load: vi.fn(),
+    show: vi.fn(),
+    getStateVersion: () => 7,
+    getCurrentEventId: () => "evt-webmcp-intro"
+  });
+
+  expect(tool.inputSchema).not.toHaveProperty("required");
+});
+
+it("rejects a different event ID on a detail page scoped to the current event", async () => {
+  const load = vi.fn();
+  const tool = createGetEventDetailsTool({
+    load,
+    show: vi.fn(),
+    getStateVersion: () => 7,
+    getCurrentEventId: () => "evt-webmcp-intro"
+  });
+
+  await expect(tool.execute({ event_id: "evt-other" })).resolves.toMatchObject({
+    ok: false,
+    code: "INVALID_INPUT",
+    reason: "CURRENT_EVENT_MISMATCH",
+    retryable: false
+  });
+  expect(load).not.toHaveBeenCalled();
+});
