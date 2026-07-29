@@ -86,7 +86,7 @@ Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 
 | 11 | `/labs/day-11-tool-lifecycle/` | register、route leave、abort、toolchange |
 | 12 | `/labs/day-12-confirmation-safety/` | prepare-only 與 zero mutation |
 
-Day 8 之後部分 Lab 會使用 synthetic event 或直接 `execute()` 固定 Tool 行為。它們屬於 E2 test harness，不是瀏覽器或 Codex 的真實 Agent invocation。Day 2 沒有 Tool submission，只驗證 Playwright 對 UI 的操作。
+Day 8 之後部分 Lab 會使用 synthetic event 或直接 `execute()` 固定 Tool 行為。它們屬於 E2 test harness，不是真實 Agent invocation。Day 2 沒有 Tool submission，只驗證 Playwright 對 UI 的操作。
 
 Day 2 focused spec：
 
@@ -188,11 +188,13 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 目前可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
-- GitHub run 29179363328 與 Azure 公開站對應 commit `2a2c027`，不是目前 local `main`。
-- 公開站可由 HTTPS 開啟，Origin-Trial header 已出現。
-- `document.modelContext` 未出現，20 題正式 Eval 因此是 environment failure；discovery 與 invocation 都是 0。
+- GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`。
+- 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
+- 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
+- WebMCP Inspector 內的 Gemini Agent 已在未提示 Tool 名稱的情況下，分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details`，這兩題可列為 E4。
+- 其餘 18 題、寫入／確認類 Journey 與跨乾淨環境的 E5 重播仍未完成。
 
-目前 Chrome testing surface 已能列出 `search_events`，屬於 E3 capability evidence；真實 Agent discovery／invocation 仍未驗證。請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 的乾淨環境流程重跑，不要用 fake ModelContext、testing API 或直接 `executeTool()` 把 E2／E3 改名成 E4。
+請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 
 ## 本機與 Azure 權限界線
 

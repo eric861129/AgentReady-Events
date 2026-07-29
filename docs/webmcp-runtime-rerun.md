@@ -8,16 +8,23 @@
 
 ## 與 Day 27 baseline 的關係
 
-Day 27 的 0/20 environment-classified baseline 保持不變：當時的 Codex surface 沒有 discovery，因此沒有可評分的 invocation。這次重跑只補充 browser capability 座標，不會回寫為 20 題 Agent 成功。
+Day 27 的 0/20 environment-classified baseline 保持不變：當時的測試 surface 沒有 discovery，因此沒有可評分的 invocation。這次重跑只補充 browser capability 座標，不會回寫為 20 題 Agent 成功。
 
-目前公開 Azure artifact 仍落後本機 source：公開頁面沒有 `toolautosubmit`，而正式搜尋表單已在 `a29135b3e674e741dc6637ed01b26648e4564ebc` 加上該屬性。因此，在取得作者授權部署該 revision 前，不會對公開站宣稱 declarative execution 已驗證。
+## 2026-07-29：兩題 E4 Agent invocation
 
-## 下一次有效的 E4 重跑
+公開站已更新至 commit `d0fe4df`、GitHub workflow run `30439991021`、Azure revision `ca-agentready-events--0000004`。使用 Chrome 150、`WebMCP for testing` flag、WebMCP Inspector 與 `Gemini 3 Flash Preview`，在 Prompt 未指定 Tool 名稱、也未手動執行 Tool 的前提下取得兩筆成功紀錄：
 
-1. 以作者授權將含 `toolautosubmit` 的 revision 部署至公開 HTTPS origin，並記錄 commit、瀏覽器版本與 Origin Trial 狀態。
-2. 在乾淨 profile 使用相容的 WebMCP Agent（例如官方 Inspector 搭配其要求的模型設定），不在 prompt 中提示 Tool 名稱。
-3. 固定二十題、三條 Journey 與資料集；保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
-4. 僅在上述紀錄完整時，將結果從 E3 升為 E4；另以獨立乾淨環境重播才可主張 E5。
+1. 「幫我找台北、免費，而且適合入門者的活動。」由 Agent 選擇並呼叫 `search_events`，輸入為 `location=taipei`、`price=free`、`level=beginner`。
+2. 「請整理我現在看的活動名稱、地點、時間與剩餘名額。」由 Agent 在活動詳情頁選擇並呼叫 `get_event_details`，輸入為 `{}`，結果包含 `remainingCapacity=8`。
+
+這兩筆可列為 E4，但不能外推為 20/20，也不能證明寫入 Tool、確認停點或跨乾淨環境 E5 已通過。第一筆紀錄保存於文章專案 `evidence/day-27/inspector-e4-sel-01.txt`，第二筆保存於 `evidence/day-27/inspector-e4-sel-02.txt`。
+
+## 下一輪有效重跑
+
+1. 在乾淨 profile 使用相容的 WebMCP Agent，不在 prompt 中提示 Tool 名稱。
+2. 沿用固定二十題、三條 Journey 與資料集；保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
+3. 每一題獨立判定 E4，不用兩題成功替其餘案例升級。
+4. 另以獨立乾淨環境重播同一題、同一資料版本與同一部署座標，才可主張該題 E5。
 
 ## 可重跑指令
 
