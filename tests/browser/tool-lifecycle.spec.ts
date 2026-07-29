@@ -30,6 +30,10 @@ test("detail registration is disposed when navigation leaves its route", async (
 
 test("detail Tool reads the route-bound event without an ID", async ({ page }) => {
   await page.goto("/events/evt-webmcp-intro");
+  await expect.poll(() => page.evaluate(() => {
+    const tools = (window as Window & { __registeredTools?: Record<string, unknown> }).__registeredTools;
+    return Boolean(tools?.get_event_details);
+  })).toBe(true);
   const result = await page.evaluate(async () => {
     const tools = (window as Window & { __registeredTools?: Record<string, { execute(input: object): Promise<unknown> }> }).__registeredTools;
     const detailsTool = tools?.get_event_details;
