@@ -1,5 +1,26 @@
 import { expect, test } from "@playwright/test";
 
+test("presents search as a polished human-first product journey", async ({ page }) => {
+  await page.goto("/events");
+
+  await expect(page.getByRole("heading", { name: "探索下一場值得參加的活動" })).toBeVisible();
+  await expect(page.getByText("先讓人類能找，再讓 Agent 能懂")).toBeVisible();
+  await expect(page.locator("#event-search")).toHaveAttribute("toolname", "search_events");
+  await expect(page.getByRole("status")).toContainText("設定條件");
+
+  await page.getByLabel("地點").selectOption("taipei");
+  await page.getByLabel("費用").selectOption("free");
+  await page.getByLabel("程度").selectOption("beginner");
+  await page.getByRole("button", { name: "搜尋活動" }).click();
+
+  const result = page.getByRole("list", { name: "活動搜尋結果" }).getByRole("listitem");
+  await expect(result).toHaveCount(1);
+  await expect(result).toContainText("台北");
+  await expect(result).toContainText("免費");
+  await expect(result).toContainText("入門");
+  await expect(result.getByRole("button", { name: "查看詳情" })).toBeVisible();
+});
+
 test("human can search with labels and keyboard without invoking WebMCP", async ({ page }) => {
   await page.goto("/events");
   await page.getByLabel("地點").selectOption("taipei");
