@@ -10,6 +10,7 @@ test("Journey A: search → details → save keeps one opaque event ID", async (
   await expect(page.getByRole("status")).toContainText("已收藏");
   await page.getByRole("button", { name: "收藏活動" }).click();
   await expect(page.getByRole("status")).toContainText("沒有重複新增");
+  await expect(page.getByRole("heading", { name: "可查核操作紀錄" })).toBeVisible();
   const timeline = page.getByRole("list", { name: "操作紀錄" });
   await expect(timeline).toContainText("search_events");
   await expect(timeline).toContainText("get_event_details");
