@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { EVENTS } from "../../shared/fixtures";
 import type { RegistrationInput } from "../../shared/contracts";
 import { OPAQUE_ID } from "../../shared/validation";
 import { ensureSession, validCsrf } from "../session/demo-session";
@@ -35,7 +34,10 @@ export function createRegistrationsRouter(store: MemoryStore): Router {
     if (!OPAQUE_ID.test(request.params.registrationId)) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_ID", message: "報名 ID 格式無效。" });
     if (request.body?.interactionMode !== "human" && request.body?.interactionMode !== "agent") return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_INTERACTION_MODE", message: "互動來源格式無效。" });
     if (request.body.interactionMode !== "human") return response.status(403).json({ code: "FORBIDDEN", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "請由使用者在可見介面確認。" });
-    const result = cancelRegistration(session, request.params.registrationId);
+    if (!store.consumeConfirmationIntent(session, request.body?.confirmationIntent, "cancel_registration", request.params.registrationId)) {
+      return response.status(403).json({ code: "FORBIDDEN", reason: "CONFIRMATION_INTENT_INVALID", message: "確認已失效，請重新操作。" });
+    }
+    const result = cancelRegistration(session, store.inventory, request.params.registrationId);
     if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "REGISTRATION_NOT_FOUND", message: "找不到可取消的報名。" });
     return response.json({ registrationId: result.registrationId, alreadyCancelled: result.alreadyCancelled });
   });
@@ -45,7 +47,13 @@ export function createRegistrationsRouter(store: MemoryStore): Router {
     const input = parseInput(request.body);
     if (!input) return response.status(400).json({ code: "VALIDATION_ERROR", reason: "INVALID_REGISTRATION_INPUT", message: "報名資料格式無效。" });
     if (input.interactionMode !== "human") return response.status(403).json({ code: "FORBIDDEN", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "請由使用者在可見介面確認。" });
-    const result = createRegistration(session, EVENTS, input);
+    if (typeof request.body?.confirmationIntent !== "string") {
+      return response.status(403).json({ code: "FORBIDDEN", reason: "CONFIRMATION_INTENT_REQUIRED", message: "送出前需要新的確認意圖。" });
+    }
+    if (!store.consumeConfirmationIntent(session, request.body.confirmationIntent, "submit_registration", input.eventId)) {
+      return response.status(403).json({ code: "FORBIDDEN", reason: "CONFIRMATION_INTENT_INVALID", message: "確認已失效，請重新操作。" });
+    }
+    const result = createRegistration(session, store.inventory, input);
     if (result.kind === "not-found") return response.status(404).json({ code: "NOT_FOUND", reason: "EVENT_NOT_FOUND", message: "找不到公開活動。" });
     if (result.kind === "unavailable") return response.status(409).json({ code: "CONFLICT", reason: result.reason, message: "活動目前無法報名。" });
     if (result.kind === "duplicate") return response.status(409).json({ code: "CONFLICT", reason: "DUPLICATE_REGISTRATION", message: "你已報名這場活動。" });

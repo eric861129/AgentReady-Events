@@ -7,6 +7,18 @@ type AgentSubmitEvent = Event & { agentInvoked?: boolean; respondWith?: (promise
 
 export async function renderRegistrationPage(root: HTMLElement, eventId: string): Promise<void> {
   const event = await eventDetailsRequest(eventId);
+  if (event.state !== "open" || event.remainingCapacity < 1) {
+    root.innerHTML = `
+      <section class="registration-page" aria-labelledby="registration-heading">
+        <a class="back-link" href="/events/${event.id}">← 回活動詳情</a>
+        <div class="empty-state">
+          <span>!</span>
+          <h1 id="registration-heading">目前無法報名</h1>
+          <p>${event.state === "full" ? "這場活動目前名額已滿。" : "這場活動已超過報名期限或停止受理。"}</p>
+        </div>
+      </section>`;
+    return;
+  }
   root.innerHTML = `
     <section class="registration-page" aria-labelledby="registration-heading">
       <a class="back-link" href="/events/${event.id}">← 回活動詳情</a>

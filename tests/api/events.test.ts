@@ -17,10 +17,22 @@ it("rejects an invalid enum", async () => {
 });
 
 it("returns one public detail by opaque ID and a public 404", async () => {
-  const found = await request(createApp()).get("/api/events/evt-webmcp-intro");
+  const found = await request(createApp({ now: () => new Date("2027-01-01T00:00:00+08:00") })).get("/api/events/evt-webmcp-intro");
   expect(found.status).toBe(200);
   expect(found.body.event).toMatchObject({ id: "evt-webmcp-intro", remainingCapacity: 8, state: "open" });
   const missing = await request(createApp()).get("/api/events/evt-missing");
   expect(missing.status).toBe(404);
   expect(missing.body).toEqual({ code: "NOT_FOUND", reason: "EVENT_NOT_FOUND", message: "找不到公開活動。" });
+});
+
+it("derives the public state from an injectable clock around the registration deadline", async () => {
+  const before = await request(createApp({ now: () => new Date("2027-01-21T23:59:58+08:00") })).get(
+    "/api/events/evt-webmcp-intro"
+  );
+  const after = await request(createApp({ now: () => new Date("2027-01-22T00:00:00+08:00") })).get(
+    "/api/events/evt-webmcp-intro"
+  );
+
+  expect(before.body.event.state).toBe("open");
+  expect(after.body.event.state).toBe("closed");
 });

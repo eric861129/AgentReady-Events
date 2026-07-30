@@ -1,4 +1,7 @@
 import express, { type Express } from "express";
+import type { EventDetail } from "../shared/contracts";
+import { EVENTS } from "../shared/fixtures";
+import { createConfirmationIntentsRouter } from "./routes/confirmation-intents";
 import { createEventsRouter } from "./routes/events";
 import { createSavedEventsRouter } from "./routes/saved-events";
 import { createSessionRouter } from "./routes/session";
@@ -8,10 +11,14 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import type { FailurePolicy } from "./failure/failure-policy";
 
-export function createApp(options: { failurePolicy?: FailurePolicy } = {}): Express {
+export function createApp(options: {
+  failurePolicy?: FailurePolicy;
+  events?: EventDetail[];
+  now?: () => Date;
+} = {}): Express {
   const app = express();
   app.locals.failurePolicy = options.failurePolicy;
-  const store = new MemoryStore();
+  const store = new MemoryStore(options.events ?? EVENTS, options.now ?? (() => new Date()));
   app.disable("x-powered-by");
   app.use((_request, response, next) => {
     response.setHeader("Origin-Agent-Cluster", "?1");
@@ -20,8 +27,14 @@ export function createApp(options: { failurePolicy?: FailurePolicy } = {}): Expr
   });
   app.use(express.json({ limit: "16kb" }));
   app.get("/health/live", (_request, response) => response.json({ status: "ok" }));
-  app.use("/api/events", createEventsRouter());
+  app.get("/health/version", (_request, response) => response.json({
+    commit: process.env.APP_COMMIT ?? "development",
+    version: process.env.APP_VERSION ?? "development",
+    revision: process.env.CONTAINER_APP_REVISION ?? "local"
+  }));
+  app.use("/api/events", createEventsRouter(store));
   app.use("/api/session", createSessionRouter(store));
+  app.use("/api/confirmation-intents", createConfirmationIntentsRouter(store));
   app.use("/api/saved-events", createSavedEventsRouter(store));
   app.use("/api/registrations", createRegistrationsRouter(store));
   app.use("/api", (_request, response) => response.status(404).json({ code: "NOT_FOUND", reason: "API_ROUTE_NOT_FOUND", message: "找不到 API。" }));

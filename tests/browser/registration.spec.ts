@@ -37,3 +37,31 @@ test("Agent-like preparation causes zero POST and human confirmation creates one
   await expect.poll(() => posts).toBe(1);
   await expect(page.getByRole("status")).toContainText("報名完成");
 });
+
+test("direct registration route removes the form when the server reports registration closed", async ({ page }) => {
+  await page.route("**/api/events/evt-webmcp-intro", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        event: {
+          id: "evt-webmcp-intro",
+          title: "WebMCP 入門工作坊",
+          summary: "從語意 HTML 到第一個網站 Tool。",
+          startsAt: "2027-01-23T10:00:00+08:00",
+          endsAt: "2027-01-23T12:00:00+08:00",
+          location: "taipei",
+          venue: "台北前端共學空間",
+          price: "free",
+          level: "beginner",
+          remainingCapacity: 8,
+          registrationDeadline: "2027-01-21T23:59:59+08:00",
+          state: "closed"
+        }
+      })
+    });
+  });
+
+  await page.goto("/events/evt-webmcp-intro/register");
+  await expect(page.getByRole("heading", { name: "目前無法報名" })).toBeVisible();
+  await expect(page.locator("#registration-form")).toHaveCount(0);
+});

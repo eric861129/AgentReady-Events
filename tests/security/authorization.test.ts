@@ -23,8 +23,24 @@ it("does not reveal or mutate a foreign registration", async () => {
   const app = createApp(); const owner = request.agent(app); const stranger = request.agent(app);
   const ownerToken = (await owner.get("/api/session")).body.csrfToken as string;
   const strangerToken = (await stranger.get("/api/session")).body.csrfToken as string;
-  const created = await owner.post("/api/registrations").set("x-csrf-token", ownerToken).send({ eventId: "evt-webmcp-intro", attendeeName: "王小明", email: "reader@example.com", interactionMode: "human" });
-  const response = await stranger.post(`/api/registrations/${created.body.registration.id}/cancel`).set("x-csrf-token", strangerToken).send({ interactionMode: "human" });
+  const intent = await owner
+    .post("/api/confirmation-intents")
+    .set("x-csrf-token", ownerToken)
+    .send({ action: "submit_registration", targetId: "evt-webmcp-intro", interactionMode: "human" });
+  const created = await owner
+    .post("/api/registrations")
+    .set("x-csrf-token", ownerToken)
+    .send({
+      eventId: "evt-webmcp-intro",
+      attendeeName: "王小明",
+      email: "reader@example.com",
+      interactionMode: "human",
+      confirmationIntent: intent.body.confirmationIntent.token
+    });
+  const response = await stranger
+    .post("/api/confirmation-intents")
+    .set("x-csrf-token", strangerToken)
+    .send({ action: "cancel_registration", targetId: created.body.registration.id, interactionMode: "human" });
   expect(response.status).toBe(404);
   expect(response.body.reason).toBe("REGISTRATION_NOT_FOUND");
   expect(JSON.stringify(response.body)).not.toMatch(/owner|session|token|stack/i);

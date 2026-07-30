@@ -50,12 +50,26 @@ export async function undoSavedEventRequest(eventId: string): Promise<void> {
   await readJson(await fetch(`/api/saved-events/${encodeURIComponent(eventId)}`, { method: "DELETE", headers: { "x-csrf-token": session.csrfToken } }));
 }
 
+async function confirmationIntentRequest(
+  action: "submit_registration" | "cancel_registration",
+  targetId: string
+): Promise<string> {
+  const session = await sessionRequest();
+  const body = await readJson<{ confirmationIntent: { token: string } }>(await fetch("/api/confirmation-intents", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
+    body: JSON.stringify({ action, targetId, interactionMode: "human" })
+  }));
+  return body.confirmationIntent.token;
+}
+
 export async function registrationRequest(input: RegistrationInput, context: { mode: InteractionMode }): Promise<RegistrationResponse> {
   const session = await sessionRequest();
+  const confirmationIntent = await confirmationIntentRequest("submit_registration", input.eventId);
   return readJson<RegistrationResponse>(await fetch("/api/registrations", {
     method: "POST",
     headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
-    body: JSON.stringify({ ...input, interactionMode: context.mode })
+    body: JSON.stringify({ ...input, interactionMode: context.mode, confirmationIntent })
   }));
 }
 
@@ -69,9 +83,10 @@ export async function cancellationSummaryRequest(registrationId: string): Promis
 
 export async function cancellationRequest(registrationId: string, context: { mode: InteractionMode }): Promise<CancellationResponse> {
   const session = await sessionRequest();
+  const confirmationIntent = await confirmationIntentRequest("cancel_registration", registrationId);
   return readJson<CancellationResponse>(await fetch(`/api/registrations/${encodeURIComponent(registrationId)}/cancel`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
-    body: JSON.stringify({ interactionMode: context.mode })
+    body: JSON.stringify({ interactionMode: context.mode, confirmationIntent })
   }));
 }

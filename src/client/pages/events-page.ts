@@ -98,7 +98,7 @@ export function renderEventsPage(root: HTMLElement, actions: EventActions): void
   root.innerHTML = `
     <section class="page-intro events-intro" aria-labelledby="events-title">
       <div>
-        <p class="eyebrow">HUMAN-FIRST SEARCH <span>E2 UI</span><span>E4 READY</span></p>
+        <p class="eyebrow">HUMAN-FIRST SEARCH <span>E2 VERIFIED</span><span>E4 TEST TARGET</span></p>
         <h1 id="events-title">探索下一場值得參加的活動</h1>
         <p>先讓人類能找，再讓 Agent 能懂。你在畫面上使用的條件，也會成為 <code>search_events</code> 的穩定語意輸入。</p>
       </div>

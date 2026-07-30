@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
-import type { CancellationSummary, EventDetail, RegistrationInput, RegistrationListItem } from "../../shared/contracts";
+import type { CancellationSummary, RegistrationInput, RegistrationListItem } from "../../shared/contracts";
 import type { DemoSession } from "../store/memory-store";
+import type { EventInventory } from "../store/event-inventory";
 
 export type RegistrationServiceResult =
   | { kind: "created"; registration: RegistrationListItem }
@@ -8,11 +9,22 @@ export type RegistrationServiceResult =
   | { kind: "unavailable"; reason: "EVENT_NOT_OPEN" }
   | { kind: "duplicate" };
 
-export function createRegistration(session: DemoSession, events: EventDetail[], input: RegistrationInput): RegistrationServiceResult {
-  const event = events.find((candidate) => candidate.id === input.eventId);
-  if (!event) return { kind: "not-found" };
-  if (event.state !== "open" || event.remainingCapacity < 1) return { kind: "unavailable", reason: "EVENT_NOT_OPEN" };
-  if ([...session.registrations.values()].some((registration) => registration.eventId === event.id && registration.status === "active")) return { kind: "duplicate" };
+export function createRegistration(
+  session: DemoSession,
+  inventory: EventInventory,
+  input: RegistrationInput
+): RegistrationServiceResult {
+  if (
+    [...session.registrations.values()].some(
+      (registration) => registration.eventId === input.eventId && registration.status === "active"
+    )
+  ) {
+    return { kind: "duplicate" };
+  }
+
+  const reservation = inventory.reserve(input.eventId);
+  if (reservation.kind !== "reserved") return reservation;
+  const event = reservation.event;
   const registration: RegistrationListItem = {
     id: `reg-${randomUUID()}`,
     eventId: event.id,
@@ -41,10 +53,13 @@ export function cancellationSummary(session: DemoSession, registrationId: string
   };
 }
 
-export function cancelRegistration(session: DemoSession, registrationId: string) {
+export function cancelRegistration(session: DemoSession, inventory: EventInventory, registrationId: string) {
   const registration = session.registrations.get(registrationId);
   if (!registration) return { kind: "not-found" as const };
   const alreadyCancelled = registration.status === "cancelled";
-  registration.status = "cancelled";
+  if (!alreadyCancelled) {
+    registration.status = "cancelled";
+    inventory.release(registration.eventId);
+  }
   return { kind: "cancelled" as const, registrationId, alreadyCancelled };
 }

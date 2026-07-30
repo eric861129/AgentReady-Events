@@ -16,7 +16,10 @@ LABEL org.opencontainers.image.title="AgentReady Events" \
       org.opencontainers.image.created="$BUILD_DATE" \
       org.opencontainers.image.version="$VERSION"
 WORKDIR /app
-ENV NODE_ENV=production
+ENV NODE_ENV=production \
+    APP_COMMIT=$VCS_REF \
+    APP_BUILD_DATE=$BUILD_DATE \
+    APP_VERSION=$VERSION
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist

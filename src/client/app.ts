@@ -17,6 +17,18 @@ const actions = createEventActions({ search: searchEventsRequest, loadDetails: e
 const state = new AppState();
 const registry = new WebMcpRegistry(registerToolAdapter);
 
+function updateRuntimeStatus() {
+  const detected = "modelContext" in document;
+  const status = document.querySelector<HTMLElement>("#webmcp-capability-status");
+  if (status) {
+    status.dataset.capability = detected ? "detected" : "unavailable";
+    status.lastChild!.textContent = ` WebMCP capability: ${detected ? "detected" : "unavailable"}`;
+  }
+  for (const value of document.querySelectorAll<HTMLElement>("[data-browser-capability]")) {
+    value.textContent = `Browser capability：${detected ? "detected" : "unavailable"}`;
+  }
+}
+
 function updateShell(route: ReturnType<typeof parseRoute>) {
   const activeRoute = route.kind === "events" || route.kind === "event-detail" || route.kind === "registration"
     ? "events"
@@ -37,7 +49,7 @@ function renderHome(root: HTMLElement) {
   root.innerHTML = `
     <section class="hero" aria-labelledby="home-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span>Agent-ready WebMCP 實驗網站</span><span>E4 實測導向</span></p>
+        <p class="eyebrow"><span>Agent-ready WebMCP 實驗網站</span><span>E2 VERIFIED</span><span>E4 TEST TARGET</span></p>
         <h1 id="home-title">把下一場值得參加的活動，交給人類與 Agent 一起找到</h1>
         <p class="hero-lead">這不是只會展示成功畫面的 Demo。我們從人類可用的 UI 出發，讓網站公開五個語意清楚的 Tool，並保留報名與取消的最後決定權給你。</p>
         <div class="hero-actions">
@@ -53,7 +65,7 @@ function renderHome(root: HTMLElement) {
       <aside class="hero-console" aria-label="WebMCP 能力預覽">
         <div class="console-header">
           <span>WebMCP tool catalog</span>
-          <span class="console-live">LIVE CONTRACT</span>
+          <span class="console-live">SOURCE CONTRACT</span>
         </div>
         <ol>
           <li><span class="tool-index">01</span><code>search_events</code><span class="risk risk-read">READ</span></li>
@@ -63,6 +75,11 @@ function renderHome(root: HTMLElement) {
           <li><span class="tool-index">05</span><code>prepare_registration_cancellation</code><span class="risk risk-stop">HUMAN</span></li>
         </ol>
         <p>高風險操作停在可見的確認畫面；Agent 不替你按下最後一個按鈕。</p>
+        <div class="runtime-coordinate-list" aria-label="目前驗證座標">
+          <p>Source contract：5 Tools</p>
+          <p data-browser-capability>Browser capability：checking</p>
+          <p>Agent invocation：current revision pending</p>
+        </div>
       </aside>
     </section>
     <section class="journey-section" aria-labelledby="journey-title">
@@ -78,7 +95,7 @@ function renderHome(root: HTMLElement) {
           <span class="journey-number">J1</span>
           <h3>搜尋 → 詳情 → 收藏</h3>
           <p>從公開條件找到活動，用 opaque ID 進入詳情，再完成可復原的低風險收藏。</p>
-          <span class="evidence-chip">E2–E4</span>
+          <span class="evidence-chip">E2 verified · E4 current revision pending</span>
         </article>
         <article>
           <span class="journey-number">J2</span>
@@ -98,6 +115,7 @@ function renderHome(root: HTMLElement) {
 
 async function render() {
   if (!app) return;
+  updateRuntimeStatus();
   const route = parseRoute(location.pathname);
   updateShell(route);
   if (route.kind === "event-detail") {
@@ -125,6 +143,7 @@ async function render() {
     return;
   }
   renderHome(app);
+  updateRuntimeStatus();
   appendActivityTimeline(app);
 }
 

@@ -10,8 +10,8 @@ test("detail page explains availability and keeps registration visible to the hu
   await page.goto("/events/evt-webmcp-intro");
 
   await expect(page.getByText("開放報名")).toBeVisible();
-  await expect(page.getByText("剩餘 8 名")).toBeVisible();
-  await expect(page.getByText("2026 年 8 月 1 日")).toBeVisible();
+  await expect(page.getByText(/^剩餘 [1-8] 名$/)).toBeVisible();
+  await expect(page.getByText("2027 年 1 月 23 日")).toBeVisible();
   await expect(page.getByRole("link", { name: "前往報名" })).toHaveAttribute(
     "href",
     "/events/evt-webmcp-intro/register",

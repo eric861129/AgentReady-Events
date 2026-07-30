@@ -405,6 +405,24 @@ button[type="submit"]:hover {
   font-size: 0.76rem;
 }
 
+.runtime-coordinate-list {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.7rem;
+  padding: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.09);
+  border-radius: 0.7rem;
+  background: rgb(255 255 255 / 0.035);
+}
+
+.runtime-coordinate-list p {
+  margin: 0;
+  color: #c9d4e7;
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 0.68rem;
+}
+
 .journey-section {
   padding: clamp(3rem, 7vw, 5rem) 0 1.5rem;
   border-top: 1px solid var(--line);
