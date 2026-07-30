@@ -1104,6 +1104,167 @@ button[type="submit"]:hover {
   font-size: 0.72rem;
 }
 
+.registrations-page {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.registrations-list-section {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.registration-list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.registration-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: #fbfcfe;
+}
+
+.registration-state {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+
+.registration-state-active {
+  color: #126340;
+  background: #daf3e8;
+}
+
+.registration-state-cancelled {
+  color: #7b8495;
+  background: #e8ebef;
+}
+
+.registration-item h2 {
+  margin-bottom: 0.55rem;
+  font-size: 1.2rem;
+}
+
+.registration-item p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 0.55rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.registration-item p span::before {
+  margin-right: 0.8rem;
+  color: #a2adbd;
+  content: "•";
+}
+
+.registration-item code {
+  color: #8792a4;
+  font-size: 0.68rem;
+}
+
+.registration-item-actions {
+  display: flex;
+  align-items: center;
+}
+
+.registrations-status {
+  margin: 1rem 0 0;
+  color: var(--success);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.registrations-status:empty {
+  display: none;
+}
+
+.button-danger {
+  border-color: #a33c3c;
+  color: #fff;
+  background: #a33c3c;
+}
+
+.button-danger:hover {
+  background: #842d2d;
+}
+
+.confirmation-dialog {
+  padding: 0;
+}
+
+.confirmation-dialog > .eyebrow {
+  margin: 0;
+  padding: 1rem 1.5rem;
+  color: #8eacf4;
+  background: var(--navy);
+}
+
+.confirmation-dialog > h2,
+.confirmation-dialog > .confirmation-summary,
+.confirmation-dialog > .confirmation-consequence,
+.confirmation-dialog > .confirmation-actions {
+  margin-right: 1.5rem;
+  margin-left: 1.5rem;
+}
+
+.confirmation-dialog > h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.7rem;
+}
+
+.confirmation-summary {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.confirmation-consequence {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border: 1px solid #efc78a;
+  border-radius: 0.8rem;
+  background: #fff8ec;
+}
+
+.confirmation-consequence strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #6d4310;
+  font-size: 0.8rem;
+}
+
+.confirmation-consequence p {
+  margin: 0;
+  color: #7d5a2d;
+  font-size: 0.75rem;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -1289,6 +1450,22 @@ dialog::backdrop {
   }
 
   .registration-submit button {
+    width: 100%;
+  }
+
+  .registration-item {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-item-actions .button {
+    width: 100%;
+  }
+
+  .confirmation-actions {
+    flex-direction: column-reverse;
+  }
+
+  .confirmation-actions .button {
     width: 100%;
   }
 
