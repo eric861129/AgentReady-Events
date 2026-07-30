@@ -7,6 +7,9 @@ const localBaseUrl = `http://127.0.0.1:${webPort}`;
 
 export default defineConfig({
   testDir: "tests/browser",
+  // Journey 共享同一個 server-side inventory；跨檔平行會讓測試資料彼此污染。
+  // 真正的多 session 最後名額競爭由 API 測試獨立覆蓋。
+  workers: 1,
   use: { baseURL: externalBaseUrl ?? localBaseUrl },
   ...(externalBaseUrl
     ? {}

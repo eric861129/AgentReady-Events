@@ -36,9 +36,14 @@ test("Tool execution failure is visible in the minimized activity timeline", asy
 });
 
 test("Journey B: prepare registration → zero POST → human submit", async ({ page }) => {
+  await page.goto("/events/evt-webmcp-intro/register");
+  const initialCapacity = await page.evaluate(async () => {
+    const response = await fetch("/api/events/evt-webmcp-intro");
+    const payload = await response.json() as { event: { remainingCapacity: number } };
+    return payload.event.remainingCapacity;
+  });
   let posts = 0;
   page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/api/registrations")) posts += 1; });
-  await page.goto("/events/evt-webmcp-intro/register");
   await page.getByLabel("姓名").fill("王小明");
   await page.getByLabel("Email（不保存）").fill("reader@example.com");
   await page.evaluate(() => {
@@ -49,6 +54,17 @@ test("Journey B: prepare registration → zero POST → human submit", async ({ 
   expect(posts).toBe(0);
   await page.getByRole("button", { name: "我確認並送出報名" }).click();
   await expect.poll(() => posts).toBe(1);
+  await expect(page.getByRole("status")).toContainText("報名完成");
+
+  // 部署 smoke 會直接對正式 revision 執行；同一 Journey 必須清理自己建立的報名。
+  await page.goto("/registrations");
+  await page.getByRole("button", { name: "準備取消" }).click();
+  await page.getByRole("button", { name: "確認取消" }).click();
+  await expect.poll(async () => page.evaluate(async () => {
+    const response = await fetch("/api/events/evt-webmcp-intro");
+    const payload = await response.json() as { event: { remainingCapacity: number } };
+    return payload.event.remainingCapacity;
+  })).toBe(initialCapacity);
 });
 
 test("Journey C: prepare cancellation → zero POST → human confirm", async ({ page }) => {
