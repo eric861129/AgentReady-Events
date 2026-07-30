@@ -885,6 +885,225 @@ button[type="submit"]:hover {
   background: rgb(0 0 0 / 0.12);
 }
 
+.registration-page {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.registration-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.38fr);
+  align-items: end;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.registration-intro h1 {
+  margin-bottom: 0.85rem;
+  font-size: clamp(2.25rem, 5vw, 4.2rem);
+}
+
+.registration-intro > div:first-child > p:last-child {
+  max-width: 680px;
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
+.confirmation-stop {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid #ebc995;
+  border-radius: 0.9rem;
+  background: #fff8ec;
+}
+
+.confirmation-stop > span {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #bd751d;
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-weight: 900;
+}
+
+.confirmation-stop strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.confirmation-stop p {
+  margin: 0;
+  color: #74511f;
+  font-size: 0.75rem;
+}
+
+.registration-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(285px, 0.75fr);
+  align-items: start;
+  gap: 1rem;
+}
+
+.registration-card,
+.safety-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.registration-card {
+  overflow: hidden;
+}
+
+.registration-event {
+  padding: 1.35rem clamp(1.35rem, 4vw, 2.4rem);
+  color: #eaf0ff;
+  background: var(--navy);
+}
+
+.registration-event .eyebrow {
+  color: #91adf1;
+}
+
+.registration-event h2 {
+  margin-bottom: 0.55rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+}
+
+.registration-event > p:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 0;
+  color: #b8c5dd;
+  font-size: 0.78rem;
+}
+
+.registration-event > p:last-child span + span::before {
+  margin-right: 0.8rem;
+  color: #61708e;
+  content: "•";
+}
+
+.registration-card form {
+  padding: clamp(1.35rem, 4vw, 2.4rem);
+}
+
+.registration-card .field {
+  margin-bottom: 0.65rem;
+}
+
+.registration-card small {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
+.registration-submit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.registration-submit p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
+.registration-submit code,
+.safety-panel code {
+  color: var(--blue-dark);
+  font-family: ui-monospace, "Cascadia Code", monospace;
+}
+
+.registration-status {
+  margin: 0;
+  padding: 0 clamp(1.35rem, 4vw, 2.4rem);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.registration-status:not(:empty) {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-top: 1px solid var(--line);
+  background: #f6f8fb;
+}
+
+.registration-status[data-state="success"] {
+  color: var(--success);
+  background: #eef9f4;
+}
+
+.registration-status[data-state="error"] {
+  color: var(--danger);
+  background: #fff2f2;
+}
+
+.safety-panel {
+  overflow: hidden;
+  padding: 1.35rem;
+}
+
+.safety-panel h2 {
+  margin-bottom: 1.25rem;
+  font-size: 1.45rem;
+}
+
+.safety-panel ol {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.safety-panel li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.safety-panel li > span {
+  color: var(--blue);
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.safety-panel li strong {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.82rem;
+}
+
+.safety-panel li p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
+.safety-panel .tool-boundary {
+  margin: 1rem -1.35rem -1.35rem;
+  color: var(--ink-soft);
+  background: #f2f5f9;
+  font-size: 0.72rem;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -963,7 +1182,9 @@ dialog::backdrop {
   .hero,
   .section-heading,
   .page-intro,
-  .detail-layout {
+  .detail-layout,
+  .registration-intro,
+  .registration-layout {
     grid-template-columns: 1fr;
   }
 
@@ -1060,6 +1281,14 @@ dialog::backdrop {
 
   .detail-actions .button,
   .registration-unavailable {
+    width: 100%;
+  }
+
+  .registration-submit {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-submit button {
     width: 100%;
   }
 
