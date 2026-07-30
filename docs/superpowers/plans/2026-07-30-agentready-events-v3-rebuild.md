@@ -8,6 +8,13 @@
 
 **Tech Stack:** TypeScript, Vite, Express, Vitest, Playwright, WebMCP Declarative/Imperative APIs, Git branches and tags.
 
+## Execution Override
+
+On 2026-07-30, the author explicitly requested direct development on the local `main`
+branch. The temporary `feat/v3-rebuild` worktree was fast-forwarded into local `main` and
+removed. All remaining tasks run in `D:\MySelf\WebMCP\AgentReady-Events`; remote push and
+deployment still require a separate explicit approval.
+
 ## Global Constraints
 
 - The approved article contract is `D:\MySelf\WebMCP\WEBMCP-iThome-2026-Draft-V3\BookProposal.md` plus `ArticleBriefs.md`.
@@ -291,6 +298,7 @@ git commit -m "feat(ui): restore event explorer visual foundation"
 - [ ] Run the full local verification suite and audit.
 - [ ] Start the production build and inspect `/events`, detail, registration, and cancellation with Playwright CLI.
 - [ ] Review the 30 local branches/tags against the approved article briefs.
-- [ ] Merge the reviewed rebuild branch using `superpowers:finishing-a-development-branch`.
+- [ ] Review the complete local `main` diff and commit history; no feature-branch merge is
+  required under the author's direct-main override.
 - [ ] Ask for explicit approval before pushing `main`, Day branches, tags, or deploying.
 - [ ] After approval, push the exact reviewed refs, deploy the saved commit, rerun Inspector E4, and update article links.
