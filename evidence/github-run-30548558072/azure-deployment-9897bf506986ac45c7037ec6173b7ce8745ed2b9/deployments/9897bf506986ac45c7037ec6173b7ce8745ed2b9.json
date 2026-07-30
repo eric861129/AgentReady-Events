@@ -1,0 +1,13 @@
+{
+  "commit": "9897bf506986ac45c7037ec6173b7ce8745ed2b9",
+  "imageRef": "ghcr.io/eric861129/agentready-events@sha256:3dbc579ed87cd23f1a4a5f087c24a7b3299b49530154602467217cd6b5ba0c39",
+  "fqdn": "ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+  "revision": "ca-agentready-events--0000005",
+  "region": "eastasia",
+  "workflowRunUrl": "https://github.com/eric861129/AgentReady-Events/actions/runs/30548558072",
+  "resourceTypes": [
+    "Microsoft.App/managedEnvironments",
+    "Microsoft.App/containerApps"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "commit": "8e89e6519406388a0de8c456a890d6fcc8cc5544",
+  "imageRef": "ghcr.io/eric861129/agentready-events:8e89e6519406388a0de8c456a890d6fcc8cc5544",
+  "imageId": "sha256:7adf32bbc9f0c33b6edbd6edc1c7604262c52336ba14b0965fee18408e48398d",
+  "platform": "linux/amd64",
+  "containerName": "agentready-events-smoke-8e89e6519406",
+  "port": 39939,
+  "startedAt": "2026-07-30T13:59:36.897Z",
+  "completedAt": "2026-07-30T13:59:48.278Z",
+  "checks": [
+    {
+      "path": "/health/live",
+      "status": 200,
+      "contains": "\"status\":\"ok\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/events/evt-webmcp-intro",
+      "status": 200,
+      "contains": "id=\"app\"",
+      "actualStatus": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/does-not-exist",
+      "status": 404,
+      "contains": "API_ROUTE_NOT_FOUND",
+      "actualStatus": 404,
+      "passed": true
+    }
+  ],
+  "success": true
+}

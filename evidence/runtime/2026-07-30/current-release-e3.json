@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-07-30T14:05:30.680Z",
+  "evidenceLevel": "E3",
+  "release": {
+    "commit": "8e89e6519406388a0de8c456a890d6fcc8cc5544",
+    "tag": "v3-p0-release.1",
+    "revision": "ca-agentready-events--0000006",
+    "digest": "sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41",
+    "workflowRun": "30549409859"
+  },
+  "responseStatus": 200,
+  "targetUrl": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events",
+  "isSecureContext": true,
+  "navigatorModelContext": "object",
+  "testingSurface": "object",
+  "tools": [
+    {
+      "name": "search_events",
+      "description": "依關鍵字、地點、費用與程度搜尋目前公開活動，並更新使用者可見的活動列表。"
+    }
+  ],
+  "limitations": [
+    "這是 Chrome testing surface 的 capability discovery，不是真實 Agent discovery 或 invocation。",
+    "腳本刻意不執行 Tool；E4 仍須由相容 Agent 實際選擇並呼叫 Tool。"
+  ]
+}

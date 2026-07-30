@@ -1,7 +1,7 @@
 # 讀者版程式里程碑
 
 > 更新日期：2026-07-30
-> 狀態：本機 refs 已建立並驗證，尚未推送遠端
+> 狀態：公開 Repository、`main`、10 組 Day branches 與 annotated tags 均已發布
 
 ## 為什麼不是 30 天各一份程式碼
 
@@ -71,10 +71,17 @@ git switch --detach v3-day-14
 git switch main
 ```
 
-## 發布前驗證
+## 公開匿名重播
 
-目前 10 組 branch 與 annotated tag 都已驗證指向相同的預定 commit。正式推送前仍需：
+2026-07-30 從全新、無既有工作目錄的匿名 clone 實際重播：
 
-1. 確認文章中的 branch、tag、路徑與這份表一致。
-2. 重跑完整測試、瀏覽器測試、production build 與 dependency audit。
-3. 取得作者明確授權後，才推送 `main`、Day branches 與 tags。
+1. Day 02：47 files／138 tests 與 production build 通過。
+2. Day 11：1 unit 通過；原始 browser command 因本機 `5173` 已被其他服務占用而誤連，
+   改用只調整 port 的臨時 config 後 1 browser 通過。歷史 lockfile 另有 1 個 high
+   audit finding；tag 不移動，現行 P0 release 的 audit 為 0。
+3. Day 14：2 個 focused files／6 tests 與 4 browser tests 通過。
+4. Day 25：`npm run verify` 全程通過，包括 47 files／138 deterministic tests、
+   11 API tests、6 security tests、36 browser tests 與 production build。
+
+現行 hardening 版本另以 `v3-p0-release` 與 `v3-p0-release.1` 固定；後者加入部署
+smoke 自行恢復名額的驗證責任，不移動任何歷史 Day tag。

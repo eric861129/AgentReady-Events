@@ -59,6 +59,25 @@ async function redactDynamicRegistrationIds(page: Page) {
   });
 }
 
+test("Day 01 captures the honest product and evidence status", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("Source contract：5 Tools")).toBeVisible();
+  await expect(page.getByText("Agent invocation：current revision pending")).toBeVisible();
+  await captureEvidence(page, {
+    id: "day-01-product-overview",
+    day: 1,
+    route: "/",
+    fixture: "honest-source-capability-invocation-status",
+    selector: "body",
+    action: "open the product home page in a browser without native modelContext",
+    assertion: "the page separates the five-Tool source contract, unavailable browser capability and pending current-revision Agent invocation",
+    finalAsset: "assets/day-01/agentready-events-home-overview.png",
+    evidenceAxis: "test_harness",
+    evidenceLevel: "E2",
+    limitations: ["This screenshot proves the product copy and browser fallback state; it is not an Agent invocation."]
+  });
+});
+
 test("Day 02 captures the original locator succeeding", async ({ page }) => {
   await page.goto("/labs/day-02-actuation/index.html?evidence=1");
   const locator = page.getByRole("button", { name: "搜尋活動" });

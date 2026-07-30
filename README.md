@@ -191,6 +191,8 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 歷史可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
+- 最終 P0 release `8e89e65`／`v3-p0-release.1` 已由 run `30549409859` 部署為 Azure revision `ca-agentready-events--0000006`，immutable digest 為 `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41`。
+- 公開 `/health/version` 與 artifact 的 commit／revision 一致；production smoke 完成後 `remainingCapacity` 仍為 8。Chrome testing surface 已在同版本發現 `search_events`，因此目前 release 為 E3，current-release Agent invocation 仍 pending。
 - GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`；這是兩題 read-only E4 的歷史座標，不替目前 source 升級。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。

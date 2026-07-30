@@ -27,11 +27,21 @@ Inspector trace 本身沒有內嵌 URL、commit、revision 或 image digest；`d
 `0000004` 的對應來自同一測試 session 的部署紀錄，所以應標示為 correlated evidence，
 不得寫成自包含的 cryptographic linkage。
 
-## 2026-07-30：P0 runtime release 尚待同版本重測
+## 2026-07-30：P0 release 已取得同版本 E3
 
-`9897bf506986ac45c7037ec6173b7ce8745ed2b9` 修正名額、截止時間、confirmation intent
-與網站 E4 過度宣稱。這個 commit 目前只有 E2；部署前與 Inspector 同版本重測前，
-不能沿用 `d0fe4df` 的兩份 trace 升級。
+最終 release `8e89e6519406388a0de8c456a890d6fcc8cc5544`／`v3-p0-release.1`
+已由 workflow run `30549409859` 部署至 revision
+`ca-agentready-events--0000006`，image digest 為
+`sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41`。
+`/health/version` 與 artifact 四個座標一致；完整 production smoke 後活動名額仍為 8。
+
+Chrome testing surface 在該 HTTPS `/events` 發現 `search_events`，secure context、
+`navigator.modelContext` 與 `navigator.modelContextTesting` 均存在，因此此版本可列
+E3。原始輸出保存於
+`evidence/runtime/2026-07-30/current-release-e3.json`。
+
+Inspector 側邊面板仍需由使用者在 Chrome UI 開啟並送出 prompt；目前沒有這個精確
+revision 的 Agent trace，所以不能沿用 `d0fe4df` 的兩份歷史 trace 升級為 E4。
 
 ## 下一輪有效重跑
 
