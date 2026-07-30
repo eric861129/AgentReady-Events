@@ -179,7 +179,9 @@ infra/         Azure Container Apps Bicep
 - Day 23–29：verification、安全、container、Azure、capability preflight、Eval、release evidence
 - Day 30：作者回顧，不建立新的程式 branch 或第六個 Tool
 
-精確檔案與測試請查文章專案的 mapping，不要複製 30 份相同程式碼。
+精確檔案、測試與可切換的 Git refs 請查
+[讀者版程式里程碑](docs/reader-code-milestones.md)。只有實際存在程式差異的 Day
+才建立 branch／annotated tag，不複製 30 份相同程式碼。
 
 ## Evidence 與目前限制
 

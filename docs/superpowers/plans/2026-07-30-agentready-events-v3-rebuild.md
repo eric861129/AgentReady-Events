@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rebuild AgentReady Events with the V2 event-explorer product experience, preserve the current five-Tool security architecture, and publish truthful Day 01–30 source snapshots that match the approved V3 article briefs.
+**Goal:** Rebuild AgentReady Events with the V2 event-explorer product experience, preserve the current five-Tool security architecture, and publish truthful source milestones only for article days with meaningful code differences.
 
-**Architecture:** Keep the current Vite/TypeScript client, Express server, shared actions, WebMCP adapter, five-Tool catalog, three Journeys, and server authority. Replace only the presentation shell and page rendering needed for the polished event-explorer experience. Daily branches and immutable tags are generated from verified commits recorded in a machine-readable snapshot manifest; conceptual days may share an executable code state only when the manifest says so explicitly.
+**Architecture:** Keep the current Vite/TypeScript client, Express server, shared actions, WebMCP adapter, five-Tool catalog, three Journeys, and server authority. Replace only the presentation shell and page rendering needed for the polished event-explorer experience. Reader branches and immutable tags point only to verified commits with observable code or behavior differences; conceptual and evidence-only days link to the relevant source, tests, or records instead of duplicating a source state.
 
 **Tech Stack:** TypeScript, Vite, Express, Vitest, Playwright, WebMCP Declarative/Imperative APIs, Git branches and tags.
 
@@ -77,49 +77,21 @@ git diff --cached --check
 git commit -m "chore(deps): secure V3 rebuild baseline"
 ```
 
-### Task 2: Define the Day 01–30 Snapshot Contract
+### Task 2: Define the Reader Code Milestone Contract
 
 **Files:**
-- Create: `docs/daily-snapshots.json`
-- Create: `docs/daily-snapshots.md`
-- Create: `scripts/validate-daily-snapshots.ts`
-- Create: `tests/scripts/daily-snapshots.test.ts`
-- Modify: `package.json`
+- Create: `docs/reader-code-milestones.md`
+- Modify: `README.md`
 
 **Interfaces:**
-- Produces: `DailySnapshot` entries with `day`, `branch`, `tag`, `articleTitle`, `sourceRef`, `evidenceCeiling`, and `status`.
-- Later tasks update each `sourceRef` only after the corresponding commit passes its gate.
+- Each milestone records an article day, branch, annotated tag, exact commit, and observable code difference.
+- Days without a standalone source delta link to the closest relevant milestone, source file, test, or evidence record.
 
-- [ ] **Step 1: Write the failing manifest test**
-
-The test must require exactly 30 unique days, branches, and tags; Day 01–30 must be continuous; branch names must match `day-XX-<slug>`; tags must match `v3-day-XX`; forbidden words such as `codex` must not appear.
-
-- [ ] **Step 2: Verify RED**
-
-```powershell
-npx vitest run tests/scripts/daily-snapshots.test.ts
-```
-
-Expected: FAIL because the manifest and validator do not exist.
-
-- [ ] **Step 3: Add the approved 30-day manifest**
-
-Use the exact titles and ordering from `ArticleBriefs.md`. Mark unresolved refs as `pending`; do not invent commit hashes.
-
-- [ ] **Step 4: Verify GREEN**
-
-```powershell
-npx vitest run tests/scripts/daily-snapshots.test.ts
-npm run snapshots:validate
-```
-
-- [ ] **Step 5: Commit**
-
-```powershell
-git add docs/daily-snapshots.json docs/daily-snapshots.md scripts/validate-daily-snapshots.ts tests/scripts/daily-snapshots.test.ts package.json
-git diff --cached --check
-git commit -m "docs(series): define Day 01 to Day 30 snapshots"
-```
+- [x] **Step 1: Inventory verified commits with meaningful reader-visible differences**
+- [x] **Step 2: Reject duplicate refs for conceptual, operational, and evidence-only days**
+- [x] **Step 3: Create the approved local branches and annotated tags**
+- [x] **Step 4: Verify every branch and peeled tag commit against its intended SHA**
+- [x] **Step 5: Commit the reader milestone documentation**
 
 ### Task 3: Restore the V2 Event Explorer Visual Foundation
 
@@ -248,56 +220,37 @@ git commit -m "feat(ui): restore event explorer visual foundation"
 - [ ] Run lint, typecheck, unit, API, security, browser, build, and audit gates.
 - [ ] Commit as `test(ui): verify responsive and accessible journeys`.
 
-### Task 9: Rebuild Day 01–12 Reader Snapshots
+### Task 9: Publish Day 01–12 Reader Milestones
 
-**Files:**
-- Modify: `docs/daily-snapshots.json`
-- Modify: `docs/daily-snapshots.md`
-- Modify: relevant `labs/day-*` files and tests only when the approved article requires a missing state.
+- [x] Map Day 02, 05, 11, and 12 to real verified source differences.
+- [x] Document why conceptual Days 01, 03–04, and 06–10 have no duplicate refs.
+- [x] Preserve historical Lab paths and commit subjects while mapping them to the new article days.
+- [x] Create and verify the four local branches and annotated tags.
 
-- [ ] Map Day 01–05 to real human baseline and copy-change experiment commits.
-- [ ] Map Day 06–10 conceptual days to explicit verified source states; shared code states are allowed only when documented.
-- [ ] Map Day 11–12 to Declarative and Imperative Lab commits.
-- [ ] Create local `day-01-*` through `day-12-*` branches and `v3-day-01` through `v3-day-12` tags.
-- [ ] Run `npm run snapshots:validate -- --refs`.
-- [ ] Commit manifest updates as `chore(series): publish Day 01 to Day 12 refs`.
+### Task 10: Publish Day 13–22 Product Milestones
 
-### Task 10: Rebuild Day 13–22 Product Snapshots
+- [x] Map Days 14, 15, 19, 20, and 21 to focused, verified product commits.
+- [x] Document why Days 13, 16–18, and 22 do not receive artificial duplicate refs.
+- [x] Create and verify the five local branches and annotated tags.
+- [x] Preserve the five Tool names and human-confirmation boundaries.
 
-**Files:**
-- Modify: `docs/daily-snapshots.json`
-- Modify: `docs/daily-snapshots.md`
-- Modify: product tests only when a brief requires an unrepresented intermediate contract.
+### Task 11: Publish Day 23–30 Trust and Evidence Milestones
 
-- [ ] Reuse verified historical feature commits where their behavior matches the new brief.
-- [ ] Create new commits where result/error contracts or shared-use-case ordering differs.
-- [ ] Create local Day 13–22 branches and tags only after each focused gate passes.
-- [ ] Verify five Tool names and three Journey boundaries at every applicable ref.
-- [ ] Commit as `chore(series): publish Day 13 to Day 22 refs`.
-
-### Task 11: Rebuild Day 23–30 Trust and Evidence Snapshots
-
-**Files:**
-- Modify: `docs/daily-snapshots.json`
-- Modify: `docs/daily-snapshots.md`
-- Modify: `evals/*`, `evidence/*`, deployment docs, and Inspector runbook only from real reruns.
-
-- [ ] Map deterministic verification, security, deployment, Inspector setup, Gemini budget, E4 Eval, release ledger, and final reference states.
-- [ ] Remove Codex wording from public branch names and reader docs.
+- [x] Create Day 25 as the verified rebuilt release-candidate source milestone.
+- [x] Keep verification, security, deployment, Inspector, Gemini, E4 Eval, and release ledger as evidence links unless they introduce a real source delta.
+- [x] Do not create a Day 30 code ref or a sixth Tool.
 - [ ] Preserve historical E4 traces as historical evidence until the rebuilt deployment is rerun.
-- [ ] Create local Day 23–30 branches and tags.
-- [ ] Verify all refs and commit as `chore(series): publish Day 23 to Day 30 refs`.
 
 ### Task 12: Final Review, Deployment, and Remote Publication Gate
 
 **Files:**
 - Modify: `README.md`
-- Modify: `docs/daily-snapshots.md`
+- Modify: `docs/reader-code-milestones.md`
 - Modify: article mapping docs and evidence only after final verification.
 
 - [ ] Run the full local verification suite and audit.
 - [ ] Start the production build and inspect `/events`, detail, registration, and cancellation with Playwright CLI.
-- [ ] Review the 30 local branches/tags against the approved article briefs.
+- [x] Review the 10 local branches/tags against the approved article briefs and actual commit differences.
 - [ ] Review the complete local `main` diff and commit history; no feature-branch merge is
   required under the author's direct-main override.
 - [ ] Ask for explicit approval before pushing `main`, Day branches, tags, or deploying.
