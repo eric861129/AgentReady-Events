@@ -3,10 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AgentReady Events</title>
+    <meta
+      name="description"
+      content="一個同時為人類與 AI Agent 設計的 WebMCP 活動探索網站。"
+    />
+    <title>活動探索站｜Agent-ready WebMCP Demo</title>
   </head>
   <body>
-    <main id="app"></main>
+    <a class="skip-link" href="#app">跳到主要內容</a>
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span>活動探索站</span>
+      </a>
+      <nav class="site-nav" aria-label="主要導覽">
+        <a href="/events" data-nav-route="events">探索活動</a>
+        <a href="/registrations" data-nav-route="registrations">我的報名</a>
+        <a href="/labs/day-11-tool-lifecycle/index.html">教學 Labs</a>
+      </nav>
+      <p class="site-status"><span aria-hidden="true"></span> WebMCP 實驗中</p>
+    </header>
+    <main id="app" class="page-shell" tabindex="-1"></main>
+    <footer class="site-footer">
+      <p><strong>AgentReady Events</strong> — 先讓人類能用，再讓 Agent 能懂。</p>
+      <p>五個 Tool、三條 Journey、每一個證據等級都誠實標示。</p>
+    </footer>
     <script type="module" src="/src/client/app.ts"></script>
   </body>
 </html>
