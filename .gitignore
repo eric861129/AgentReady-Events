@@ -5,4 +5,5 @@ playwright-report/
 test-results/
 .playwright-cli/
 evidence/article-screenshots/.playwright/
+.worktrees/
 .DS_Store
