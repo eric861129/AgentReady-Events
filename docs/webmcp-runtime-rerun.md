@@ -17,7 +17,21 @@ Day 27 的 0/20 environment-classified baseline 保持不變：當時的測試 s
 1. 「幫我找台北、免費，而且適合入門者的活動。」由 Agent 選擇並呼叫 `search_events`，輸入為 `location=taipei`、`price=free`、`level=beginner`。
 2. 「請整理我現在看的活動名稱、地點、時間與剩餘名額。」由 Agent 在活動詳情頁選擇並呼叫 `get_event_details`，輸入為 `{}`，結果包含 `remainingCapacity=8`。
 
-這兩筆可列為 E4，但不能外推為 20/20，也不能證明寫入 Tool、確認停點或跨乾淨環境 E5 已通過。第一筆紀錄保存於文章專案 `evidence/day-27/inspector-e4-sel-01.txt`，第二筆保存於 `evidence/day-27/inspector-e4-sel-02.txt`。
+這兩筆只對該歷史部署可列為 E4，不能外推為 20/20，也不能證明寫入 Tool、確認停點、目前 release 或跨乾淨環境 E5 已通過。原始文字、截圖與 SHA-256 provenance 已保存於：
+
+- `evidence/agent-invocation/2026-07-29/sel-01-search-events-e4.txt`
+- `evidence/agent-invocation/2026-07-29/sel-02-current-page-e4.txt`
+- `evidence/agent-invocation/2026-07-29/provenance.json`
+
+Inspector trace 本身沒有內嵌 URL、commit、revision 或 image digest；`d0fe4df`／
+`0000004` 的對應來自同一測試 session 的部署紀錄，所以應標示為 correlated evidence，
+不得寫成自包含的 cryptographic linkage。
+
+## 2026-07-30：P0 runtime release 尚待同版本重測
+
+`9897bf506986ac45c7037ec6173b7ce8745ed2b9` 修正名額、截止時間、confirmation intent
+與網站 E4 過度宣稱。這個 commit 目前只有 E2；部署前與 Inspector 同版本重測前，
+不能沿用 `d0fe4df` 的兩份 trace 升級。
 
 ## 下一輪有效重跑
 

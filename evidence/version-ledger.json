@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-07-30",
+  "entries": [
+    {
+      "id": "historical-e3",
+      "commit": "2a2c02701da6a381106c1e24903f0415e03a19b0",
+      "revision": "ca-agentready-events--0000002",
+      "workflowRun": "29179363328",
+      "evidence": ["E2", "E3"],
+      "status": "historical",
+      "claim": "Historical HTTPS and browser-capability evidence only."
+    },
+    {
+      "id": "historical-e4-readonly",
+      "commit": "d0fe4df19112d6c4eaac4dee71c55d47d5367c09",
+      "revision": "ca-agentready-events--0000004",
+      "workflowRun": "30439991021",
+      "evidence": ["E2", "E3", "E4-SEL-01", "E4-SEL-02"],
+      "status": "historical",
+      "claim": "Two correlated read-only E4 cases; not transferable to a different revision."
+    },
+    {
+      "id": "rebuild-release-candidate",
+      "commit": "3a9b1245d6f9f6663554c321de72d98105e59578",
+      "tag": "v3-day-25",
+      "evidence": ["E2"],
+      "status": "superseded",
+      "claim": "Rebuilt source candidate; not deployed for same-revision E4."
+    },
+    {
+      "id": "p0-runtime-release",
+      "commit": "9897bf506986ac45c7037ec6173b7ce8745ed2b9",
+      "tag": "v3-p0-release",
+      "evidence": ["E2"],
+      "status": "deployment-pending",
+      "claim": "Inventory, deadline, confirmation-intent and honest-status hardening. Current-revision E4 is pending."
+    }
+  ]
+}

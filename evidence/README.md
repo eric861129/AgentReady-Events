@@ -1,5 +1,11 @@
 # Evidence
 
+Release-to-evidence coordinates are indexed in
+[`version-ledger.json`](version-ledger.json) and
+[`docs/version-evidence-ledger.md`](../docs/version-evidence-ledger.md).
+Historical Inspector traces live under `agent-invocation/`; they must not be
+reused to upgrade a different commit or Azure revision.
+
 Evidence levels are claims, not progress badges. Every record separates four independent observations:
 
 - `runtime_integration`: the built site and browser flow ran in the named environment.

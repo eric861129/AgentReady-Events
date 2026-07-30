@@ -24,15 +24,15 @@ No Tool named `submit_registration`, `register_event`, `cancel_registration`, or
 
 ## Shared contracts
 
-UI and Tool paths call the same client actions. Routes call server services. Server services alone access per-session memory state. Interaction source is audit metadata, never authorization.
+UI and Tool paths call the same client actions. Routes call server services. Server services own per-session records and application-level event inventory. Interaction source is audit metadata, never authorization.
 
 ## Security
 
-Validate input at the server; use opaque Session cookie, CSRF, ownership, state and idempotency. Public errors never expose stack, path, Cookie, token or CSRF values. Treat event content as untrusted. Annotations are hints, not permissions.
+Validate input at the server; use opaque Session cookie, CSRF, ownership, deadline, inventory, idempotency and a short-lived single-use confirmation intent bound to session/action/target. The intent limits replay and target substitution but is not proof of human identity. Public errors never expose stack, path, Cookie, token or CSRF values. Treat event content as untrusted. Annotations are hints, not permissions.
 
 ## Non-goals
 
-No database, OAuth, payment, email delivery, admin panel, user-generated event creation, recommendation engine, analytics backend or production identity system.
+No database, OAuth, payment, email delivery, admin panel, user-generated event creation, recommendation engine, analytics backend or production identity system. Inventory is intentionally scoped to one application process; multi-replica capacity control is outside this Demo.
 
 ## Freeze and evidence
 

@@ -1,0 +1,25 @@
+Evidence ID: SEL-02
+Evidence level: E4 (historical read-only invocation only)
+Captured: 2026-07-29
+Associated deployment commit: d0fe4df19112d6c4eaac4dee71c55d47d5367c09
+Associated Azure revision: ca-agentready-events--0000004
+Association quality: correlated by the test-session deployment record; the Inspector trace itself does not embed commit, revision, URL or image digest.
+
+User prompt: "請整理我現在看的活動名稱、地點、時間與剩餘名額。"
+
+AI calling tool "get_event_details" with {}
+
+Tool "get_event_details" result: {"ok":true,"code":"SUCCESS","data":{"event":{"id":"evt-webmcp-intro","title":"WebMCP 入門工作坊","summary":"從語意 HTML 到第一個網站 Tool。","startsAt":"2026-08-01T10:00:00+08:00","endsAt":"2026-08-01T12:00:00+08:00","location":"taipei","venue":"台北前端共學空間","price":"free","level":"beginner","remainingCapacity":8,"registrationDeadline":"2026-07-30T23:59:59+08:00","state":"open"}},"uiUpdated":true,"stateVersion":2}
+
+AI result:
+這是目前頁面上找到的活動資訊：
+
+- 活動名稱：WebMCP 入門工作坊
+- 地點：台北前端共學空間（台北）
+- 時間：2026 年 8 月 1 日 10:00–12:00
+- 剩餘名額：8 位
+
+Limitations:
+- This trace proves one compatible Agent selected and invoked the route-bound get_event_details Tool with no event_id.
+- It does not prove the other 18 Eval cases, any write path, E5 replay, or the current release.
+- The text was preserved from the Inspector Copy trace and screenshot; secrets and API keys are not included.

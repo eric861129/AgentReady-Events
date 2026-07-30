@@ -14,7 +14,7 @@ AgentReady Events 是《網站不只給人用：30 天做一個 Agent-ready 網�
 4. `prepare_event_registration`
 5. `prepare_registration_cancellation`
 
-報名與取消只有 prepare Tool。最後 mutation 必須由人類在可見介面確認；`submit_registration` 與 `cancel_registration` 不屬於正式 catalog。完整 freeze 見 [FEATURE_FREEZE.md](FEATURE_FREEZE.md)。
+報名與取消只有 prepare Tool。受控 UI Journey 會在使用者按下可見按鈕後，向 server 取得綁定 session、action 與 target 的短效單次確認意圖，再執行最後 mutation；`submit_registration` 與 `cancel_registration` 不屬於正式 catalog。這個 Demo 停點可被測試，但不等於 server 能以密碼學方式證明「真的由人類點擊」。完整 freeze 見 [FEATURE_FREEZE.md](FEATURE_FREEZE.md)。
 
 ## 技術架構
 
@@ -68,6 +68,7 @@ npm run dev
 
 - Web：`http://127.0.0.1:5173/events`
 - API health：`http://127.0.0.1:3000/health/live`
+- 版本座標：`http://127.0.0.1:3000/health/version`
 - Production build：先執行 `npm run build`，再執行 `npm start`
 
 Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 已被占用，先停止既有 process；不要隨意改 port 後仍沿用文章中的 URL。
@@ -187,14 +188,18 @@ infra/         Azure Container Apps Bicep
 
 Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`agent_invocation`、`test_harness`。詳見 [evidence/README.md](evidence/README.md)。
 
-目前可查核狀態：
+歷史可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
-- GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`。
+- GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`；這是兩題 read-only E4 的歷史座標，不替目前 source 升級。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
-- WebMCP Inspector 內的 Gemini Agent 已在未提示 Tool 名稱的情況下，分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details`，這兩題可列為 E4。
+- WebMCP Inspector 內的 Gemini Agent 已在未提示 Tool 名稱的情況下，分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details`，這兩題只對歷史部署可列為 E4。
 - 其餘 18 題、寫入／確認類 Journey 與跨乾淨環境的 E5 重播仍未完成。
+
+最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在
+[版本證據帳本](docs/version-evidence-ledger.md)。網站畫面只標示 source contract、
+目前瀏覽器 capability 與 current revision invocation 狀態，不自行宣稱 E4。
 
 請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 
@@ -204,7 +209,9 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 - GitHub Actions 透過 OIDC 登入 Azure，不使用長效 client secret。
 - Infrastructure deployment 只允許核准的 resource type 與 immutable public GHCR digest。
 - Browser input、Tool annotation 與 `interactionMode` 都不是 authorization。
-- Server 必須重新驗證 session、ownership、state 與 mutation 條件。
+- Server 必須重新驗證 session、ownership、state、截止時間、名額與 mutation 條件。
+- 最後報名／取消還需短效、單次且綁定 session/action/target 的 confirmation intent；它降低重播與錯誤 target 風險，但不構成真實人類身分證明。
+- Demo 名額是單一 Node.js 執行個體內的 server-side state。正式多 revision／多 replica 系統必須改用資料庫交易或等價的原子性儲存。
 
 ## 常見問題
 

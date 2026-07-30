@@ -1,8 +1,10 @@
 # Azure deployment source
 
-- Source release: `v1.0.0`
-- Source commit: `8d64b8a81074e9af6de24c1c505e53dfe1aa4e5d`
+- Target release: `v3-p0-release`
+- Target source commit: `9897bf506986ac45c7037ec6173b7ce8745ed2b9`
+- Deployment status: pending
 - Source repository: `https://github.com/eric861129/AgentReady-Events`
-- Deployment branch: `ops/azure-container-apps`
 - Target image: `ghcr.io/eric861129/agentready-events`
 - Azure deployment always uses an immutable manifest digest.
+- After deployment, record the workflow run, image digest, Azure revision and
+  public `/health/version` response in `docs/version-evidence-ledger.md`.

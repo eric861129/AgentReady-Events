@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-29",
+  "evidenceLevel": "E4",
+  "scope": "historical-read-only",
+  "associatedDeployment": {
+    "commit": "d0fe4df19112d6c4eaac4dee71c55d47d5367c09",
+    "revision": "ca-agentready-events--0000004",
+    "workflowRun": "30439991021"
+  },
+  "environment": {
+    "browser": "Google Chrome 150.0.7871.125",
+    "flag": "WebMCP for testing",
+    "inspector": "WebMCP - Model Context Tool Inspector 1.9.12",
+    "agentModel": "Gemini 3 Flash Preview"
+  },
+  "artifacts": [
+    {
+      "caseId": "SEL-01",
+      "trace": "sel-01-search-events-e4.txt",
+      "screenshot": "sel-01-search-events-e4.png",
+      "screenshotSha256": "2ddac60675c072becb40738ad7b416e22ff0773c1674e53097de87a3b3f72a3e"
+    },
+    {
+      "caseId": "SEL-02",
+      "trace": "sel-02-current-page-e4.txt",
+      "screenshot": "sel-02-current-page-e4.png",
+      "screenshotSha256": "03b152738e8088a140a173b4534536dc9804531b7ded42d2e6d1abfbcf42eba7"
+    }
+  ],
+  "associationQuality": "correlated",
+  "limitations": [
+    "The Inspector traces do not embed deployment URL, commit, revision or image digest.",
+    "The deployment association comes from the same test-session runtime record and is therefore correlated, not self-contained.",
+    "Only two read-only cases are E4. No current-release E4, write-path E4 or E5 claim is made."
+  ]
+}

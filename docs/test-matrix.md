@@ -6,7 +6,7 @@
 | Unit and Tool | Pure rules, schemas, lifecycle and result contracts | Network or rendered UI |
 | API | Session ownership, validation and HTTP behavior | Browser accessibility |
 | Security | Explicit authorization, injection and annotation invariants | Absence of every vulnerability |
-| Browser | Human fallback, accessible confirmation and three Journeys | Real Codex discovery |
+| Browser | Human fallback, accessible confirmation and three Journeys | Real compatible-Agent discovery |
 | Build | Client and server sources compile | Public-host configuration |
 | Codex Evals | Observed discovery, selection and behavior in the recorded environment | Behavior in unrecorded versions or environments |
 
