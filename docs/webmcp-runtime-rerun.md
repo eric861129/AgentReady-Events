@@ -40,14 +40,48 @@ Chrome testing surface 在該 HTTPS `/events` 發現 `search_events`，secure co
 E3。原始輸出保存於
 `evidence/runtime/2026-07-30/current-release-e3.json`。
 
-Inspector 側邊面板仍需由使用者在 Chrome UI 開啟並送出 prompt；目前沒有這個精確
-revision 的 Agent trace，所以不能沿用 `d0fe4df` 的兩份歷史 trace 升級為 E4。
+Inspector 側邊面板仍需由使用者在 Chrome UI 開啟並送出 prompt。此時尚無精確
+revision 的 Agent trace，所以當天沒有沿用 `d0fe4df` 的兩份歷史 trace 升級為 E4。
+
+## 2026-07-31：最終 release 的兩題 read-only E4
+
+維持同一個 immutable release：
+
+```text
+tag       v3-p0-release.1
+commit    8e89e6519406388a0de8c456a890d6fcc8cc5544
+revision  ca-agentready-events--0000006
+digest    sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41
+run       30549409859
+```
+
+在受控交接測試 session 預先開啟最終公開 `/events` 與
+`/events/evt-webmcp-intro`。使用者只在 Inspector 輸入自然語言 prompt，沒有在
+prompt 提示 Tool 名稱，也沒有手動按下 `Execute Tool`：
+
+1. SEL-01：Agent 選擇 `search_events`，帶入台北、免費、入門 filters，回傳
+   2027-01-23 的 WebMCP 入門工作坊並正確整理。
+2. SEL-02：Agent 在詳情頁選擇 `get_event_details {}`，回傳相同活動、場地、時間與
+   `remainingCapacity=8` 並正確整理。
+
+這兩題各自滿足 User prompt、Tool call、input、Tool result、AI result 五段，故可列
+為 current-release E4。原始資料保存於：
+
+- `evidence/agent-invocation/2026-07-31/sel-01-search-events-current-release-e4.txt`
+- `evidence/agent-invocation/2026-07-31/sel-02-current-page-current-release-e4.txt`
+- `evidence/agent-invocation/2026-07-31/provenance.json`
+
+關聯品質仍是 correlated：截圖與 Copy trace 沒有內嵌 URL、commit、revision 或
+digest；精確版本是由受控 session、預先開啟的兩條 public route、2027 fixture 與
+既有 release 座標共同建立。這只補上 SEL-01、SEL-02；其餘 18 題、完整三條 Journey、
+寫入／確認路徑與 E5 都沒有因此通過。搜尋頁截圖裡的 `E4 TEST TARGET` 是送出這次
+trace 前就存在於 immutable revision 的靜態標籤，不代表本文用畫面文案自我認證。
 
 ## 下一輪有效重跑
 
 1. 在乾淨 profile 使用相容的 WebMCP Agent，不在 prompt 中提示 Tool 名稱。
-2. 沿用固定二十題、三條 Journey 與資料集；保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
-3. 每一題獨立判定 E4，不用兩題成功替其餘案例升級。
+2. 從其餘 18 題與三條完整 Journey 繼續；保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
+3. 每一題獨立判定 E4，不用 SEL-01、SEL-02 替其餘案例升級。
 4. 另以獨立乾淨環境重播同一題、同一資料版本與同一部署座標，才可主張該題 E5。
 
 ## 可重跑指令

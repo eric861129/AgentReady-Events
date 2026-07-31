@@ -8,4 +8,5 @@
 - [x] Three browser Journeys and fixed 20-case Eval set.
 - [x] Immutable environment-failure baseline; no evidence inflation.
 - [x] Current release deployed to author-authorized HTTPS with commit/revision/digest coordinates.
-- [ ] Current-release compatible Agent discovery/invocation E4 and independent E5 replay.
+- [x] Current-release compatible Agent discovery/invocation E4 for read-only SEL-01 and SEL-02.
+- [ ] Remaining 18 cases, complete Journeys, write-path E4 and independent E5 replay.

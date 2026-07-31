@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-31",
+  "evidenceLevel": "E4",
+  "scope": "current-release-read-only",
+  "associatedDeployment": {
+    "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io",
+    "tag": "v3-p0-release.1",
+    "commit": "8e89e6519406388a0de8c456a890d6fcc8cc5544",
+    "revision": "ca-agentready-events--0000006",
+    "imageDigest": "sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41",
+    "workflowRun": "30549409859"
+  },
+  "environment": {
+    "browser": "Google Chrome 150",
+    "flag": "WebMCP for testing",
+    "inspector": "WebMCP - Model Context Tool Inspector 1.9.12",
+    "agentModel": "Gemini through Inspector; the exact model revision is not embedded in the trace"
+  },
+  "artifacts": [
+    {
+      "caseId": "SEL-01",
+      "trace": "sel-01-search-events-current-release-e4.txt",
+      "traceSha256": "54b88edcbb9df5ac7420c9ddf7790fd896a07b205a7cfc8cbc23eb88cdf40c69",
+      "screenshot": "sel-01-search-events-current-release-e4.png",
+      "screenshotSha256": "191aff79fa6bc75c62fdfde619614281834b9df99f9c0abaefd43cee2f155741"
+    },
+    {
+      "caseId": "SEL-02",
+      "trace": "sel-02-current-page-current-release-e4.txt",
+      "traceSha256": "6aa4bc808e69c8d7c74222eafd2cc07e55d62b2ed7128bf4b0c411b9b95d9986",
+      "screenshot": "sel-02-current-page-current-release-e4.png",
+      "screenshotSha256": "984f7cb61cf841d100013add3c7b282b68fa4206cafc8a83103e5085d7b29bcc"
+    }
+  ],
+  "associationQuality": "correlated",
+  "limitations": [
+    "The Inspector screenshots and copied traces do not embed the deployment URL, commit, revision or image digest.",
+    "The exact release association comes from the controlled handoff test session, the two pre-opened public routes and matching 2027 fixture data.",
+    "Only SEL-01 and SEL-02 are current-release E4. No 20/20, complete Journey, write-path E4 or E5 claim is made.",
+    "The E4 TEST TARGET label visible in the search-page screenshot was rendered before these traces were captured on the same immutable revision."
+  ]
+}

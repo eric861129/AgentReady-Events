@@ -1,0 +1,28 @@
+Evidence case: SEL-01
+Captured date: 2026-07-31
+Evidence level: E4
+Scope: current-release read-only Agent invocation
+Public URL: https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events
+Release tag: v3-p0-release.1
+Source commit: 8e89e6519406388a0de8c456a890d6fcc8cc5544
+Azure revision: ca-agentready-events--0000006
+Image digest: sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41
+Workflow run: 30549409859
+Association quality: correlated
+
+User prompt: "幫我找台北、免費，而且適合入門者的活動。"
+AI calling tool "search_events" with {"location":"taipei","level":"beginner","query":"","price":"free"}
+Tool "search_events" result: {"count":1,"events":[{"id":"evt-webmcp-intro","url":"/events/evt-webmcp-intro","title":"WebMCP 入門工作坊","summary":"從語意 HTML 到第一個網站 Tool。","startsAt":"2027-01-23T10:00:00+08:00","location":"taipei","price":"free","level":"beginner"}]}
+AI result: 為您找到 1 個在台北、免費且適合入門者的活動：
+
+### [WebMCP 入門工作坊](/events/evt-webmcp-intro)
+* **摘要：** 從語意 HTML 到第一個網站 Tool。
+* **時間：** 2027 年 1 月 23 日 (六) 10:00
+* **地點：** 台北
+* **費用：** 免費
+- **程度：** 入門 (Beginner)
+
+Limitations:
+- The screenshot and copied trace do not embed the deployment URL, commit, revision or image digest.
+- The release association comes from the controlled handoff test session and matching 2027 fixture data.
+- This file proves only this read-only case. It does not prove the remaining 18 cases, a complete Journey, write-path E4 or E5.

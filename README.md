@@ -192,16 +192,16 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
 - 最終 P0 release `8e89e65`／`v3-p0-release.1` 已由 run `30549409859` 部署為 Azure revision `ca-agentready-events--0000006`，immutable digest 為 `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41`。
-- 公開 `/health/version` 與 artifact 的 commit／revision 一致；production smoke 完成後 `remainingCapacity` 仍為 8。Chrome testing surface 已在同版本發現 `search_events`，因此目前 release 為 E3，current-release Agent invocation 仍 pending。
+- 公開 `/health/version` 與 artifact 的 commit／revision 一致；production smoke 完成後 `remainingCapacity` 仍為 8。Chrome testing surface 已在同版本發現 `search_events`，因此目前 release 為 E3。
 - GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`；這是兩題 read-only E4 的歷史座標，不替目前 source 升級。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
-- WebMCP Inspector 內的 Gemini Agent 已在未提示 Tool 名稱的情況下，分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details`，這兩題只對歷史部署可列為 E4。
+- 2026-07-31，WebMCP Inspector 內的 Gemini Agent 在最終 `v3-p0-release.1` 未被提示 Tool 名稱，仍分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details {}`；這兩題可列為 current-release read-only E4。trace 與截圖本身未嵌入部署座標，所以版本關聯仍標為 correlated。
 - 其餘 18 題、寫入／確認類 Journey 與跨乾淨環境的 E5 重播仍未完成。
 
 最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在
 [版本證據帳本](docs/version-evidence-ledger.md)。網站畫面只標示 source contract、
-目前瀏覽器 capability 與 current revision invocation 狀態，不自行宣稱 E4。
+目前瀏覽器 capability 與逐 case 的 current revision invocation 狀態；E4 只標示在已有完整 trace 的 SEL-01、SEL-02。
 
 請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 

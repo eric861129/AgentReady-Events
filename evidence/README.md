@@ -3,8 +3,9 @@
 Release-to-evidence coordinates are indexed in
 [`version-ledger.json`](version-ledger.json) and
 [`docs/version-evidence-ledger.md`](../docs/version-evidence-ledger.md).
-Historical Inspector traces live under `agent-invocation/`; they must not be
-reused to upgrade a different commit or Azure revision.
+Historical and current-release Inspector traces live under
+`agent-invocation/`; they must not be reused to upgrade a different commit,
+Azure revision, case or Journey.
 
 Evidence levels are claims, not progress badges. Every record separates four independent observations:
 

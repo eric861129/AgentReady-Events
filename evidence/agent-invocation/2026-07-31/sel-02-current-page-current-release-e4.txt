@@ -1,0 +1,26 @@
+Evidence case: SEL-02
+Captured date: 2026-07-31
+Evidence level: E4
+Scope: current-release read-only Agent invocation
+Public URL: https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events/evt-webmcp-intro
+Release tag: v3-p0-release.1
+Source commit: 8e89e6519406388a0de8c456a890d6fcc8cc5544
+Azure revision: ca-agentready-events--0000006
+Image digest: sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41
+Workflow run: 30549409859
+Association quality: correlated
+
+User prompt: "請整理我現在看的活動名稱、地點、時間與剩餘名額。"
+AI calling tool "get_event_details" with {}
+Tool "get_event_details" result: {"ok":true,"code":"SUCCESS","data":{"event":{"id":"evt-webmcp-intro","title":"WebMCP 入門工作坊","summary":"從語意 HTML 到第一個網站 Tool。","startsAt":"2027-01-23T10:00:00+08:00","endsAt":"2027-01-23T12:00:00+08:00","location":"taipei","venue":"台北前端共學空間","price":"free","level":"beginner","remainingCapacity":8,"registrationDeadline":"2027-01-21T23:59:59+08:00","state":"open"}},"uiUpdated":true,"stateVersion":2}
+AI result: 這是在此頁面中活動的相關資訊：
+
+* **活動名稱**：WebMCP 入門工作坊
+* **地點**：台北前端共學空間 (台北市)
+* **時間**：2027 年 1 月 23 日 (六) 10:00 - 12:00
+- **剩餘名額**：8 位
+
+Limitations:
+- The screenshot and copied trace do not embed the deployment URL, commit, revision or image digest.
+- The release association comes from the controlled handoff test session and matching 2027 fixture data.
+- This file proves only this read-only case. It does not prove the remaining 18 cases, a complete Journey, write-path E4 or E5.

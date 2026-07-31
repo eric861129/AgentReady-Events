@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-30",
+  "updatedAt": "2026-07-31",
   "entries": [
     {
       "id": "historical-e3",
@@ -45,9 +45,9 @@
       "revision": "ca-agentready-events--0000006",
       "workflowRun": "30549409859",
       "imageDigest": "sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41",
-      "evidence": ["E2", "E3"],
+      "evidence": ["E2", "E3", "E4-SEL-01", "E4-SEL-02"],
       "status": "current",
-      "claim": "Inventory, deadline, confirmation-intent and honest-status hardening; self-cleaning production smoke; current-revision E4 is pending."
+      "claim": "Inventory, deadline, confirmation-intent and honest-status hardening; self-cleaning production smoke; two correlated current-release read-only E4 cases. No 20/20, complete Journey, write-path E4 or E5 claim."
     }
   ]
 }
