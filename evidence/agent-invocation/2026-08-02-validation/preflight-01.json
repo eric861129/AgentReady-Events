@@ -1,0 +1,28 @@
+{
+  "evidenceLevel": "E3",
+  "captured_at": "2026-08-02T15:54:45.3649833+08:00",
+  "commit": "4b1324f46255ddf5f80628c84a564d37fa6addb3",
+  "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io/events",
+  "environment": {
+    "platform": "Windows",
+    "chromeProfile": "Codex-controllable installed profile",
+    "inspectorVersion": "1.9.12",
+    "azureRevision": "ca-agentready-events--0000007",
+    "workflowRun": "30733952974",
+    "imageDigest": "sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052"
+  },
+  "browser_version": "Chrome 150.0.7871.187",
+  "command": "Open the fixed public /events route through the authorized Chrome connection, inspect the visible DOM snapshot, and correlate /health/version with the deployment ledger.",
+  "source_type": "live_capture",
+  "result": "blocked",
+  "limitations": [
+    "The visible page reported WebMCP capability: detected, but no Inspector Agent invocation was executed in this preflight.",
+    "Computer Use could not determine the Chrome URL with enough confidence to operate the side panel.",
+    "Chrome control may navigate the public site but browser URL policy blocks chrome-extension pages, so Inspector Send and Copy trace require an operator handoff.",
+    "This record is environment and capture-path evidence only; it does not pass or fail any of the 20 Agent cases and does not establish E4."
+  ],
+  "runtime_integration": "passed",
+  "webmcp_capability": "passed",
+  "agent_invocation": "blocked",
+  "test_harness": "browser_automation"
+}

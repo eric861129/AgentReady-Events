@@ -24,6 +24,22 @@ forbidden Tool 仍以 [`evals/dataset/webmcp-evals.json`](../evals/dataset/webmc
 6. 新證據寫入 `evidence/agent-invocation/2026-08-02-validation/<CASE>/attempt-NN-*`。
    每次重跑都增加 attempt 編號，不覆蓋上一輪。
 
+## Inspector 的最小人工作業
+
+2026-08-02 preflight 確認 Chrome control 可以導航與檢查公開網站，但安全政策禁止直接
+開啟 `chrome-extension://` 的 Inspector 頁面；Computer Use 也無法可靠驗證該 Chrome
+視窗 URL。因此本批次採最小 operator handoff，不把 UI 限制誤算成網站失敗：
+
+1. 自動化負責導航、前置狀態、網站畫面與結果判定。
+2. 操作人員只在 Inspector 貼上指定 Prompt、按 `Send`，完成後按 `Copy trace`。
+3. Copy trace 可直接貼回工作對話；保存前先掃描 Gemini key、Cookie、CSRF、Email
+   與其他敏感值。
+4. Inspector 同框畫面由操作人員擷取；檔名與 CASE／attempt 由執行者統一整理。
+5. 人類最後確認仍是產品安全邊界，不是為了自動化方便而交給 Agent。
+
+這個 handoff 不降低 E4 判定：Tool 的選擇、input、execution、result 與 final answer
+仍由 Inspector 內的 Gemini Agent 完成；操作人員只負責擴充功能 UI 的送出與取證。
+
 ## 建議執行順序
 
 順序以降低狀態污染為主，不代表題號或證據等級。
