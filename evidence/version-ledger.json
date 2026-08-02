@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-31",
+  "updatedAt": "2026-08-02",
   "entries": [
     {
       "id": "historical-e3",
@@ -46,8 +46,18 @@
       "workflowRun": "30549409859",
       "imageDigest": "sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41",
       "evidence": ["E2", "E3", "E4-SEL-01", "E4-SEL-02"],
-      "status": "current",
+      "status": "superseded",
       "claim": "Inventory, deadline, confirmation-intent and honest-status hardening; self-cleaning production smoke; two correlated current-release read-only E4 cases. No 20/20, complete Journey, write-path E4 or E5 claim."
+    },
+    {
+      "id": "webmcp-20-case-validation-release",
+      "commit": "4b1324f46255ddf5f80628c84a564d37fa6addb3",
+      "revision": "ca-agentready-events--0000007",
+      "workflowRun": "30733952974",
+      "imageDigest": "sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052",
+      "evidence": ["E2", "E3"],
+      "status": "current-validation",
+      "claim": "Fixed public revision for the 20-case native Inspector rerun. Production smoke passed and the controlled current-session expiry fixture is enabled only for RECOVERY-02. No current-revision E4 case is claimed until its raw Inspector trace and screenshot are saved."
     }
   ]
 }

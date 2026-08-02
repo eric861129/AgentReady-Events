@@ -83,5 +83,6 @@ git switch main
 4. Day 25：`npm run verify` 全程通過，包括 47 files／138 deterministic tests、
    11 API tests、6 security tests、36 browser tests 與 production build。
 
-目前正式發布版本另以 `v3-p0-release.1` 固定；它加入部署 smoke 自行恢復名額的
-驗證責任，不移動任何 Day tag。
+當時的正式發布版本另以 `v3-p0-release.1` 固定；它加入部署 smoke 自行恢復名額的
+驗證責任，不移動任何 Day tag。20 題原生 Agent 驗收則固定在 commit `4b1324f`、
+Azure revision `ca-agentready-events--0000007`；兩者是不同時間點的證據座標，不得混用。

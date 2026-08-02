@@ -1,6 +1,6 @@
 # 版本證據帳本
 
-> 更新日期：2026-07-31
+> 更新日期：2026-08-02
 > 原則：commit、Azure revision、image digest、Inspector trace 必須對到同一個 source state，否則不得互相升級證據。
 
 | 用途 | 精確 commit | 部署座標 | 可主張 | 不可主張 |
@@ -10,6 +10,7 @@
 | 重建候選版 | `3a9b1245d6f9f6663554c321de72d98105e59578` | 未做同版本 E4 部署 | 本機 E2 | 用歷史 trace 替它升級 |
 | P0 首次部署 | `9897bf506986ac45c7037ec6173b7ce8745ed2b9`、`v3-p0-release` | `ca-agentready-events--0000005`、run `30548558072` | E2、E3；暴露 smoke 留下報名副作用 | 正式最終版、E4、E5 |
 | P0 最終 release | `8e89e6519406388a0de8c456a890d6fcc8cc5544`、`v3-p0-release.1` | `ca-agentready-events--0000006`、run `30549409859`、digest `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41` | E2、E3；完整 smoke 後名額仍為 8；SEL-01、SEL-02 各一題 current-release read-only E4 | 20/20、完整 Journey、write E4、E5 |
+| 20 題固定驗收 release | `4b1324f46255ddf5f80628c84a564d37fa6addb3` | `ca-agentready-events--0000007`、run `30733952974`、digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052` | E2、E3；immutable deployment、production smoke、受控 `RECOVERY-02` fixture | 尚未保存於此 revision 的 Inspector trace，因此目前不得主張任何新 E4、20/20 或 E5 |
 
 Machine-readable 版本位於
 [`evidence/version-ledger.json`](../evidence/version-ledger.json)。
@@ -60,3 +61,16 @@ revision，HTTPS runtime、三條 Journey、session isolation、Agent finalizati
 拒絕均通過；smoke 結束後公開活動仍有 8 個名額。Chrome testing surface 又在該
 HTTPS `/events` 發現 `search_events`，因此可列 E3。2026-07-31 的兩份 Inspector
 trace 再讓 SEL-01 與 SEL-02 分別取得 current-release E4；其他 case 仍維持未重跑。
+
+## 20 題固定驗收 release
+
+run `30733952974` 將 commit `4b1324f46255ddf5f80628c84a564d37fa6addb3`
+以 immutable digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052`
+部署為 revision `ca-agentready-events--0000007`。GitHub Actions 已重新通過完整
+verification、Linux container smoke、restricted Bicep what-if 與 production smoke；
+公開 `/health/version` 也回傳相同 commit 與 revision。
+
+這個 revision 只為 `RECOVERY-02` 顯式開啟受控 current-session expiry fixture；
+fixture 仍要求同 session CSRF 與 `interactionMode: "human"`，不能指定或終止其他 session。
+部署 artifact 原樣保存在 `evidence/github-run-30733952974/`。目前桌面控制尚未能安全
+辨識 Inspector 所在 Chrome 視窗，因此沒有把歷史 trace 搬來，也沒有把未重跑題目標成成功。
