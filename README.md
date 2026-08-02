@@ -73,28 +73,25 @@ npm run dev
 
 Vite 會把 `/api` 與 `/health` proxy 到 `127.0.0.1:3000`。若 3000 或 5173 已被占用，先停止既有 process；不要隨意改 port 後仍沿用文章中的 URL。
 
-## Day 2、Day 7–12 Labs
+## 文章使用的隔離 Labs
 
 執行 `npm run dev` 後，可由 Vite 直接開啟：
 
 | Day | URL | 重點 |
 | ---: | --- | --- |
-| 02 | `/labs/day-02-actuation/` | role Locator、accessible name 與 CSS Selector 修改前後實驗 |
+| 04 | `/labs/day-04-playwright-locator/` | role Locator、accessible name 與 CSS Selector 修改前後實驗 |
 | 07 | `/labs/day-07-semantic-form/` | Semantic form 與 human fallback |
-| 08 | `/labs/day-08-declarative-tool/` | `toolautosubmit` 與 synthetic `respondWith()` |
-| 09 | `/labs/day-09-declarative-schema/` | HTML constraint 到 schema snapshot |
-| 10 | `/labs/day-10-imperative-tool/` | 同需求 Imperative `search_events` |
-| 11 | `/labs/day-11-tool-lifecycle/` | register、route leave、abort、toolchange |
-| 12 | `/labs/day-12-confirmation-safety/` | prepare-only 與 zero mutation |
+| 11 | `/labs/day-11-declarative-tool/` | `toolautosubmit`、表單契約與 human fallback |
+| 12 | `/labs/day-12-imperative-lifecycle/` | register、execute、route leave、abort 與 unregister |
 
-Day 8 之後部分 Lab 會使用 synthetic event 或直接 `execute()` 固定 Tool 行為。它們屬於 E2 test harness，不是真實 Agent invocation。Day 2 沒有 Tool submission，只驗證 Playwright 對 UI 的操作。
+部分 Lab 會使用 synthetic event 或直接 `execute()` 固定 Tool 行為。它們屬於 E2 test harness，不是真實 Agent invocation。Day 4 沒有 Tool submission，只驗證 Playwright 對 UI 的操作。
 
-Day 2 focused spec：
+Day 4 focused spec：
 
 ```powershell
-npx playwright test tests/browser/day-02-actuation.spec.ts --reporter=line
-npx playwright test tests/browser/day-02-actuation.spec.ts --headed --workers=1
-npx playwright test tests/browser/day-02-actuation.spec.ts --debug --workers=1
+npx playwright test tests/browser/reader-facing-labs.spec.ts --grep "Day 4" --reporter=line
+npx playwright test tests/browser/reader-facing-labs.spec.ts --grep "Day 4" --headed --workers=1
+npx playwright test tests/browser/reader-facing-labs.spec.ts --grep "Day 4" --debug --workers=1
 ```
 
 四個案例分開比較原始介面、只增加 DOM wrapper、只修改 visible name，以及直接子元素 CSS Selector。兩個預期失敗都會留下 Playwright 的真實 TimeoutError attachment。
@@ -160,7 +157,7 @@ Failure Lab 只能由 test code 注入。Query string 或 request header 不能�
 ## 目錄
 
 ```text
-labs/          Day 2、7–12 的隔離教學
+labs/          Day 4、7、11、12 的讀者版隔離教學
 src/client/    人類頁面、shared actions、WebMCP adapter 與 Tools
 src/server/    Express routes、services、authorization
 src/shared/    contract、validation、fixtures、activity types
@@ -188,15 +185,14 @@ infra/         Azure Container Apps Bicep
 
 Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`agent_invocation`、`test_harness`。詳見 [evidence/README.md](evidence/README.md)。
 
-歷史可查核狀態：
+目前可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
-- 最終 P0 release `8e89e65`／`v3-p0-release.1` 已由 run `30549409859` 部署為 Azure revision `ca-agentready-events--0000006`，immutable digest 為 `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41`。
+- 固定 release `8e89e65`／`v3-p0-release.1` 已由 run `30549409859` 部署為 Azure revision `ca-agentready-events--0000006`，immutable digest 為 `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41`。
 - 公開 `/health/version` 與 artifact 的 commit／revision 一致；production smoke 完成後 `remainingCapacity` 仍為 8。Chrome testing surface 已在同版本發現 `search_events`，因此目前 release 為 E3。
-- GitHub workflow run `30439991021` 將 commit `d0fe4df` 部署為 Azure revision `ca-agentready-events--0000004`；這是兩題 read-only E4 的歷史座標，不替目前 source 升級。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
-- 2026-07-31，WebMCP Inspector 內的 Gemini Agent 在最終 `v3-p0-release.1` 未被提示 Tool 名稱，仍分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details {}`；這兩題可列為 current-release read-only E4。trace 與截圖本身未嵌入部署座標，所以版本關聯仍標為 correlated。
+- 2026-07-31，WebMCP Inspector 內的 Gemini Agent 在固定 release 未被提示 Tool 名稱，仍分別選擇並呼叫 `search_events` 與目前頁面的 `get_event_details {}`；這兩題可列為 read-only E4。trace 與截圖本身未嵌入部署座標，所以版本關聯仍標為 correlated。
 - 其餘 18 題、寫入／確認類 Journey 與跨乾淨環境的 E5 重播仍未完成。
 
 最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在

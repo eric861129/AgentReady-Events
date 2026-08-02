@@ -18,7 +18,7 @@
 
 | 文章日次 | Branch | Annotated tag | Commit | 讀者可觀察的差異 |
 | --- | --- | --- | --- | --- |
-| Day 02 | `day-02-reproducible-baseline` | `v3-day-02` | `7aa4e64` | 固定可重現的 V3 相依套件與測試基線 |
+| Day 02 | `day-02-reproducible-baseline` | `v3-day-02` | `7aa4e64` | 固定可重現的相依套件與測試基線 |
 | Day 05 | `day-05-copy-change-failure` | `v3-day-05` | `078fe7b` | 重現 Locator 與文案耦合後的失敗 |
 | Day 11 | `day-11-declarative-lab` | `v3-day-11` | `5d0e782` | 以表單宣告 `search_events` Tool |
 | Day 12 | `day-12-imperative-lifecycle` | `v3-day-12` | `c9191fb` | 註冊、執行、回傳與解除註冊的完整生命週期 |
@@ -27,21 +27,22 @@
 | Day 19 | `day-19-prepare-registration` | `v3-day-19` | `d7e93d6` | Agent 準備報名資料，人類執行最後送出 |
 | Day 20 | `day-20-prepare-cancellation` | `v3-day-20` | `81f807d` | 取消後果、稽核資訊與 human confirmation |
 | Day 21 | `day-21-trusted-journeys` | `v3-day-21` | `e3112d0` | 三條 Journey 共用的人類／Agent 操作時間線 |
-| Day 25 | `day-25-rebuild-release-candidate` | `v3-day-25` | `3a9b124` | 經測試與無障礙修正後的新版候選版本 |
+| Day 25 | `day-25-rebuild-release-candidate` | `v3-day-25` | `3a9b124` | 經測試與無障礙修正後的部署候選版本 |
 
-## 舊 Lab 路徑與新版文章日次
+## 讀者版 Lab 路徑
 
-三個隔離 Lab 是從既有、已驗證的歷史 commit 沿用，因此 commit subject 與目錄仍保留
-當時的日次。新版文章必須同時寫出「新版文章 Day」與實際路徑，不應改寫 Git 歷史：
+`main` 提供與文章日次一致的固定入口。讀者不必理解內部模組如何重用，只要依文章
+開啟下列路徑即可：
 
-| 新版文章 | 實際路徑 | 歷史 commit subject |
+| 文章日次 | 讀者版路徑 | 驗證主題 |
 | --- | --- | --- |
-| Day 05 | `labs/day-02-actuation/` | `lab(day-02): reproduce copy-coupled actuation failure` |
-| Day 11 | `labs/day-08-declarative-tool/` | `feat(day-08): declare the search_events form tool` |
-| Day 12 | `labs/day-11-tool-lifecycle/` | `feat(day-11): demonstrate Tool results and lifecycle` |
+| Day 04 | `labs/day-04-playwright-locator/` | Locator 對 DOM 與 accessible name 的耦合 |
+| Day 07 | `labs/day-07-semantic-form/` | 語意表單與 human fallback |
+| Day 11 | `labs/day-11-declarative-tool/` | Declarative Tool 與表單契約 |
+| Day 12 | `labs/day-12-imperative-lifecycle/` | Imperative Tool 註冊、執行與解除註冊 |
 
-這不是文章與程式不一致，而是保留可追溯的實驗來源。文章內會以新版日次為主，
-並附上實際路徑與 tag。
+Git branch 與 annotated tag 仍固定重要程式里程碑；讀者版 Lab 路徑則以 `main`
+為準，避免文章日次和操作入口產生不必要的認知負擔。
 
 ## 沒有獨立 ref 的 Day
 
@@ -76,12 +77,11 @@ git switch main
 2026-07-30 從全新、無既有工作目錄的匿名 clone 實際重播：
 
 1. Day 02：47 files／138 tests 與 production build 通過。
-2. Day 11：1 unit 通過；原始 browser command 因本機 `5173` 已被其他服務占用而誤連，
-   改用只調整 port 的臨時 config 後 1 browser 通過。歷史 lockfile 另有 1 個 high
-   audit finding；tag 不移動，現行 P0 release 的 audit 為 0。
+2. Day 11：1 unit 與 1 browser test 通過；若本機 `5173` 已被其他服務占用，
+   可透過 `PLAYWRIGHT_WEB_PORT` 改用其他 port 重播。
 3. Day 14：2 個 focused files／6 tests 與 4 browser tests 通過。
 4. Day 25：`npm run verify` 全程通過，包括 47 files／138 deterministic tests、
    11 API tests、6 security tests、36 browser tests 與 production build。
 
-現行 hardening 版本另以 `v3-p0-release` 與 `v3-p0-release.1` 固定；後者加入部署
-smoke 自行恢復名額的驗證責任，不移動任何歷史 Day tag。
+目前正式發布版本另以 `v3-p0-release.1` 固定；它加入部署 smoke 自行恢復名額的
+驗證責任，不移動任何 Day tag。

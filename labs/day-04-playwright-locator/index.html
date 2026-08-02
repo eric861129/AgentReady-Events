@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 04 Playwright Locator Lab</title>
+    <link rel="stylesheet" href="../day-02-actuation/styles.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Day 04 · Playwright Locator Lab</p>
+      <h1>按鈕只改四個字，誰迷路了？</h1>
+      <p>三個 variant 共用同一個搜尋功能，每次只改一個 UI 條件，方便判斷 Locator 為什麼成功或失敗。</p>
+      <aside class="variant" aria-label="目前介面版本">
+        <strong id="variant-name">原始介面</strong>
+        <span id="variant-detail">按鈕名稱與 DOM 結構都維持實驗基準。</span>
+      </aside>
+      <form id="search-form">
+        <label for="query">關鍵字</label>
+        <input id="query" name="keyword" value="WebMCP" />
+        <button type="submit" data-action="search-events"></button>
+      </form>
+      <p id="status" role="status">尚未搜尋</p>
+      <ol id="results" aria-label="活動搜尋結果"></ol>
+      <section id="evidence-board" class="evidence-board" hidden>
+        <div class="evidence-heading">
+          <p class="eyebrow">Playwright replay evidence</p>
+          <h2>Locator 與目前頁面的實際落差</h2>
+        </div>
+        <article>
+          <h3>UI locator</h3>
+          <code id="locator-expression">由 Playwright 測試寫入</code>
+          <p id="automation-outcome">等待測試執行</p>
+        </article>
+        <article>
+          <h3>目前 DOM</h3>
+          <pre id="dom-after"></pre>
+        </article>
+        <article class="error-card">
+          <h3>真實錯誤訊息</h3>
+          <pre id="locator-error">原始狀態尚未執行失敗案例</pre>
+        </article>
+      </section>
+    </main>
+    <script type="module" src="../day-02-actuation/main.ts"></script>
+  </body>
+</html>

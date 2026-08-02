@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day 11 Declarative Tool</title>
+  </head>
+  <body>
+    <main>
+      <p>Day 11 · Declarative Tool</p>
+      <h1>同一張表單，兩種提交路徑</h1>
+      <form
+        id="event-search"
+        toolname="search_events"
+        tooldescription="依關鍵字、城市與活動形式搜尋公開活動；沒有符合項目時回傳空陣列。"
+        toolautosubmit
+      >
+        <label for="keyword">關鍵字</label>
+        <input
+          id="keyword"
+          name="keyword"
+          maxlength="100"
+          toolparamdescription="比對活動名稱與摘要的關鍵字。"
+        />
+        <label for="city">城市</label>
+        <select id="city" name="city" toolparamdescription="實體活動所在城市。">
+          <option value="">不限</option>
+          <option value="taipei">台北</option>
+          <option value="kaohsiung">高雄</option>
+        </select>
+        <label for="format">活動形式</label>
+        <select id="format" name="format" toolparamdescription="活動參與形式。">
+          <option value="">不限</option>
+          <option value="onsite">實體</option>
+          <option value="online">線上</option>
+        </select>
+        <button type="submit">搜尋活動</button>
+      </form>
+      <p id="search-status" role="status">尚未搜尋</p>
+      <ol id="results" aria-label="活動搜尋結果"></ol>
+    </main>
+    <script type="module" src="../day-08-declarative-tool/main.ts"></script>
+  </body>
+</html>
