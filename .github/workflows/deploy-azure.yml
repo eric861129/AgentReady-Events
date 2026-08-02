@@ -13,6 +13,11 @@ on:
         required: true
         default: false
         type: boolean
+      enable_evaluation_fixtures:
+        description: Enable the controlled current-session expiry fixture for this validation revision
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -155,7 +160,7 @@ jobs:
           az deployment group what-if \
             --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
             --template-file infra/main.bicep \
-            --parameters @infra/main.parameters.json imageRef="${{ steps.image.outputs.image_ref }}" \
+            --parameters @infra/main.parameters.json imageRef="${{ steps.image.outputs.image_ref }}" enableEvaluationFixtures="${{ inputs.enable_evaluation_fixtures }}" \
             --no-pretty-print \
             --result-format FullResourcePayloads \
             --output json > "$RUNNER_TEMP/what-if.json"
@@ -186,7 +191,7 @@ jobs:
             --name "$DEPLOYMENT_NAME" \
             --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
             --template-file infra/main.bicep \
-            --parameters @infra/main.parameters.json imageRef="${{ steps.image.outputs.image_ref }}" \
+            --parameters @infra/main.parameters.json imageRef="${{ steps.image.outputs.image_ref }}" enableEvaluationFixtures="${{ inputs.enable_evaluation_fixtures }}" \
             --output none
           FQDN=$(az deployment group show \
             --name "$DEPLOYMENT_NAME" \

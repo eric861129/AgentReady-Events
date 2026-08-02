@@ -4,6 +4,7 @@ param environmentId string
 param imageRef string
 param originTrialToken string = ''
 param evalLab string = ''
+param enableEvaluationFixtures bool = false
 
 var optionalEnvironment = concat(
   empty(originTrialToken) ? [] : [
@@ -16,6 +17,17 @@ var optionalEnvironment = concat(
     {
       name: 'EVAL_LAB'
       value: evalLab
+    }
+  ],
+  enableEvaluationFixtures ? [
+    {
+      name: 'ENABLE_EVALUATION_FIXTURES'
+      value: 'true'
+    }
+  ] : [
+    {
+      name: 'ENABLE_EVALUATION_FIXTURES'
+      value: 'false'
     }
   ]
 )

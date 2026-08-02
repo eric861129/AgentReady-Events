@@ -12,6 +12,9 @@ param imageRef string
 @secure()
 param originTrialToken string = ''
 
+@description('Enable the current-session expiry fixture only for a controlled validation revision.')
+param enableEvaluationFixtures bool = false
+
 resource environment 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: environmentName
   location: location
@@ -30,6 +33,7 @@ module production 'modules/container-app.bicep' = {
     environmentId: environment.id
     imageRef: imageRef
     originTrialToken: originTrialToken
+    enableEvaluationFixtures: enableEvaluationFixtures
   }
 }
 

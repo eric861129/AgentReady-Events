@@ -60,3 +60,9 @@ it("deploys only a verified digest through the production environment", () => {
   expect(workflow).toContain("password: ${{ secrets.GITHUB_TOKEN }}");
   expect(workflow).not.toContain(":latest");
 });
+
+it("requires an explicit manual switch before enabling the controlled evaluation fixture", () => {
+  expect(workflow).toContain("enable_evaluation_fixtures:");
+  expect(workflow).toContain("default: false");
+  expect(workflow).toContain('enableEvaluationFixtures="${{ inputs.enable_evaluation_fixtures }}"');
+});

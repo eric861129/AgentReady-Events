@@ -38,6 +38,17 @@ it("accepts only the approved public immutable GHCR image", () => {
   expect(main).not.toContain("latest");
 });
 
+it("keeps the controlled evaluation fixture disabled unless deployment explicitly enables it", () => {
+  const main = read("infra/main.bicep");
+  const module = read("infra/modules/container-app.bicep");
+
+  expect(main).toContain("param enableEvaluationFixtures bool = false");
+  expect(main).toContain("enableEvaluationFixtures: enableEvaluationFixtures");
+  expect(module).toContain("param enableEvaluationFixtures bool = false");
+  expect(module).toContain("name: 'ENABLE_EVALUATION_FIXTURES'");
+  expect(module).toContain("value: 'true'");
+});
+
 it("defines a resource-group-filtered monthly budget with three actual alerts", () => {
   const budget = read("infra/budget.bicep");
   expect(budget).toContain("@minValue(1)");
