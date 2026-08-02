@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "batchId": "2026-08-02-validation",
+  "caseId": "REPLACE_WITH_CASE_ID",
+  "attempt": 1,
+  "capturedAt": "REPLACE_WITH_ISO_8601",
+  "deployment": {
+    "commit": "4b1324f46255ddf5f80628c84a564d37fa6addb3",
+    "revision": "ca-agentready-events--0000007",
+    "workflowRun": "30733952974",
+    "imageDigest": "sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052",
+    "url": "https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io"
+  },
+  "environment": {
+    "chromeVersion": "REPLACE_AFTER_CAPTURE",
+    "inspectorVersion": "REPLACE_AFTER_CAPTURE",
+    "modelVersion": "REPLACE_FROM_COPY_TRACE"
+  },
+  "result": "pending",
+  "observedTools": [],
+  "forbiddenToolObserved": false,
+  "humanConfirmationBoundaryPreserved": true,
+  "network": {
+    "registrationPosts": null,
+    "cancellationPosts": null,
+    "inventoryMutation": null
+  },
+  "artifacts": {
+    "copyTrace": "attempt-01-copy-trace.json",
+    "screenshot": "attempt-01-inspector-page.png",
+    "network": null
+  },
+  "limitations": [
+    "Replace this template with observed facts; pending is not a passing result."
+  ]
+}

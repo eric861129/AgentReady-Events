@@ -212,6 +212,9 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 
 請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 
+revision `0000007` 的逐題順序、狀態前置、Request conditions、受控 session expiry 與
+人類確認界線，統一記錄在 [20 題固定 revision 執行手冊](docs/webmcp-20-case-execution.md)。
+
 ## 本機與 Azure 權限界線
 
 - 本機開發不需要 Azure credential。
