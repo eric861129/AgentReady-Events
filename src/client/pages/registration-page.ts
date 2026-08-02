@@ -43,7 +43,7 @@ export async function renderRegistrationPage(root: HTMLElement, eventId: string)
             <h2 data-registration-event-title></h2>
             <p><span data-registration-event-date></span><span data-registration-event-venue></span></p>
           </section>
-          <form id="registration-form" toolname="prepare_event_registration" tooldescription="替目前公開活動準備使用者可見的報名資料，並停在最終人類確認之前。">
+          <form id="registration-form" toolname="prepare_event_registration" tooldescription="替目前公開活動準備使用者可見的報名資料，並停在最終人類確認之前。" toolautosubmit>
             <input type="hidden" name="eventId">
             <div class="field">
               <label for="attendeeName">姓名</label>

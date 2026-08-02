@@ -18,7 +18,11 @@ export default defineConfig({
         {
           command: "npm run dev:api",
           url: `http://127.0.0.1:${apiPort}/health/live`,
-          env: { ...process.env, PORT: apiPort },
+          env: {
+            ...process.env,
+            PORT: apiPort,
+            ENABLE_EVALUATION_FIXTURES: "true"
+          },
           reuseExistingServer: !process.env.CI && apiPort === "3000"
         },
         {

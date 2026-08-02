@@ -1,4 +1,4 @@
-import type { CancellationSummary, RegistrationListItem } from "../../shared/contracts";
+import type { CancellationSummary } from "../../shared/contracts";
 import { cancellationRequest, cancellationSummaryRequest, registrationsRequest } from "../api/client";
 import { createConfirmationDialog } from "../ui/confirmation-dialog";
 import { createPrepareCancellationTool } from "../webmcp/tools/prepare-cancellation";
@@ -36,8 +36,12 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   list.className = "registration-list";
   list.setAttribute("aria-label", "我的報名列表");
   const registrations = await registrationsRequest();
+  const activeRegistrationIds = new Set(
+    registrations.filter((registration) => registration.status === "active").map((registration) => registration.id)
+  );
   let stateVersion = 1;
   const updateCancelled = (registrationId: string) => {
+    activeRegistrationIds.delete(registrationId);
     const item = list.querySelector<HTMLElement>(`[data-registration-id="${registrationId}"]`);
     item?.querySelector("button")?.remove();
     const state = item?.querySelector<HTMLElement>("[data-registration-status]");
@@ -130,7 +134,14 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
 
   page.append(intro, listSection, dialogApi.element);
   root.replaceChildren(page);
-  const active = registrations.find((registration: RegistrationListItem) => registration.status === "active");
-  if (!active) return [];
-  return [createPrepareCancellationTool({ load: cancellationSummaryRequest, show: (summary) => showSummary(summary), cancel: cancellationRequest, getStateVersion: () => stateVersion })];
+  if (activeRegistrationIds.size === 0) return [];
+  return [createPrepareCancellationTool({
+    load: cancellationSummaryRequest,
+    show: (summary) => showSummary(summary),
+    cancel: cancellationRequest,
+    getStateVersion: () => stateVersion,
+    getDefaultRegistrationId: () => activeRegistrationIds.size === 1
+      ? activeRegistrationIds.values().next().value
+      : undefined
+  })];
 }

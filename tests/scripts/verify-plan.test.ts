@@ -20,6 +20,23 @@ it("keeps direct executables on non-Windows platforms", () => {
   });
 });
 
+it("isolates the Playwright verification servers from the documented manual ports", () => {
+  expect(verify.resolveVerificationEnvironment).toBeTypeOf("function");
+  expect(
+    verify.resolveVerificationEnvironment?.("npm", ["run", "test:e2e"], { PATH: "test-path" })
+  ).toMatchObject({
+    PATH: "test-path",
+    PLAYWRIGHT_API_PORT: "3300",
+    PLAYWRIGHT_WEB_PORT: "5573"
+  });
+  expect(
+    verify.resolveVerificationEnvironment?.("npm", ["run", "test:e2e"], {
+      PLAYWRIGHT_API_PORT: "4300",
+      PLAYWRIGHT_WEB_PORT: "6573"
+    })
+  ).toMatchObject({ PLAYWRIGHT_API_PORT: "4300", PLAYWRIGHT_WEB_PORT: "6573" });
+});
+
 it("classifies verification as a test harness instead of real Agent invocation", () => {
   expect(verify.createVerificationEvidenceMetadata).toBeTypeOf("function");
   expect(verify.createVerificationEvidenceMetadata?.("abc", "2026-07-16T06:30:00.000Z")).toMatchObject({

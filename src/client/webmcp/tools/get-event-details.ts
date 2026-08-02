@@ -12,14 +12,20 @@ export function createGetEventDetailsTool(dependencies: {
   getStateVersion(): number;
   getCurrentEventId?: () => string | undefined;
 }): ProjectTool<GetEventDetailsInput, ToolResult<{ event: EventDetail }>> {
+  const routeBound = dependencies.getCurrentEventId !== undefined;
   return {
     name: "get_event_details",
-    description: "讀取目前頁面正在查看的公開活動完整資訊，並更新使用者看得見的活動內容。此 Tool 已綁定目前頁面；通常不需要提供活動 ID。",
-    inputSchema: {
-      type: "object",
-      additionalProperties: false,
-      properties: { event_id: { type: "string", minLength: 1, maxLength: 64, pattern: "^[a-z0-9_-]+$", description: "僅在 Tool 未綁定目前詳情頁時，使用搜尋結果提供的不透明活動 ID。" } }
-    },
+    description: routeBound
+      ? "讀取目前頁面正在查看的公開活動完整資訊，並更新使用者看得見的活動內容。此 Tool 已綁定目前頁面，請以空物件呼叫，不要提供活動 ID。"
+      : "使用 search_events 結果提供的不透明活動 ID，讀取該公開活動的完整資訊。",
+    inputSchema: routeBound
+      ? { type: "object", additionalProperties: false, properties: {} }
+      : {
+          type: "object",
+          additionalProperties: false,
+          required: ["event_id"],
+          properties: { event_id: { type: "string", minLength: 1, maxLength: 64, pattern: "^[a-z0-9_-]+$", description: "search_events 結果提供的不透明活動 ID；不得自行產生。" } }
+        },
     annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options = {}) {
       const version = dependencies.getStateVersion();

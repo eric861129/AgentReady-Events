@@ -14,6 +14,7 @@ type ConfirmationIntent = {
 export type DemoSession = {
   id: string;
   csrfToken: string;
+  expiresAt: number;
   savedEventIds: Set<string>;
   registrations: Map<string, RegistrationListItem>;
   confirmationIntents: Map<string, ConfirmationIntent>;
@@ -25,15 +26,17 @@ export class MemoryStore {
 
   constructor(
     events: EventDetail[],
-    private readonly now: Clock
+    private readonly now: Clock,
+    private readonly sessionTtlMs = 4 * 60 * 60 * 1000
   ) {
     this.inventory = new EventInventory(events, now);
   }
 
   createSession(): DemoSession {
-    const session = {
+    const session: DemoSession = {
       id: randomUUID(),
       csrfToken: randomUUID(),
+      expiresAt: this.now().getTime() + this.sessionTtlMs,
       savedEventIds: new Set<string>(),
       registrations: new Map<string, RegistrationListItem>(),
       confirmationIntents: new Map<string, ConfirmationIntent>()
@@ -44,6 +47,15 @@ export class MemoryStore {
 
   getSession(id: string | undefined): DemoSession | undefined {
     return id ? this.sessions.get(id) : undefined;
+  }
+
+  isSessionExpired(session: DemoSession): boolean {
+    return this.now().getTime() >= session.expiresAt;
+  }
+
+  expireSession(session: DemoSession): void {
+    session.expiresAt = this.now().getTime() - 1;
+    session.confirmationIntents.clear();
   }
 
   createConfirmationIntent(session: DemoSession, action: ConfirmationAction, targetId: string) {

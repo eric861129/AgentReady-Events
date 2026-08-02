@@ -45,6 +45,15 @@ export function commonToolFailure(
     return toolFailure("ABORTED", "EXECUTION_ABORTED", "Tool 執行已取消。", "確認目前頁面狀態後，再決定是否重新執行。", stateVersion);
   }
   if (error instanceof ApiClientError && error.status === 401) {
+    if (error.reason === "SESSION_EXPIRED") {
+      return toolFailure(
+        "UNAUTHORIZED",
+        "SESSION_EXPIRED",
+        "工作階段已過期。",
+        "請重新整理頁面，重新開始這次操作。",
+        stateVersion
+      );
+    }
     return toolFailure("UNAUTHORIZED", "AUTHENTICATION_REQUIRED", "登入狀態已失效。", "請先重新登入，再執行這個 Tool。", stateVersion);
   }
   if (error instanceof ApiClientError && error.status === 403) {

@@ -10,13 +10,13 @@ test("registration page makes the Agent and human boundary unmistakable", async 
   await expect(page.getByRole("button", { name: "我確認並送出報名" })).toBeVisible();
 });
 
-test("Agent-like preparation causes zero POST and human confirmation creates one registration", async ({ page }) => {
+test("Declarative Agent preparation completes through autosubmit with zero registration POST", async ({ page }) => {
   let posts = 0;
   page.on("request", (request) => { if (request.method() === "POST" && request.url().endsWith("/api/registrations")) posts += 1; });
   await page.goto("/events/evt-webmcp-intro/register");
   const form = page.locator("form");
   await expect(form).toHaveAttribute("toolname", "prepare_event_registration");
-  await expect(form).not.toHaveAttribute("toolautosubmit", /.*/);
+  await expect(form).toHaveAttribute("toolautosubmit", "");
   await page.getByLabel("姓名").fill("王小明");
   await page.getByLabel("Email（不保存）").fill("reader@example.com");
   const agentResult = await page.evaluate(async () => {

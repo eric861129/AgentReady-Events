@@ -139,6 +139,14 @@ npm run evals:validate
 
 Failure Lab 只能由 test code 注入。Query string 或 request header 不能啟用它，避免公開網站出現測試後門。
 
+`RECOVERY-02` 另有一個預設關閉的 current-session fixture。只有設定
+`ENABLE_EVALUATION_FIXTURES=true` 時，`POST /api/session/evaluation/expire-current`
+才存在；呼叫者必須提供目前 session 的 CSRF token 與
+`interactionMode: "human"`。它只能讓呼叫者自己的 session 過期，不能指定或影響
+其他 session。下一次 Tool request 會收到
+`AUTHENTICATION_REQUIRED / SESSION_EXPIRED / retryable: false`，同時不會開啟取消對話框或
+執行取消 POST。正式日常環境維持關閉，只在受控驗收 revision 明確啟用。
+
 ## 環境變數
 
 [.env.example](.env.example) 是變數清單，不會被應用程式自動載入。請在 PowerShell、CI 或啟動工具中設定需要的值。
@@ -147,6 +155,8 @@ Failure Lab 只能由 test code 注入。Query string 或 request header 不能�
 
 - `PORT`：production server port，預設 3000
 - `PLAYWRIGHT_BASE_URL`：讓 browser tests 指向外部已啟動環境
+- `PLAYWRIGHT_API_PORT`、`PLAYWRIGHT_WEB_PORT`：覆寫本機 E2E server；`npm run verify` 預設使用 3300／5573，避免接到手動開發用的 3000／5173
+- `ENABLE_EVALUATION_FIXTURES`：預設 false；只在受控 `RECOVERY-02` 驗收環境開啟 current-session expiry fixture
 - `ARTICLE_REPO_ROOT`：把 article evidence 寫入文章 repository
 - `PUBLIC_SITE_URL`：公開 HTTPS origin，用於 Day 25–27 evidence capture
 - `PUBLIC_DEPLOYMENT_COMMIT`：上述公開站對應的完整 commit SHA

@@ -10,18 +10,29 @@ export function createPrepareCancellationTool(dependencies: {
   show(summary: CancellationSummary): void;
   cancel(registrationId: string, context: { mode: "human" | "agent" }): Promise<CancellationResponse>;
   getStateVersion(): number;
-}): ProjectTool<{ registration_id: string }, PreparationResult> {
+  getDefaultRegistrationId?(): string | undefined;
+}): ProjectTool<{ registration_id?: string }, PreparationResult> {
   return {
     name: "prepare_registration_cancellation",
-    description: "為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前。",
-    inputSchema: { type: "object", additionalProperties: false, required: ["registration_id"], properties: { registration_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "我的報名列表提供的不透明報名 ID。" } } },
+    description: "為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前。頁面只有一筆有效報名時請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。",
+    inputSchema: { type: "object", additionalProperties: false, properties: { registration_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。" } } },
     annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options = {}) {
       const version = dependencies.getStateVersion();
       if (options.signal?.aborted) return commonToolFailure(undefined, options.signal, version)!;
-      if (!/^[a-z0-9_-]{1,64}$/.test(input?.registration_id ?? "")) return toolFailure("INVALID_INPUT", "INVALID_REGISTRATION_ID", "報名 ID 格式無效。", "請使用我的報名列表提供的 registration_id。", version);
+      const registrationId = input?.registration_id || dependencies.getDefaultRegistrationId?.();
+      if (!registrationId) {
+        return toolFailure(
+          "INVALID_INPUT",
+          "REGISTRATION_SELECTION_REQUIRED",
+          "目前無法唯一判定要取消的報名。",
+          "請使用者從我的報名列表選擇一筆有效報名。",
+          version
+        );
+      }
+      if (!/^[a-z0-9_-]{1,64}$/.test(registrationId)) return toolFailure("INVALID_INPUT", "INVALID_REGISTRATION_ID", "報名 ID 格式無效。", "請使用我的報名列表提供的 registration_id。", version);
       try {
-        const summary = await dependencies.load(input.registration_id);
+        const summary = await dependencies.load(registrationId);
         if (options.signal?.aborted) return commonToolFailure(undefined, options.signal, version)!;
         dependencies.show(summary);
         return { ok: false, code: "CONFIRMATION_REQUIRED", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "取消摘要已顯示，等待使用者確認。", nextAction: "請使用者閱讀影響，並在可見對話框中自行確認。", retryable: false, uiUpdated: true, stateVersion: dependencies.getStateVersion(), summary };

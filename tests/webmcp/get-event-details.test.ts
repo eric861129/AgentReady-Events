@@ -71,7 +71,24 @@ it("publishes the current-detail Tool without requiring an event ID", () => {
     getCurrentEventId: () => "evt-webmcp-intro"
   });
 
-  expect(tool.inputSchema).not.toHaveProperty("required");
+  expect(tool.inputSchema).toEqual({
+    type: "object",
+    additionalProperties: false,
+    properties: {}
+  });
+});
+
+it("requires an opaque event ID only when the Tool is not bound to a detail route", () => {
+  const tool = createGetEventDetailsTool({
+    load: vi.fn(),
+    show: vi.fn(),
+    getStateVersion: () => 7
+  });
+
+  expect(tool.inputSchema).toMatchObject({
+    required: ["event_id"],
+    properties: { event_id: expect.any(Object) }
+  });
 });
 
 it("rejects a different event ID on a detail page scoped to the current event", async () => {

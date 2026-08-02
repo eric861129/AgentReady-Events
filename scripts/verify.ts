@@ -26,6 +26,19 @@ export function resolveSpawnCommand(
   };
 }
 
+export function resolveVerificationEnvironment(
+  command: string,
+  args: readonly string[],
+  environment: NodeJS.ProcessEnv = process.env
+): NodeJS.ProcessEnv {
+  if (command !== "npm" || args.join(" ") !== "run test:e2e") return { ...environment };
+  return {
+    ...environment,
+    PLAYWRIGHT_API_PORT: environment.PLAYWRIGHT_API_PORT ?? "3300",
+    PLAYWRIGHT_WEB_PORT: environment.PLAYWRIGHT_WEB_PORT ?? "5573"
+  };
+}
+
 export function createVerificationEvidenceMetadata(commit: string, capturedAt = new Date().toISOString()) {
   return {
     evidenceLevel: "E2",
@@ -53,7 +66,11 @@ export function runVerification(): number {
   for (const [command, args] of VERIFY_COMMANDS) {
     const startedAt = new Date().toISOString();
     const resolvedCommand = resolveSpawnCommand(command, args);
-    const result = spawnSync(resolvedCommand.command, resolvedCommand.args, { stdio: "inherit", shell: false });
+    const result = spawnSync(resolvedCommand.command, resolvedCommand.args, {
+      stdio: "inherit",
+      shell: false,
+      env: resolveVerificationEnvironment(command, args)
+    });
     const commandExitCode = result.status ?? 1;
     report.commands.push({ command, args, startedAt, completedAt: new Date().toISOString(), exitCode: commandExitCode });
     if (commandExitCode !== 0) { exitCode = commandExitCode; break; }

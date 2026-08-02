@@ -9,3 +9,46 @@ it("creates an opaque HttpOnly SameSite session and public CSRF summary", async 
   expect(response.body.csrfToken).toMatch(/^[a-f0-9-]{36}$/);
   expect(response.body).not.toHaveProperty("sessionId");
 });
+
+it("returns SESSION_EXPIRED instead of silently replacing an expired session", async () => {
+  let currentTime = new Date("2027-02-01T00:00:00+08:00");
+  const agent = request.agent(createApp({ now: () => currentTime, sessionTtlMs: 1_000 }));
+  await agent.get("/api/session");
+
+  currentTime = new Date("2027-02-01T00:00:02+08:00");
+  const response = await agent.get("/api/registrations");
+
+  expect(response.status).toBe(401);
+  expect(response.body).toEqual({
+    code: "AUTHENTICATION_REQUIRED",
+    reason: "SESSION_EXPIRED",
+    message: "工作階段已過期，請重新開始。",
+    retryable: false
+  });
+  expect(response.headers["set-cookie"]?.[0]).toMatch(/are_session=;.*Max-Age=0/i);
+});
+
+it("keeps the current-session expiry fixture disabled unless explicitly enabled", async () => {
+  const disabled = request.agent(createApp());
+  const disabledToken = (await disabled.get("/api/session")).body.csrfToken as string;
+  expect(
+    (
+      await disabled
+        .post("/api/session/evaluation/expire-current")
+        .set("x-csrf-token", disabledToken)
+        .send({ interactionMode: "human" })
+    ).status
+  ).toBe(404);
+
+  const enabled = request.agent(createApp({ enableEvaluationFixtures: true }));
+  const enabledToken = (await enabled.get("/api/session")).body.csrfToken as string;
+  const expired = await enabled
+    .post("/api/session/evaluation/expire-current")
+    .set("x-csrf-token", enabledToken)
+    .send({ interactionMode: "human" });
+  expect(expired.status).toBe(204);
+
+  const afterExpiry = await enabled.get("/api/registrations");
+  expect(afterExpiry.status).toBe(401);
+  expect(afterExpiry.body.reason).toBe("SESSION_EXPIRED");
+});
