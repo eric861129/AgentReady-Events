@@ -10,6 +10,7 @@
     "dev": "concurrently --kill-others-on-fail \"npm:dev:api\" \"npm:dev:web\"",
     "dev:web": "vite --host 127.0.0.1",
     "dev:api": "tsx watch src/server/server.ts",
+    "serve:test:api": "tsx src/server/server.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude 'tests/browser/**' --exclude 'tests/evidence/**' --maxWorkers=1",

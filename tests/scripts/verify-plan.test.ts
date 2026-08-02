@@ -72,3 +72,14 @@ it("keeps Playwright suites out of the Vitest unit-test command", () => {
   expect(packageJson.scripts.test).toContain("--exclude 'tests/evidence/**'");
   expect(packageJson.scripts.test).toContain("--maxWorkers=1");
 });
+
+it("uses a non-watching API process for the Playwright harness", () => {
+  const packageJson = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+  const playwrightConfig = readFileSync(new URL("../../playwright.config.ts", import.meta.url), "utf8");
+
+  expect(packageJson.scripts["serve:test:api"]).toBe("tsx src/server/server.ts");
+  expect(playwrightConfig).toContain('command: "npm run serve:test:api"');
+  expect(playwrightConfig).not.toContain('command: "npm run dev:api"');
+});

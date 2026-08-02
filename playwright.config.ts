@@ -16,7 +16,7 @@ export default defineConfig({
     : {
         webServer: [
         {
-          command: "npm run dev:api",
+          command: "npm run serve:test:api",
           url: `http://127.0.0.1:${apiPort}/health/live`,
           env: {
             ...process.env,
