@@ -13,6 +13,20 @@ it("loads and shows a summary without calling cancel", async () => {
   expect(cancel).not.toHaveBeenCalled();
 });
 
+it("tells the Agent to use the page-bound Tool directly and stop on a vague target", () => {
+  const tool = createPrepareCancellationTool({
+    load: vi.fn(),
+    show: vi.fn(),
+    cancel: vi.fn(),
+    getStateVersion: () => 1,
+    getDefaultRegistrationId: () => "reg-1"
+  });
+
+  expect(tool.description).toContain("不需要先呼叫其他 Tool");
+  expect(tool.description).toContain("只說『這個』");
+  expect(tool.description).toContain("先詢問");
+});
+
 it("binds an omitted registration ID to the only active registration on the current page", async () => {
   const summary = { registrationId: "reg-route-bound", eventId: "evt-1", eventTitle: "WebMCP 入門", startsAt: "2027-01-23", effect: "取消後釋出名額" };
   const load = vi.fn().mockResolvedValue(summary);

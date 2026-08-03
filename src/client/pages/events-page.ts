@@ -1,5 +1,7 @@
-import type { EventSummary } from "../../shared/contracts";
+import type { EventDetail, EventSummary, SaveEventResponse } from "../../shared/contracts";
 import type { EventActions, SearchActionResult } from "../services/event-actions";
+import type { AppState } from "../state/app-state";
+import { appendActivityTimeline } from "../ui/activity-timeline";
 import {
   readSearchQuery,
   respondToAgentSubmission,
@@ -7,6 +9,9 @@ import {
   SEARCH_EVENTS_TOOL_NAME,
   type DeclarativeSubmitEvent
 } from "../webmcp/declarative";
+import type { AnyProjectTool } from "../webmcp/registry";
+import { createGetEventDetailsTool } from "../webmcp/tools/get-event-details";
+import { createSaveEventTool } from "../webmcp/tools/save-event";
 
 const locationLabels = {
   taipei: "台北",
@@ -94,7 +99,37 @@ function createEventCard(event: EventSummary) {
   return item;
 }
 
-export function renderEventsPage(root: HTMLElement, actions: EventActions): void {
+function showJourneyDetail(
+  root: HTMLElement,
+  event: EventDetail,
+  state: AppState,
+  onSave: () => Promise<void>
+): void {
+  state.selectEvent(event.id);
+  const section = root.querySelector<HTMLElement>("#journey-event-detail");
+  if (!section) return;
+  section.hidden = false;
+  section.querySelector<HTMLElement>("[data-journey-title]")!.textContent = event.title;
+  section.querySelector<HTMLElement>("[data-journey-summary]")!.textContent = event.summary;
+  section.querySelector<HTMLElement>("[data-journey-venue]")!.textContent = event.venue;
+  section.querySelector<HTMLElement>("[data-journey-time]")!.textContent = new Intl.DateTimeFormat("zh-TW", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(new Date(event.startsAt));
+  section.querySelector<HTMLElement>("[data-journey-capacity]")!.textContent = `剩餘 ${event.remainingCapacity} 名`;
+  section.querySelector<HTMLElement>("[data-journey-id]")!.textContent = event.id;
+  const saveButton = section.querySelector<HTMLButtonElement>("[data-journey-save]")!;
+  saveButton.onclick = () => { void onSave(); };
+  section.scrollIntoView({ block: "nearest" });
+}
+
+export function renderEventsPage(root: HTMLElement, actions: EventActions, state: AppState): AnyProjectTool[] {
+  state.clearEvent();
   root.innerHTML = `
     <section class="page-intro events-intro" aria-labelledby="events-title">
       <div>
@@ -155,12 +190,51 @@ export function renderEventsPage(root: HTMLElement, actions: EventActions): void
           <p>試試「台北＋免費＋入門」，找出 WebMCP 入門工作坊。</p>
         </li>
       </ol>
+    </section>
+    <section id="journey-event-detail" class="filter-panel journey-event-detail" aria-labelledby="journey-event-title" hidden>
+      <div class="filter-heading">
+        <div>
+          <p class="eyebrow">AGENT JOURNEY CONTINUATION</p>
+          <h2 id="journey-event-title" data-journey-title></h2>
+        </div>
+        <code data-journey-id></code>
+      </div>
+      <p data-journey-summary></p>
+      <dl class="event-facts">
+        <div><dt>時間</dt><dd data-journey-time></dd></div>
+        <div><dt>地點</dt><dd data-journey-venue></dd></div>
+        <div><dt>名額</dt><dd data-journey-capacity></dd></div>
+      </dl>
+      <div class="filter-actions">
+        <button type="button" data-journey-save>收藏活動</button>
+        <span id="journey-saved-status" role="status">尚未收藏</span>
+      </div>
     </section>`;
   const form = root.querySelector<HTMLFormElement>("#event-search");
   const status = root.querySelector<HTMLElement>("#search-status");
   const list = root.querySelector<HTMLOListElement>("#results");
+  const detailSection = root.querySelector<HTMLElement>("#journey-event-detail");
+
+  const renderSaved = (result: SaveEventResponse): void => {
+    const savedStatus = root.querySelector<HTMLElement>("#journey-saved-status");
+    if (!savedStatus) return;
+    savedStatus.textContent = result.alreadySaved ? "已收藏（沒有重複新增）" : "已收藏";
+    appendActivityTimeline(root);
+  };
+
+  const saveSelectedEvent = async (): Promise<void> => {
+    if (!state.selectedEventId) return;
+    renderSaved(await actions.saveEvent(state.selectedEventId, { mode: "human" }));
+  };
+
+  const showDetail = (event: EventDetail): void => {
+    showJourneyDetail(root, event, state, saveSelectedEvent);
+    appendActivityTimeline(root);
+  };
 
   const renderResult = (result: SearchActionResult, agentInvoked: boolean): void => {
+    state.clearEvent();
+    if (detailSection) detailSection.hidden = true;
     if (!("events" in result)) {
       list?.replaceChildren();
       if (status) status.textContent = result.message;
@@ -193,4 +267,17 @@ export function renderEventsPage(root: HTMLElement, actions: EventActions): void
     if (!button) return;
     location.assign(`/events/${button.dataset.eventId ?? ""}`);
   });
+
+  const detailsTool = createGetEventDetailsTool({
+    load: (eventId) => actions.loadDetails(eventId, { mode: "agent" }),
+    show: showDetail,
+    getStateVersion: () => state.stateVersion()
+  });
+  const saveTool = createSaveEventTool({
+    getCurrentEventId: () => state.selectedEventId,
+    save: actions.saveEvent,
+    show: renderSaved,
+    getStateVersion: () => state.stateVersion()
+  });
+  return [detailsTool, saveTool];
 }

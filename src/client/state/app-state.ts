@@ -7,6 +7,12 @@ export class AppState {
     this.version += 1;
   }
 
+  clearEvent() {
+    if (this.selectedEventId === undefined) return;
+    this.selectedEventId = undefined;
+    this.version += 1;
+  }
+
   stateVersion() {
     return this.version;
   }

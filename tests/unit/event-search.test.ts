@@ -8,7 +8,16 @@ describe("formal search action", () => {
     const events = [{ id: "evt-1", title: "WebMCP" }];
     const search = vi.fn().mockResolvedValue({ events });
     const actions = createEventActions({ search, loadDetails });
-    await expect(actions.search({ location: "taipei" }, { mode })).resolves.toEqual({ count: 1, events });
+    await expect(actions.search({ location: "taipei" }, { mode })).resolves.toEqual({
+      ok: true,
+      code: "SUCCESS",
+      count: 1,
+      events,
+      appliedFilters: { location: "taipei" },
+      constraintsRelaxed: false,
+      requiresUserDecision: false,
+      nextAction: "若使用者要查看詳情，請將 events 中的原始 id 傳給 get_event_details，不得自行產生 ID。"
+    });
     expect(search).toHaveBeenCalledWith({ location: "taipei" });
   });
 

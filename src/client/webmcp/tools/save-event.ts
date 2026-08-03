@@ -12,8 +12,8 @@ export function createSaveEventTool(dependencies: {
   const opaqueId = /^[a-z0-9_-]{1,64}$/;
   return {
     name: "save_event",
-    description: "收藏目前正在查看的公開活動；重複收藏安全且使用者可以在可見介面 Undo。",
-    inputSchema: { type: "object", additionalProperties: false, required: ["event_id"], properties: { event_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "目前詳情頁的不透明活動 ID。" } } },
+    description: "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+    inputSchema: { type: "object", additionalProperties: false, required: ["event_id"], properties: { event_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。" } } },
     annotations: { readOnlyHint: false, untrustedContentHint: true },
     async execute(input, options = {}) {
       const version = dependencies.getStateVersion();

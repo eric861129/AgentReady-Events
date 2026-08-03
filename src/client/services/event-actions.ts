@@ -10,10 +10,18 @@ export type SearchActionFailure = {
   retryable: boolean;
 };
 
-export type SearchActionResult = {
+export type SearchActionSuccess = {
+  ok: true;
+  code: "SUCCESS";
   count: number;
   events: SearchEventsResponse["events"];
-} | SearchActionFailure;
+  appliedFilters: SearchEventsQuery;
+  constraintsRelaxed: false;
+  requiresUserDecision: boolean;
+  nextAction: string;
+};
+
+export type SearchActionResult = SearchActionSuccess | SearchActionFailure;
 
 function statusFrom(error: unknown): number | undefined {
   if (!error || typeof error !== "object" || !("status" in error)) return undefined;
@@ -31,7 +39,19 @@ export function createEventActions(dependencies: {
       try {
         const result = await dependencies.search(query);
         recordActivity("search_events", context.mode, "SUCCESS");
-        return { count: result.events.length, events: result.events } satisfies SearchActionResult;
+        const noMatches = result.events.length === 0;
+        return {
+          ok: true,
+          code: "SUCCESS",
+          count: result.events.length,
+          events: result.events,
+          appliedFilters: { ...query },
+          constraintsRelaxed: false,
+          requiresUserDecision: noMatches,
+          nextAction: noMatches
+            ? "目前沒有同時符合所有條件的公開活動；請先詢問使用者是否要調整條件，不得自行放寬。"
+            : "若使用者要查看詳情，請將 events 中的原始 id 傳給 get_event_details，不得自行產生 ID。"
+        } satisfies SearchActionSuccess;
       } catch (error) {
         const invalidInput = statusFrom(error) === 400;
         const failure: SearchActionFailure = invalidInput

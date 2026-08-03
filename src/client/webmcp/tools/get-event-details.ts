@@ -17,7 +17,7 @@ export function createGetEventDetailsTool(dependencies: {
     name: "get_event_details",
     description: routeBound
       ? "讀取目前頁面正在查看的公開活動完整資訊，並更新使用者看得見的活動內容。此 Tool 已綁定目前頁面，請以空物件呼叫，不要提供活動 ID。"
-      : "使用 search_events 結果提供的不透明活動 ID，讀取該公開活動的完整資訊。",
+      : "使用 search_events 結果提供的不透明活動 ID，直接讀取該公開活動的完整資訊並顯示在目前頁面。不需要先切換頁面或呼叫其他頁面讀取 Tool；不得自行產生 ID。",
     inputSchema: routeBound
       ? { type: "object", additionalProperties: false, properties: {} }
       : {

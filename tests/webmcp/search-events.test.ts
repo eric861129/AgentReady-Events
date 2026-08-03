@@ -13,6 +13,8 @@ it("locks the exact identity and parameter handoff", () => {
   data.set("price", "free");
   expect(SEARCH_EVENTS_TOOL_NAME).toBe("search_events");
   expect(SEARCH_EVENTS_TOOL_DESCRIPTION).toContain("目前公開活動");
+  expect(SEARCH_EVENTS_TOOL_DESCRIPTION).toContain("不得自行放寬");
+  expect(SEARCH_EVENTS_TOOL_DESCRIPTION).toContain("不要執行任何網站 Tool");
   expect(readSearchQuery(data)).toEqual({ query: "WebMCP", location: "taipei", price: "free" });
 });
 

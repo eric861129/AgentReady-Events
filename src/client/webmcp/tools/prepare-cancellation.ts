@@ -14,7 +14,7 @@ export function createPrepareCancellationTool(dependencies: {
 }): ProjectTool<{ registration_id?: string }, PreparationResult> {
   return {
     name: "prepare_registration_cancellation",
-    description: "為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前。頁面只有一筆有效報名時請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。",
+    description: "直接為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前；不需要先呼叫其他 Tool 讀取清單或頁面。使用者明確指定第一筆且頁面只有一筆有效報名時，請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。若使用者只說『這個』而沒有指出報名或取消對象，請不要執行，先詢問要處理哪一筆。",
     inputSchema: { type: "object", additionalProperties: false, properties: { registration_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。" } } },
     annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options = {}) {

@@ -11,3 +11,35 @@ it("human and Agent contexts call the same dependencies", async () => {
   expect(search).toHaveBeenCalledTimes(2);
   expect(loadDetails).toHaveBeenCalledWith("evt-1");
 });
+
+it("preserves every requested constraint when a search has no matches", async () => {
+  const query = { query: "Agent", location: "kaohsiung", price: "paid", level: "advanced" } as const;
+  const actions = createEventActions({
+    search: vi.fn().mockResolvedValue({ events: [] }),
+    loadDetails: vi.fn()
+  });
+
+  await expect(actions.search(query, { mode: "agent" })).resolves.toEqual({
+    ok: true,
+    code: "SUCCESS",
+    count: 0,
+    events: [],
+    appliedFilters: query,
+    constraintsRelaxed: false,
+    requiresUserDecision: true,
+    nextAction: "目前沒有同時符合所有條件的公開活動；請先詢問使用者是否要調整條件，不得自行放寬。"
+  });
+});
+
+it("does not invent omitted filters in the Agent-visible search result", async () => {
+  const query = { query: "WebMCP" } as const;
+  const actions = createEventActions({
+    search: vi.fn().mockResolvedValue({ events: [] }),
+    loadDetails: vi.fn()
+  });
+
+  await expect(actions.search(query, { mode: "agent" })).resolves.toMatchObject({
+    appliedFilters: { query: "WebMCP" },
+    constraintsRelaxed: false
+  });
+});

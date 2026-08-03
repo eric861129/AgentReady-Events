@@ -136,12 +136,13 @@ async function render() {
     appendActivityTimeline(app);
     return;
   }
-  await registry.sync([]);
   if (route.kind === "events") {
-    renderEventsPage(app, actions);
+    const tools = renderEventsPage(app, actions, state);
+    await registry.sync(tools);
     appendActivityTimeline(app);
     return;
   }
+  await registry.sync([]);
   renderHome(app);
   updateRuntimeStatus();
   appendActivityTimeline(app);
