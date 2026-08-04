@@ -1,4 +1,5 @@
 import { ApiClientError } from "../api/client";
+import type { ApprovedToolName } from "../../shared/contracts";
 
 export type ToolErrorCode = "INVALID_INPUT" | "NOT_FOUND" | "UNAUTHORIZED" | "FORBIDDEN" | "CONFLICT" | "TEMPORARY_FAILURE" | "ABORTED";
 
@@ -13,8 +14,17 @@ export type ToolFailure = {
   stateVersion: number;
 };
 
+export type ToolGuidance = {
+  availableActions: ApprovedToolName[];
+  currentTarget?: {
+    kind: "event" | "registration";
+    id: string;
+  };
+  requiresHumanConfirmation: boolean;
+};
+
 export type ToolResult<T> =
-  | { ok: true; code: "SUCCESS"; data: T; uiUpdated: boolean; stateVersion: number }
+  | { ok: true; code: "SUCCESS"; data: T; guidance?: ToolGuidance; uiUpdated: boolean; stateVersion: number }
   | ToolFailure;
 
 export function toolFailure(

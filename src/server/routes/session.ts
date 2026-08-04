@@ -7,12 +7,16 @@ export function createSessionRouter(
   options: { enableEvaluationFixtures?: boolean } = {}
 ): Router {
   const router = Router();
+  const evaluationFixturesEnabled = options.enableEvaluationFixtures === true;
   router.get("/", (request, response) => {
     const session = ensureSession(request, response, store);
-    response.json({ csrfToken: session.csrfToken });
+    response.json({
+      csrfToken: session.csrfToken,
+      evaluationFixturesEnabled
+    });
   });
   router.post("/evaluation/expire-current", (request, response) => {
-    if (!options.enableEvaluationFixtures) {
+    if (!evaluationFixturesEnabled) {
       return response.status(404).json({ code: "NOT_FOUND", reason: "API_ROUTE_NOT_FOUND", message: "找不到 API。" });
     }
     const session = ensureSession(request, response, store);

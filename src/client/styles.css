@@ -1142,6 +1142,47 @@ button[type="submit"]:hover {
   box-shadow: var(--shadow);
 }
 
+.evaluation-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px dashed #c68a20;
+  border-radius: var(--radius);
+  background: #fff9ec;
+}
+
+.evaluation-controls h2,
+.evaluation-controls p {
+  margin-bottom: 0.35rem;
+}
+
+.evaluation-controls-action {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+}
+
+.evaluation-controls-action [role="status"] {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.evaluation-controls-action [data-state="ready"] {
+  color: #126340;
+  font-weight: 800;
+}
+
+.evaluation-controls-action [data-state="error"] {
+  color: #a52f2f;
+  font-weight: 800;
+}
+
 .registration-list {
   display: grid;
   gap: 0.8rem;
@@ -1560,6 +1601,18 @@ dialog::backdrop {
 
   .registration-item {
     grid-template-columns: 1fr;
+  }
+
+  .evaluation-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .evaluation-controls-action {
+    justify-items: stretch;
+  }
+
+  .evaluation-controls-action [role="status"] {
+    text-align: left;
   }
 
   .registration-item-actions .button {

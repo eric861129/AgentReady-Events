@@ -34,11 +34,21 @@ it("maps authentication, authorization, and abort without leaking details", asyn
   expect(JSON.stringify(result)).not.toMatch(/session-id|private/i);
 });
 
-it("updates visible detail and returns the same opaque ID", async () => {
+it("updates visible detail and returns structured guidance for the displayed event", async () => {
   const detail = { id: "evt-webmcp-intro", title: "WebMCP 入門" } as never;
   const show = vi.fn();
   const tool = createGetEventDetailsTool({ load: vi.fn().mockResolvedValue(detail), show, getStateVersion: () => 7 });
-  await expect(tool.execute({ event_id: "evt-webmcp-intro" })).resolves.toMatchObject({ ok: true, data: { event: detail }, uiUpdated: true, stateVersion: 7 });
+  await expect(tool.execute({ event_id: "evt-webmcp-intro" })).resolves.toMatchObject({
+    ok: true,
+    data: { event: detail },
+    guidance: {
+      availableActions: ["save_event"],
+      currentTarget: { kind: "event", id: "evt-webmcp-intro" },
+      requiresHumanConfirmation: false
+    },
+    uiUpdated: true,
+    stateVersion: 7
+  });
   expect(show).toHaveBeenCalledWith(detail);
 });
 
@@ -76,6 +86,7 @@ it("publishes the current-detail Tool without requiring an event ID", () => {
     additionalProperties: false,
     properties: {}
   });
+  expect(tool.description).toContain("以空物件直接呼叫");
 });
 
 it("requires an opaque event ID only when the Tool is not bound to a detail route", () => {
@@ -89,6 +100,7 @@ it("requires an opaque event ID only when the Tool is not bound to a detail rout
     required: ["event_id"],
     properties: { event_id: expect.any(Object) }
   });
+  expect(tool.description).toContain("search_events 回傳的原始活動 ID");
 });
 
 it("rejects a different event ID on a detail page scoped to the current event", async () => {

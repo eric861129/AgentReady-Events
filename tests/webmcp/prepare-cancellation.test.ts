@@ -13,7 +13,7 @@ it("loads and shows a summary without calling cancel", async () => {
   expect(cancel).not.toHaveBeenCalled();
 });
 
-it("tells the Agent to use the page-bound Tool directly and stop on a vague target", () => {
+it("describes the direct page-bound preparation contract in positive language", () => {
   const tool = createPrepareCancellationTool({
     load: vi.fn(),
     show: vi.fn(),
@@ -22,9 +22,10 @@ it("tells the Agent to use the page-bound Tool directly and stop on a vague targ
     getDefaultRegistrationId: () => "reg-1"
   });
 
-  expect(tool.description).toContain("不需要先呼叫其他 Tool");
-  expect(tool.description).toContain("只說『這個』");
-  expect(tool.description).toContain("先詢問");
+  expect(tool.description).toContain("目前頁面的有效報名");
+  expect(tool.description).toContain("空物件");
+  expect(tool.description).toContain("最終取消由使用者確認");
+  expect(tool.description).not.toMatch(/list_registrations|read_my_registrations|get_page_content/);
 });
 
 it("binds an omitted registration ID to the only active registration on the current page", async () => {
@@ -42,7 +43,12 @@ it("binds an omitted registration ID to the only active registration on the curr
   expect(tool.inputSchema).not.toHaveProperty("required");
   await expect(tool.execute({} as { registration_id: string })).resolves.toMatchObject({
     code: "CONFIRMATION_REQUIRED",
-    summary
+    summary,
+    guidance: {
+      availableActions: [],
+      currentTarget: { kind: "registration", id: "reg-route-bound" },
+      requiresHumanConfirmation: true
+    }
   });
   expect(load).toHaveBeenCalledWith("reg-route-bound");
 });

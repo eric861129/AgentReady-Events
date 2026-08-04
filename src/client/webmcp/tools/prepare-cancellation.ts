@@ -1,9 +1,9 @@
 import type { CancellationResponse, CancellationSummary } from "../../../shared/contracts";
 import { ApiClientError } from "../../api/client";
-import { commonToolFailure, toolFailure, type ToolResult } from "../result";
+import { commonToolFailure, toolFailure, type ToolGuidance, type ToolResult } from "../result";
 import type { ProjectTool } from "../types";
 
-type PreparationResult = ToolResult<never> | { ok: false; code: "CONFIRMATION_REQUIRED"; reason: "HUMAN_CONFIRMATION_REQUIRED"; message: string; nextAction: string; retryable: false; uiUpdated: true; stateVersion: number; summary: CancellationSummary };
+type PreparationResult = ToolResult<never> | { ok: false; code: "CONFIRMATION_REQUIRED"; reason: "HUMAN_CONFIRMATION_REQUIRED"; message: string; nextAction: string; retryable: false; uiUpdated: true; stateVersion: number; summary: CancellationSummary; guidance: ToolGuidance };
 
 export function createPrepareCancellationTool(dependencies: {
   load(registrationId: string): Promise<CancellationSummary>;
@@ -14,7 +14,7 @@ export function createPrepareCancellationTool(dependencies: {
 }): ProjectTool<{ registration_id?: string }, PreparationResult> {
   return {
     name: "prepare_registration_cancellation",
-    description: "直接為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前；不需要先呼叫其他 Tool 讀取清單或頁面。使用者明確指定第一筆且頁面只有一筆有效報名時，請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。若使用者只說『這個』而沒有指出報名或取消對象，請不要執行，先詢問要處理哪一筆。",
+    description: "為目前頁面的有效報名顯示取消摘要，並停在最終確認對話框。頁面只有一筆有效報名時以空物件直接呼叫；有多筆時傳入頁面提供的 registration_id。此 Tool 只準備摘要，最終取消由使用者確認。",
     inputSchema: { type: "object", additionalProperties: false, properties: { registration_id: { type: "string", pattern: "^[a-z0-9_-]+$", description: "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。" } } },
     annotations: { readOnlyHint: true, untrustedContentHint: true },
     async execute(input, options = {}) {
@@ -35,7 +35,22 @@ export function createPrepareCancellationTool(dependencies: {
         const summary = await dependencies.load(registrationId);
         if (options.signal?.aborted) return commonToolFailure(undefined, options.signal, version)!;
         dependencies.show(summary);
-        return { ok: false, code: "CONFIRMATION_REQUIRED", reason: "HUMAN_CONFIRMATION_REQUIRED", message: "取消摘要已顯示，等待使用者確認。", nextAction: "請使用者閱讀影響，並在可見對話框中自行確認。", retryable: false, uiUpdated: true, stateVersion: dependencies.getStateVersion(), summary };
+        return {
+          ok: false,
+          code: "CONFIRMATION_REQUIRED",
+          reason: "HUMAN_CONFIRMATION_REQUIRED",
+          message: "取消摘要已顯示，等待使用者確認。",
+          nextAction: "請使用者閱讀影響，並在可見對話框中自行確認。",
+          retryable: false,
+          uiUpdated: true,
+          stateVersion: dependencies.getStateVersion(),
+          summary,
+          guidance: {
+            availableActions: [],
+            currentTarget: { kind: "registration", id: summary.registrationId },
+            requiresHumanConfirmation: true
+          }
+        };
       } catch (error) {
         const common = commonToolFailure(error, options.signal, version);
         if (common) return common;

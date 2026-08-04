@@ -41,7 +41,7 @@ test("preparation opens an accessible dialog and human confirmation performs one
   await expect(page.getByRole("status")).toContainText("已取消報名");
 });
 
-test("expired session stops cancellation preparation without opening the dialog or mutating state", async ({ page }) => {
+test("visible evaluation control expires the current session before cancellation preparation", async ({ page }) => {
   test.skip(
     Boolean(process.env.PLAYWRIGHT_BASE_URL) && process.env.ENABLE_EVALUATION_FIXTURES !== "true",
     "外部部署必須明確啟用受控 evaluation fixture。"
@@ -82,15 +82,10 @@ test("expired session stops cancellation preparation without opening the dialog 
   page.on("request", (request) => {
     if (request.method() === "POST" && request.url().endsWith("/cancel")) cancelPosts += 1;
   });
-  const fixtureStatus = await page.evaluate(async () => {
-    const session = await fetch("/api/session").then((response) => response.json()) as { csrfToken: string };
-    return fetch("/api/session/evaluation/expire-current", {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
-      body: JSON.stringify({ interactionMode: "human" })
-    }).then((response) => response.status);
-  });
-  expect(fixtureStatus).toBe(204);
+  const evaluationControls = page.getByRole("region", { name: "受控測試工具" });
+  await expect(evaluationControls).toBeVisible();
+  await evaluationControls.getByRole("button", { name: "讓目前工作階段過期" }).click();
+  await expect(evaluationControls.getByRole("status")).toContainText("SESSION_EXPIRED 已建立");
 
   const result = await page.evaluate(async (id) => {
     const tools = (window as Window & {

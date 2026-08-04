@@ -1,5 +1,11 @@
 import type { CancellationSummary } from "../../shared/contracts";
-import { cancellationRequest, cancellationSummaryRequest, registrationsRequest } from "../api/client";
+import {
+  cancellationRequest,
+  cancellationSummaryRequest,
+  expireCurrentSessionForEvaluationRequest,
+  registrationsRequest,
+  sessionRequest
+} from "../api/client";
 import { createConfirmationDialog } from "../ui/confirmation-dialog";
 import { createPrepareCancellationTool } from "../webmcp/tools/prepare-cancellation";
 import type { AnyProjectTool } from "../webmcp/registry";
@@ -35,6 +41,7 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   const list = document.createElement("ol");
   list.className = "registration-list";
   list.setAttribute("aria-label", "我的報名列表");
+  const session = await sessionRequest();
   const registrations = await registrationsRequest();
   const activeRegistrationIds = new Set(
     registrations.filter((registration) => registration.status === "active").map((registration) => registration.id)
@@ -132,7 +139,48 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   listHeading.append(listHeadingCopy, count);
   listSection.append(listHeading, list, status);
 
-  page.append(intro, listSection, dialogApi.element);
+  const evaluationControls = document.createElement("section");
+  if (session.evaluationFixturesEnabled) {
+    evaluationControls.className = "evaluation-controls";
+    evaluationControls.setAttribute("role", "region");
+    evaluationControls.setAttribute("aria-labelledby", "evaluation-controls-title");
+    const evaluationCopy = document.createElement("div");
+    const evaluationEyebrow = document.createElement("p");
+    evaluationEyebrow.className = "eyebrow";
+    evaluationEyebrow.textContent = "CONTROLLED EVALUATION FIXTURE";
+    const evaluationTitle = document.createElement("h2");
+    evaluationTitle.id = "evaluation-controls-title";
+    evaluationTitle.textContent = "受控測試工具";
+    const evaluationDescription = document.createElement("p");
+    evaluationDescription.textContent = "只在 evaluation 模式顯示。用同一個分頁建立 SESSION_EXPIRED 前置條件，再回到 Inspector 執行 RECOVERY-02。";
+    evaluationCopy.append(evaluationEyebrow, evaluationTitle, evaluationDescription);
+    const evaluationAction = document.createElement("div");
+    evaluationAction.className = "evaluation-controls-action";
+    const expireButton = document.createElement("button");
+    expireButton.type = "button";
+    expireButton.className = "button button-secondary";
+    expireButton.textContent = "讓目前工作階段過期";
+    const evaluationStatus = document.createElement("p");
+    expireButton.addEventListener("click", async () => {
+      expireButton.disabled = true;
+      evaluationStatus.setAttribute("role", "status");
+      try {
+        await expireCurrentSessionForEvaluationRequest();
+        evaluationStatus.dataset.state = "ready";
+        evaluationStatus.textContent = "SESSION_EXPIRED 已建立。請勿重新整理，直接在 Inspector 執行取消準備。";
+      } catch (error) {
+        expireButton.disabled = false;
+        evaluationStatus.dataset.state = "error";
+        evaluationStatus.textContent = error instanceof Error ? error.message : "無法建立測試前置條件。";
+      }
+    });
+    evaluationAction.append(expireButton, evaluationStatus);
+    evaluationControls.append(evaluationCopy, evaluationAction);
+  }
+
+  page.append(intro, listSection);
+  if (session.evaluationFixturesEnabled) page.append(evaluationControls);
+  page.append(dialogApi.element);
   root.replaceChildren(page);
   if (activeRegistrationIds.size === 0) return [];
   return [createPrepareCancellationTool({

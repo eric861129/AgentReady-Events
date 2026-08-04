@@ -6,6 +6,8 @@ export const APPROVED_TOOL_NAMES = [
   "prepare_registration_cancellation"
 ] as const;
 
+export type ApprovedToolName = typeof APPROVED_TOOL_NAMES[number];
+
 export type InteractionMode = "human" | "agent";
 
 export type EventLocation = "taipei" | "kaohsiung" | "online";
@@ -40,7 +42,10 @@ export type EventDetail = EventSummary & {
 
 export type SearchEventsResponse = { events: EventSummary[] };
 
-export type SessionSummary = { csrfToken: string };
+export type SessionSummary = {
+  csrfToken: string;
+  evaluationFixturesEnabled: boolean;
+};
 export type SaveEventResponse = { eventId: string; alreadySaved: boolean };
 
 export type RegistrationInput = {

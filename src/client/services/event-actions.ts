@@ -18,6 +18,7 @@ export type SearchActionSuccess = {
   appliedFilters: SearchEventsQuery;
   constraintsRelaxed: false;
   requiresUserDecision: boolean;
+  availableActions: Array<"get_event_details">;
   nextAction: string;
 };
 
@@ -48,6 +49,7 @@ export function createEventActions(dependencies: {
           appliedFilters: { ...query },
           constraintsRelaxed: false,
           requiresUserDecision: noMatches,
+          availableActions: noMatches ? [] : ["get_event_details"],
           nextAction: noMatches
             ? "目前沒有同時符合所有條件的公開活動；請先詢問使用者是否要調整條件，不得自行放寬。"
             : "若使用者要查看詳情，請將 events 中的原始 id 傳給 get_event_details，不得自行產生 ID。"

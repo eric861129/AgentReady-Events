@@ -36,6 +36,16 @@ export function sessionRequest(): Promise<SessionSummary> {
   return sessionPromise;
 }
 
+export async function expireCurrentSessionForEvaluationRequest(): Promise<void> {
+  const session = await sessionRequest();
+  const response = await fetch("/api/session/evaluation/expire-current", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
+    body: JSON.stringify({ interactionMode: "human" })
+  });
+  if (!response.ok) await readJson<never>(response);
+}
+
 export async function saveEventRequest(eventId: string, context: { mode: InteractionMode }): Promise<SaveEventResponse> {
   const session = await sessionRequest();
   return readJson<SaveEventResponse>(await fetch("/api/saved-events", {

@@ -27,6 +27,7 @@ it("preserves every requested constraint when a search has no matches", async ()
     appliedFilters: query,
     constraintsRelaxed: false,
     requiresUserDecision: true,
+    availableActions: [],
     nextAction: "目前沒有同時符合所有條件的公開活動；請先詢問使用者是否要調整條件，不得自行放寬。"
   });
 });

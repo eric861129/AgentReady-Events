@@ -16,6 +16,7 @@ describe("formal search action", () => {
       appliedFilters: { location: "taipei" },
       constraintsRelaxed: false,
       requiresUserDecision: false,
+      availableActions: ["get_event_details"],
       nextAction: "若使用者要查看詳情，請將 events 中的原始 id 傳給 get_event_details，不得自行產生 ID。"
     });
     expect(search).toHaveBeenCalledWith({ location: "taipei" });

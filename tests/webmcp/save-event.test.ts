@@ -6,7 +6,17 @@ it("binds save to the currently displayed event and updates visible state", asyn
   const save = vi.fn().mockResolvedValue({ eventId: "evt-webmcp-intro", alreadySaved: false });
   const show = vi.fn();
   const tool = createSaveEventTool({ getCurrentEventId: () => "evt-webmcp-intro", save, show, getStateVersion: () => 3 });
-  await expect(tool.execute({ event_id: "evt-webmcp-intro" })).resolves.toMatchObject({ ok: true, data: { eventId: "evt-webmcp-intro" }, uiUpdated: true });
+  expect(tool.description).toContain("目前畫面已顯示的公開活動");
+  await expect(tool.execute({ event_id: "evt-webmcp-intro" })).resolves.toMatchObject({
+    ok: true,
+    data: { eventId: "evt-webmcp-intro" },
+    guidance: {
+      availableActions: [],
+      currentTarget: { kind: "event", id: "evt-webmcp-intro" },
+      requiresHumanConfirmation: false
+    },
+    uiUpdated: true
+  });
   expect(save).toHaveBeenCalledWith("evt-webmcp-intro", { mode: "agent" });
   expect(show).toHaveBeenCalledOnce();
   await expect(tool.execute({ event_id: "evt-agent-testing" })).resolves.toMatchObject({ ok: false, code: "CONFLICT", reason: "STALE_EVENT_TARGET" });
