@@ -1,0 +1,290 @@
+[
+ {
+  "userPrompt": {
+   "message": "準備取消清單中的第一筆；如果頁面狀態已更新，先重新確認再繼續。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "直接為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前；不需要先呼叫其他 Tool 讀取清單或頁面。使用者明確指定第一筆且頁面只有一筆有效報名時，請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。若使用者只說『這個』而沒有指出報名或取消對象，請不要執行，先詢問要處理哪一筆。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1491",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:22:43 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1942",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_read_registration_list",
+         "args": {},
+         "id": "2lf5y20t"
+        },
+        "thoughtSignature": "Eu8HCuwHARFNMg823ckQSLLHmfU/aeXei58rYrbi87pOLFg/7vxwVsHtqXc0WGPINGwizw29EwSJ5H6kNywInXjHd6+vLRD28Cov7jg36SNcGPG6Vt0Z187O/BGWZljJ7HnoR3FCDxWEFqHKGCO4U9AD9WyHL4yieZbVC9VCvOHt+/7qxIihCyBDshkmaLR2cKIRE5RO07m3y3VfRmZTmSErs8XPFOs0wzHSWUXjWgVzIIVORwAx9x451+tKCu6qRYGQQr6/6yQ7sCsQr10VCWjs+NfMiaPBlMXtlxb6gnIQ9N/caQocyWJUQdQQOu3AbIwnVdMRWWO4NFQoA9g5dKNbdOgXKht3wmR74heaQX8AUoc01oF/UFG9iRVjk9dp49x/KOtTDMYCpeQmFr/7CCtPgOW3NHnAFNztljpaUqbI2Mz1BLnXsPfQNIu0OkYdxlWgSH//9ZN+5VPIH+CTb+4teV3K0hbCNq/4ia9alTn8gVdj2F9r25mCAqBWup0ngOyiGFK0mJgmXsGY5l4lU8S/co7TkE6BVJb2b7GlAhReKhsL+944l50sbtkCWQVNMIZCOJwsjji5mqW5UfLFjBrsviZmS9akgFsil9gndyArYDN55lRraLIeOadywB81nOqYOUWPimFv7cwwZ5yeuBR5xxcE+al5OtuRGuMtPTcG6ZtC5uuNLdDJvkWyCBRbw5WVvJ0Cj2+VwyhzwMc+xVrhUs/qjO4hTDicEgIiHxmViIYe6erGNdXmKEvtuoP/Zlv4U4S9/HeTGp/ZxRxm2ofRPXLR9ewrGKxEYCxU+gXGih2qS3ue9BSL52KCqO3eFbLxJZPf/bLh5petm2S1zSTe7rMANHxGyLwWSwPbUFVWIv4vFY/bCulH6AzBAqZR+dSgdDFZgF8jbNq2yFSVFE1YKfRtROMK3GlUJ0Y5HR2bdSV8gcW1QdBmTuJf69WZ8YT1C1uS5GH6lvoedSHmrljn++OWq0Wg95cTE/9MK3VNvVYxmNRt8emgbOjlNF428+mK7uPKRRXJdsKecwarhd2XJ8ac0YmbR/Xx8CL3cDBkYYxOj5iVU4dXuFi5CW1FyNclTl2sPkqEXiZKE7c7BbfL9tuwxCX2koxVi6QO+YI1QolGfqrlp9veQfcYJ/H/AcHsPGcEWZmAAmSS8fHPaBmVvKWGOhODvpmEHNpjQOWAxOlD+S4qy0nI/q57iOZh4IRRmc6z1sx0LOlOEUIZzWbpzgvNA52rchb6nRfifWkIxsQTyA68c2ars1X+n4G3IvpWLY47uHXvyLN9q//8QS+mntPS/msKjGw2VzYP+uuC4LtbINaY+BoKI1Byf95mwEc="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "0U9wauKnFo2N1e8P5pbCoAI",
+   "usageMetadata": {
+    "promptTokenCount": 331,
+    "candidatesTokenCount": 14,
+    "totalTokenCount": 551,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 331
+     }
+    ],
+    "thoughtsTokenCount": 206,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_read_registration_list",
+      "response": {
+       "result": "\"Failed to execute 'executeTool' on 'ModelContext': The provided value is not of type 'RegisteredTool'.\""
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "直接為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前；不需要先呼叫其他 Tool 讀取清單或頁面。使用者明確指定第一筆且頁面只有一筆有效報名時，請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。若使用者只說『這個』而沒有指出報名或取消對象，請不要執行，先詢問要處理哪一筆。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "6821",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:22:52 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=9230",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_prepare_registration_cancellation",
+         "args": {},
+         "id": "vesacd5r"
+        },
+        "thoughtSignature": "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"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "009wasOwKNKi9tMPgJ2E8AE",
+   "usageMetadata": {
+    "promptTokenCount": 592,
+    "candidatesTokenCount": 15,
+    "totalTokenCount": 2284,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 592
+     }
+    ],
+    "thoughtsTokenCount": 1677,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_prepare_registration_cancellation",
+      "response": {
+       "result": "{\"ok\":false,\"code\":\"CONFIRMATION_REQUIRED\",\"reason\":\"HUMAN_CONFIRMATION_REQUIRED\",\"message\":\"取消摘要已顯示，等待使用者確認。\",\"nextAction\":\"請使用者閱讀影響，並在可見對話框中自行確認。\",\"retryable\":false,\"uiUpdated\":true,\"stateVersion\":1,\"summary\":{\"registrationId\":\"reg-a31d0a75-4bb7-4a2a-8bcf-791a8391097d\",\"eventId\":\"evt-webmcp-intro\",\"eventTitle\":\"WebMCP 入門工作坊\",\"startsAt\":\"2027-01-23T10:00:00+08:00\",\"effect\":\"取消後會釋出名額；本 Demo 不會寄送通知。\"}}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "直接為目前工作階段擁有的有效報名顯示取消摘要，並停在最終人類確認之前；不需要先呼叫其他 Tool 讀取清單或頁面。使用者明確指定第一筆且頁面只有一筆有效報名時，請省略 registration_id，Tool 會綁定該筆；有多筆時必須使用頁面提供的 ID，不得猜測。若使用者只說『這個』而沒有指出報名或取消對象，請不要執行，先詢問要處理哪一筆。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "644",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:22:55 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1887",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "已為您準備好取消「WebMCP 入門工作坊」的報名（ID: `reg-a31d0a75-4bb7-4a2a-8bcf-791a8391097d`）。\n\n該活動將於 2027 年 1 月 23 日 10:00 開始。取消後將會釋出名額，且此展示環境不會寄送通知。\n\n請您檢查頁面上顯示的取消摘要，確認無誤後，請在對話框中點擊確認以完成取消作業。"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "3U9watP4Gpi8vr0PypWfqQQ",
+   "usageMetadata": {
+    "promptTokenCount": 2482,
+    "candidatesTokenCount": 133,
+    "totalTokenCount": 2615,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 2482
+     }
+    ],
+    "serviceTier": "standard"
+   }
+  }
+ }
+]

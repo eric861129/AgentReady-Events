@@ -77,14 +77,17 @@ digest；精確版本是由受控 session、預先開啟的兩條 public route�
 寫入／確認路徑與 E5 都沒有因此通過。搜尋頁截圖裡的 `E4 TEST TARGET` 是送出這次
 trace 前就存在於 immutable revision 的靜態標籤，不代表本文用畫面文案自我認證。
 
-## 下一輪有效重跑
+## 封存時保留的證據規則
+
+本次測試活動已於 2026-08-02 封存，不再安排其餘 18 題的 Inspector 複測。若未來另立
+研究批次，仍應遵守以下證據規則，且不得回寫本次封存結果：
 
 1. 在乾淨 profile 使用相容的 WebMCP Agent，不在 prompt 中提示 Tool 名稱。
-2. 從其餘 18 題與三條完整 Journey 繼續；保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
-3. 每一題獨立判定 E4，不用 SEL-01、SEL-02 替其餘案例升級。
+2. 保存 discovered schema、Agent invocation、結果、失敗案例與遮蔽敏感資訊後的原始紀錄。
+3. 每一題獨立判定 E4，不用 SEL-01、SEL-02 替其他案例升級。
 4. 另以獨立乾淨環境重播同一題、同一資料版本與同一部署座標，才可主張該題 E5。
 
-## 可重跑指令
+## 保留的 capability 診斷指令
 
 ```powershell
 $env:WEBMCP_CHROME_PATH = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
@@ -93,6 +96,7 @@ npm run probe:webmcp
 ```
 
 此腳本只會列出 testing surface 可見的工具；它強制使用可見瀏覽器，且不會執行任何 Tool。
+指令僅作技術參考，不是目前仍待完成的測試工作。
 
 ## 外部依據
 

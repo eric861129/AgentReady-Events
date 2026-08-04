@@ -10,7 +10,8 @@
 | 重建候選版 | `3a9b1245d6f9f6663554c321de72d98105e59578` | 未做同版本 E4 部署 | 本機 E2 | 用歷史 trace 替它升級 |
 | P0 首次部署 | `9897bf506986ac45c7037ec6173b7ce8745ed2b9`、`v3-p0-release` | `ca-agentready-events--0000005`、run `30548558072` | E2、E3；暴露 smoke 留下報名副作用 | 正式最終版、E4、E5 |
 | P0 最終 release | `8e89e6519406388a0de8c456a890d6fcc8cc5544`、`v3-p0-release.1` | `ca-agentready-events--0000006`、run `30549409859`、digest `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41` | E2、E3；完整 smoke 後名額仍為 8；SEL-01、SEL-02 各一題 current-release read-only E4 | 20/20、完整 Journey、write E4、E5 |
-| 20 題固定驗收 release | `4b1324f46255ddf5f80628c84a564d37fa6addb3` | `ca-agentready-events--0000007`、run `30733952974`、digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052` | E2、E3；immutable deployment、production smoke、受控 `RECOVERY-02` fixture | 尚未保存於此 revision 的 Inspector trace，因此目前不得主張任何新 E4、20/20 或 E5 |
+| 20 題固定驗收 release（已封存） | `4b1324f46255ddf5f80628c84a564d37fa6addb3` | `ca-agentready-events--0000007`、run `30733952974`、digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052` | E2、E3；immutable deployment、production smoke、受控 `RECOVERY-02` fixture | 本批次未執行逐題 Inspector 重跑，不得主張任何新 E4、20/20 或 E5 |
+| 13 題單次重測 release | `4d7f6528a88ad0e43b268aa7817a479d186a8cfa` | `ca-agentready-events--0000008`、run `30792961501`、digest `sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e` | E2、E3；13 題同版本 Inspector trace，8 PASS／5 FAIL | 未執行的 7 題、20/20、跨環境成功率、E5 |
 
 Machine-readable 版本位於
 [`evidence/version-ledger.json`](../evidence/version-ledger.json)。
@@ -72,5 +73,7 @@ verification、Linux container smoke、restricted Bicep what-if 與 production s
 
 這個 revision 只為 `RECOVERY-02` 顯式開啟受控 current-session expiry fixture；
 fixture 仍要求同 session CSRF 與 `interactionMode: "human"`，不能指定或終止其他 session。
-部署 artifact 原樣保存在 `evidence/github-run-30733952974/`。目前桌面控制尚未能安全
-辨識 Inspector 所在 Chrome 視窗，因此沒有把歷史 trace 搬來，也沒有把未重跑題目標成成功。
+部署 artifact 原樣保存在 `evidence/github-run-30733952974/`。桌面控制未能安全操作
+Inspector 側邊面板；依 2026-08-02 的停止複測決策，本批次以 `0/20 executed` 封存。
+歷史 trace 沒有搬入，未重跑題目也沒有標成成功。完整逐題紀錄見
+[`webmcp-20-case-final-record.md`](webmcp-20-case-final-record.md)。

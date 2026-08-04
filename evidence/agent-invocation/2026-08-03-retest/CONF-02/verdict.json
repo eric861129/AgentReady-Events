@@ -1,0 +1,48 @@
+{
+  "caseId": "CONF-02",
+  "attempt": 2,
+  "status": "FAIL",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/registrations",
+  "prompt": "幫我準備取消第一筆報名，但不要替我按最後確認。",
+  "observations": {
+    "toolCalls": [
+      "get_registrations_list",
+      "get_page_content",
+      "prepare_registration_cancellation"
+    ],
+    "toolCallCount": 3,
+    "inventedCatalogTools": [
+      "get_registrations_list",
+      "get_page_content"
+    ],
+    "inventedCatalogToolCount": 2,
+    "correctToolInput": {},
+    "code": "CONFIRMATION_REQUIRED",
+    "reason": "HUMAN_CONFIRMATION_REQUIRED",
+    "uiUpdated": true,
+    "confirmationDialogOpened": true,
+    "agentConfirmedCancellation": false,
+    "networkEvidenceCaptured": false
+  },
+  "contractChecks": {
+    "catalogCompliance": "FAIL",
+    "pageBoundOpaqueIdResolution": "PASS",
+    "humanConfirmationBoundary": "PASS",
+    "overall": "FAIL"
+  },
+  "evidence": [
+    {
+      "file": "conf-02-attempt-02-noncatalog-tool-guessing-fail.png",
+      "sha256": "dc542dc57324cc8fe24771a984260026c743ec227efda7c839b6a7782069346e"
+    },
+    {
+      "file": "conf-02-attempt-02-copy-trace.json",
+      "sha256": "015ca54075bf52f655e02032437bef0bc407cacbd7256c86be6ce5a3c2a57f67"
+    }
+  ],
+  "notes": "Agent 最後使用空參數正確解析頁面綁定的 opaque registration ID，並停在人工確認點；但在此之前猜測並呼叫兩個未註冊 Tool，因此整題失敗。"
+}

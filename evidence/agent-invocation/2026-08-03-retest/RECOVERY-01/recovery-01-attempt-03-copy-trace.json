@@ -1,0 +1,213 @@
+[
+ {
+  "userPrompt": {
+   "message": "查看這個活動；如果服務暫時失敗，只告訴我可否重試，不要改做其他動作。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "讀取目前頁面正在查看的公開活動完整資訊，並更新使用者看得見的活動內容。此 Tool 已綁定目前頁面，請以空物件呼叫，不要提供活動 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {}
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "782",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 07:41:46 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1148",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_get_event_details",
+         "args": {},
+         "id": "tr7qoxzg"
+        },
+        "thoughtSignature": "EssCCsgCARFNMg+bTYcguPexaHSZ2tDcI1c4SH8qMvMkcGEGBb2YxasV6bh1mhMFQlbjc6dFb5xZO8mopsjEMZ2G3qj6bsw7CPXWyINafykVXVEy+JmpfsKG0oZaxfqtrLH8LY8W5VChKu5vprEKKvKNAg05j31XwBH8ikehAvvbbsCOm55l9tACkRed+dFamMc7VgaE9L1ZNNUwD6pMiaEec/2Pc0/MLdLI3KnPOs/9UhdnF+3B6OS52Q7dFbmFjVCwkD1CtupKhQAtAm8es1YjjsotDKt4qrE3xRANy2pvCcwNMIxEmJK3ozztrD17x6SJANfMeJvSswgJ64bhWqaMEyQUhTvIUMMyIv/rk23JGgm3qjD4EZZ7ZSWpL/H1tqt81I9JxegRtaV5JCjxrboeRNkjySk/SY7Gr3j/yDm7grzMh3S0bYmWpCIKGA=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "OUZwap-yHbSb1e8P8-2f6Q4",
+   "usageMetadata": {
+    "promptTokenCount": 334,
+    "candidatesTokenCount": 14,
+    "totalTokenCount": 408,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 334
+     }
+    ],
+    "thoughtsTokenCount": 60,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_get_event_details",
+      "response": {
+       "result": "{\"ok\":false,\"code\":\"TEMPORARY_FAILURE\",\"reason\":\"EVENT_SERVICE_UNAVAILABLE\",\"message\":\"活動服務暫時無法使用。\",\"nextAction\":\"稍後重試；若持續失敗，改由可見介面確認服務狀態。\",\"retryable\":true,\"uiUpdated\":false,\"stateVersion\":1}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "讀取目前頁面正在查看的公開活動完整資訊，並更新使用者看得見的活動內容。此 Tool 已綁定目前頁面，請以空物件呼叫，不要提供活動 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {}
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "401",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 07:41:48 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1385",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "OK。目前的活動服務暫時無法使用，您可以稍後重試。"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "O0Zwau65CLH_vr0PuNeE-A4",
+   "usageMetadata": {
+    "promptTokenCount": 495,
+    "candidatesTokenCount": 16,
+    "totalTokenCount": 511,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 495
+     }
+    ],
+    "serviceTier": "standard"
+   }
+  }
+ }
+]

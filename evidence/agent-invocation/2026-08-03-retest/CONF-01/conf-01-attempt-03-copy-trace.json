@@ -1,0 +1,206 @@
+[
+ {
+  "userPrompt": {
+   "message": "請用示範資料準備報名：姓名「測試讀者」，Email「reader@example.com」。最後送出前一定要讓我自己確認。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_event_registration",
+        "description": "替目前公開活動準備使用者可見的報名資料，並停在最終人類確認之前。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "attendeeName": {
+           "type": "string",
+           "description": "報名者顯示姓名。"
+          },
+          "email": {
+           "type": "string",
+           "description": "只用於本次 Demo validation，不保存也不回傳。"
+          }
+         },
+         "required": [
+          "attendeeName",
+          "email"
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1178",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 07:45:40 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1824",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_prepare_event_registration",
+         "args": {
+          "email": "reader@example.com",
+          "attendeeName": "測試讀者"
+         },
+         "id": "d0npo5de"
+        },
+        "thoughtSignature": "Ev0ECvoEARFNMg+UdLcYiq9kd56Vtgw2wkxk5GbLRf5q7snu5QdXoWlC0zIDIONyTep0thVtYqcb0ltAKeFZGJzrPkR1OC68Cp9r6nvhhmcsBg6wthr6Pqg55rH4Jt7PGnaacY18Yo5esX8UkVRTL92HIoAAUlH8eeVwdCyMcCS47f+DdA2kiWNDRIU3xt30BCD7vkYndF/OuvB++Z0gGcnEuhkTAm3ZsITqMf/xINNMsyah8cQWeOQfGHPeIEgiRp9DJuNmEDs6ct/wh7/0mXxk8M+D+BXIElZ9R6Xo4hBxsONKnoN8yXlyPLfXKaPTi2MI1Vkf67YYpJc+I+Y3WBsb5EJc+GlgVxqfZSMR0lpQgCH9DBc2PF0DgXvVjdxsw2mzux11P7mwTPdxL3JOfilkzDs4vr2RsMp9HebrpU/wuLzGJy02cdMlHruMXlynJTMbEpo7eF5Go/sLGq556ztyBgLYhwQeGMkJtcWyKHd1BH9v9ZtGeK9kk8PDGafuYR1W0JA49LKi+slnt9Y9kDxarO4H0mEvHZVRDQkjXv7FQrbvdoY9LKw/Xtcntxq46w86DcHW8n0kqV9jlGxsitdwCIpEKPgMgqvv9x4oEegWiTzYEXmZXj1N2I1VDFBFQhUXlmyW/N7UcoshN21itsvejXGIRpaP/0vMlkgkjyGWnvc3K9Tlo3FehV8RyXZajj+BUlg6SFma6dVfSg0yV3fsKeJ5no0UuffkOryINVcLzvp39bfSNoZ38+KwZtnwtu2USx4DDuCmYoFLrDO/6z2nZhFysl1KSuBQb8ghbsGnKvmxuiHiLFMyNEc8W9t94t2P9bFxcMhPa8u250Oq4w=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "IkdwarqhK6KVvr0PwNCA4Q4",
+   "usageMetadata": {
+    "promptTokenCount": 252,
+    "candidatesTokenCount": 34,
+    "totalTokenCount": 435,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 252
+     }
+    ],
+    "thoughtsTokenCount": 149,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_prepare_event_registration",
+      "response": {
+       "result": "{\"ok\":false,\"code\":\"CONFIRMATION_REQUIRED\",\"retryable\":false,\"eventId\":\"evt-webmcp-intro\"}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_event_registration",
+        "description": "替目前公開活動準備使用者可見的報名資料，並停在最終人類確認之前。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "attendeeName": {
+           "type": "string",
+           "description": "報名者顯示姓名。"
+          },
+          "email": {
+           "type": "string",
+           "description": "只用於本次 Demo validation，不保存也不回傳。"
+          }
+         },
+         "required": [
+          "attendeeName",
+          "email"
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "2453",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 07:45:44 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=3819",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "已為您準備好報名資料：\n\n*   **姓名：** 測試讀者\n*   **Email：** reader@example.com\n*   **活動 ID：** evt-webmcp-intro\n\n目前系統已停在確認畫面，**請您檢查頁面上的資料是否正確，並手動點擊送出以完成報名。**",
+        "thoughtSignature": "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"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "JUdwauXsA6Sxvr0PxYjAgA8",
+   "usageMetadata": {
+    "promptTokenCount": 479,
+    "candidatesTokenCount": 79,
+    "totalTokenCount": 939,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 479
+     }
+    ],
+    "thoughtsTokenCount": 381,
+    "serviceTier": "standard"
+   }
+  }
+ }
+]

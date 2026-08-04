@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-02",
+  "updatedAt": "2026-08-03",
   "entries": [
     {
       "id": "historical-e3",
@@ -56,8 +56,26 @@
       "workflowRun": "30733952974",
       "imageDigest": "sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052",
       "evidence": ["E2", "E3"],
-      "status": "current-validation",
-      "claim": "Fixed public revision for the 20-case native Inspector rerun. Production smoke passed and the controlled current-session expiry fixture is enabled only for RECOVERY-02. No current-revision E4 case is claimed until its raw Inspector trace and screenshot are saved."
+      "status": "validation-closed",
+      "evaluationStatus": "closed_without_case_execution",
+      "executedCases": 0,
+      "totalCases": 20,
+      "claim": "Fixed public revision originally prepared for the 20-case native Inspector rerun. Production smoke passed and the controlled current-session expiry fixture is enabled only for RECOVERY-02. The campaign closed without per-case execution, so no current-revision E4, 20/20 or E5 claim is made."
+    },
+    {
+      "id": "webmcp-13-case-single-retest-release",
+      "commit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+      "revision": "ca-agentready-events--0000008",
+      "workflowRun": "30792961501",
+      "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+      "evidence": ["E2", "E3", "E4-per-case"],
+      "status": "current-retest-complete",
+      "evaluationStatus": "13_of_13_executed_once",
+      "executedCases": 13,
+      "passedCases": 8,
+      "failedCases": 5,
+      "plannedCases": 13,
+      "claim": "Thirteen selected Inspector cases were each executed once against this exact public revision. Eight passed and five failed. The result does not support a 20/20, cross-environment reliability or E5 claim."
     }
   ]
 }

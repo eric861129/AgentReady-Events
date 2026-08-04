@@ -1,4 +1,8 @@
-# WebMCP 20 題固定 revision 執行手冊
+# WebMCP 20 題固定 revision 執行手冊（封存）
+
+> 2026-08-02 決策：停止追加 Inspector 複測。本文件保留原定 protocol，供讀者理解
+> 題目與證據要求；不是仍待執行的工作清單。本批次最終為 `0/20 executed`，逐題結論
+> 見 [`webmcp-20-case-final-record.md`](webmcp-20-case-final-record.md)。
 
 > 執行批次：`2026-08-02-validation`
 > 公開網址：`https://ca-agentready-events.jollyfield-623e719e.eastasia.azurecontainerapps.io`

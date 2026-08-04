@@ -1,0 +1,51 @@
+{
+  "caseId": "ORD-01",
+  "attempt": 1,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/events",
+  "prompt": "找出台北免費入門活動，再告訴我第一個活動的完整資訊。",
+  "observations": {
+    "toolCalls": [
+      "search_events",
+      "get_event_details"
+    ],
+    "toolCallCount": 2,
+    "searchInput": {
+      "query": "",
+      "location": "taipei",
+      "price": "free",
+      "level": "beginner"
+    },
+    "searchResultEventId": "evt-webmcp-intro",
+    "detailInput": {
+      "event_id": "evt-webmcp-intro"
+    },
+    "opaqueIdPreserved": true,
+    "inventedCatalogTool": false,
+    "mutationToolCalled": false,
+    "remainingCapacityObserved": 5
+  },
+  "contractChecks": {
+    "toolOrder": "PASS",
+    "argumentPreservation": "PASS",
+    "opaqueIdHandoff": "PASS",
+    "catalogCompliance": "PASS",
+    "readOnlyBoundary": "PASS",
+    "overall": "PASS"
+  },
+  "evidence": [
+    {
+      "file": "ord-01-attempt-01-search-then-details-pass.png",
+      "sha256": "8bd065e4b73615fabed17372529800d05992639ee8cba8b3c9ffa872ea6fe689"
+    },
+    {
+      "file": "ord-01-attempt-01-copy-trace.json",
+      "sha256": "cc3e428d6dadb306417eac7b1d950c04ecf08b139cec895c7c3146d6d6502fe3"
+    }
+  ],
+  "notes": "兩個 Tool 依序執行並沿用搜尋結果的原始 event ID。剩餘名額 5 是同 revision 前置測試留下的共享 inventory 狀態，不影響本題順序判定。"
+}

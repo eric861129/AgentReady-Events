@@ -1,0 +1,908 @@
+[
+ {
+  "userPrompt": {
+   "message": "找出台北免費入門活動，查看第一個活動，然後替我收藏。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "使用 search_events 結果提供的不透明活動 ID，直接讀取該公開活動的完整資訊並顯示在目前頁面。不需要先切換頁面或呼叫其他頁面讀取 Tool；不得自行產生 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 64,
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "search_events 結果提供的不透明活動 ID；不得自行產生。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_search_events",
+        "description": "只在使用者要搜尋目前公開活動時，依關鍵字、地點、費用與程度執行搜尋，並更新可見列表。必須保留使用者提供的全部條件；結果為 0 時不得自行放寬或重試其他條件，應先詢問使用者。每筆結果都提供本站相對 URL 與不透明 ID，不得自行推測網域、路徑或 ID。若使用者只詢問一般知識、系列篇數，或明確要求不要搜尋活動，請直接回答，不要執行任何網站 Tool。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "query": {
+           "type": "string",
+           "description": "公開活動標題或摘要中的關鍵字，最多 100 字。"
+          },
+          "location": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限地點"
+            },
+            {
+             "type": "string",
+             "const": "taipei",
+             "title": "台北"
+            },
+            {
+             "type": "string",
+             "const": "kaohsiung",
+             "title": "高雄"
+            },
+            {
+             "type": "string",
+             "const": "online",
+             "title": "線上"
+            }
+           ],
+           "enum": [
+            "",
+            "taipei",
+            "kaohsiung",
+            "online"
+           ],
+           "description": "活動地點代碼。"
+          },
+          "price": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限費用"
+            },
+            {
+             "type": "string",
+             "const": "free",
+             "title": "免費"
+            },
+            {
+             "type": "string",
+             "const": "paid",
+             "title": "付費"
+            }
+           ],
+           "enum": [
+            "",
+            "free",
+            "paid"
+           ],
+           "description": "免費或付費。"
+          },
+          "level": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限程度"
+            },
+            {
+             "type": "string",
+             "const": "beginner",
+             "title": "入門"
+            },
+            {
+             "type": "string",
+             "const": "intermediate",
+             "title": "中階"
+            },
+            {
+             "type": "string",
+             "const": "advanced",
+             "title": "進階"
+            }
+           ],
+           "enum": [
+            "",
+            "beginner",
+            "intermediate",
+            "advanced"
+           ],
+           "description": "建議參加者程度。"
+          }
+         },
+         "required": []
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1000",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:18:19 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1734",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_search_events",
+         "args": {
+          "query": "",
+          "level": "beginner",
+          "price": "free",
+          "location": "taipei"
+         },
+         "id": "0ynh5afy"
+        },
+        "thoughtSignature": "Eu4DCusDARFNMg/O9Bmz7BjS09TcdFRl/JmX9v1Ftxoe3VIG9Q9rttN9llohvDC3ksKjVKwppd2nLWZQMGyXAjFyfbNOjAMbztQkgeSz8faHaVVDkuP1iDDhHJJ7mmdULX0HytnMwfXcj/tjvWlexYOA3ose/OaL84OTghx2jrfUhj/W2AExv9bro3vLWtsPp9+Wv1NInaw6YiAZ9y1cGtCYPhYuX9b/+cCji3E11FVgZduD5MMzj7yGMp+3c/LCZ77gG90a/f0mbLUfN228o5SodDXbGp+l+xThca4R1RMPiAA0sfD9tGI82W/zODHODsBMb/ao/Zr8aHyzm4kN962ev6gIa7Pn61AjD6eHVqOjKMeTWtckLdiCtYy3US/TtsrfAh1l6AmUsfz4L552UIfI/UYs8ubCHkuUvIn5QNKQsBAkTuGzp9gm+t41L+XFdigkD6VFfNPurM8wrfrcdq4mAN0BsyCyqNDAHntOAPEwKWe2RFf346YMp8TQE49LRJ5Lg416zDDcLhzZqUBOWR5cnE0N2Q10TB1ddxQ3/zuCAs3jF6P2eB7FyNxPPn/33TYuB4wuyFNMobMSnQ7FQ9Hd6zbRq9xcvD6hR1SQuvT84ca2C6qBSZ23CjJcqhMfwtClB5JtAsFSkIuKsjA2CzQ="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "yU5waqnVHMzV1e8P6LCW0A8",
+   "usageMetadata": {
+    "promptTokenCount": 683,
+    "candidatesTokenCount": 37,
+    "totalTokenCount": 844,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 683
+     }
+    ],
+    "thoughtsTokenCount": 124,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_search_events",
+      "response": {
+       "result": "{\"ok\":true,\"code\":\"SUCCESS\",\"count\":1,\"events\":[{\"id\":\"evt-webmcp-intro\",\"url\":\"/events/evt-webmcp-intro\",\"title\":\"WebMCP 入門工作坊\",\"summary\":\"從語意 HTML 到第一個網站 Tool。\",\"startsAt\":\"2027-01-23T10:00:00+08:00\",\"location\":\"taipei\",\"price\":\"free\",\"level\":\"beginner\"}],\"appliedFilters\":{\"location\":\"taipei\",\"price\":\"free\",\"level\":\"beginner\"},\"constraintsRelaxed\":false,\"requiresUserDecision\":false,\"nextAction\":\"若使用者要查看詳情，請將 events 中的原始 id 傳給 get_event_details，不得自行產生 ID。\"}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "使用 search_events 結果提供的不透明活動 ID，直接讀取該公開活動的完整資訊並顯示在目前頁面。不需要先切換頁面或呼叫其他頁面讀取 Tool；不得自行產生 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 64,
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "search_events 結果提供的不透明活動 ID；不得自行產生。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_search_events",
+        "description": "只在使用者要搜尋目前公開活動時，依關鍵字、地點、費用與程度執行搜尋，並更新可見列表。必須保留使用者提供的全部條件；結果為 0 時不得自行放寬或重試其他條件，應先詢問使用者。每筆結果都提供本站相對 URL 與不透明 ID，不得自行推測網域、路徑或 ID。若使用者只詢問一般知識、系列篇數，或明確要求不要搜尋活動，請直接回答，不要執行任何網站 Tool。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "query": {
+           "type": "string",
+           "description": "公開活動標題或摘要中的關鍵字，最多 100 字。"
+          },
+          "location": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限地點"
+            },
+            {
+             "type": "string",
+             "const": "taipei",
+             "title": "台北"
+            },
+            {
+             "type": "string",
+             "const": "kaohsiung",
+             "title": "高雄"
+            },
+            {
+             "type": "string",
+             "const": "online",
+             "title": "線上"
+            }
+           ],
+           "enum": [
+            "",
+            "taipei",
+            "kaohsiung",
+            "online"
+           ],
+           "description": "活動地點代碼。"
+          },
+          "price": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限費用"
+            },
+            {
+             "type": "string",
+             "const": "free",
+             "title": "免費"
+            },
+            {
+             "type": "string",
+             "const": "paid",
+             "title": "付費"
+            }
+           ],
+           "enum": [
+            "",
+            "free",
+            "paid"
+           ],
+           "description": "免費或付費。"
+          },
+          "level": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限程度"
+            },
+            {
+             "type": "string",
+             "const": "beginner",
+             "title": "入門"
+            },
+            {
+             "type": "string",
+             "const": "intermediate",
+             "title": "中階"
+            },
+            {
+             "type": "string",
+             "const": "advanced",
+             "title": "進階"
+            }
+           ],
+           "enum": [
+            "",
+            "beginner",
+            "intermediate",
+            "advanced"
+           ],
+           "description": "建議參加者程度。"
+          }
+         },
+         "required": []
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "693",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:18:21 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1376",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_get_event_details",
+         "args": {
+          "event_id": "evt-webmcp-intro"
+         },
+         "id": "q3v0a7ln"
+        },
+        "thoughtSignature": "EuUBCuIBARFNMg9Ggp1jDS4gsWyG1XBbHSnBmP0gwFAuI5g4qduSH+fx93yjP74cLZO+SmPadRBGBY//hnX2Gni9bcjq9NErc14XaXOc/OmJAoue1fCRpbrJlZ7SJwlWBhhHz75YzVMky7YwsTIw87Qzxk8agWyw8DtF8g9AehkEhKwKh7fyyxUzKwr+HlrFOm6mD/KOIwKAn+o8nXKd7AbTDyoF110hXhGwWiVZFXfb1dS5nuPJqpu+o8F+GP2ysL4++jj7gHc+tiguUE/mPyD7npxi+vnFTVRn8O12/NXOu3CVshR0aw=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "y05wat7ROdb31e8P4f2P6Q4",
+   "usageMetadata": {
+    "promptTokenCount": 1021,
+    "candidatesTokenCount": 27,
+    "totalTokenCount": 1099,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 1021
+     }
+    ],
+    "thoughtsTokenCount": 51,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_get_event_details",
+      "response": {
+       "result": "{\"ok\":true,\"code\":\"SUCCESS\",\"data\":{\"event\":{\"id\":\"evt-webmcp-intro\",\"title\":\"WebMCP 入門工作坊\",\"summary\":\"從語意 HTML 到第一個網站 Tool。\",\"startsAt\":\"2027-01-23T10:00:00+08:00\",\"endsAt\":\"2027-01-23T12:00:00+08:00\",\"location\":\"taipei\",\"venue\":\"台北前端共學空間\",\"price\":\"free\",\"level\":\"beginner\",\"remainingCapacity\":5,\"registrationDeadline\":\"2027-01-21T23:59:59+08:00\",\"state\":\"open\"}},\"uiUpdated\":true,\"stateVersion\":3}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "使用 search_events 結果提供的不透明活動 ID，直接讀取該公開活動的完整資訊並顯示在目前頁面。不需要先切換頁面或呼叫其他頁面讀取 Tool；不得自行產生 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 64,
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "search_events 結果提供的不透明活動 ID；不得自行產生。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_search_events",
+        "description": "只在使用者要搜尋目前公開活動時，依關鍵字、地點、費用與程度執行搜尋，並更新可見列表。必須保留使用者提供的全部條件；結果為 0 時不得自行放寬或重試其他條件，應先詢問使用者。每筆結果都提供本站相對 URL 與不透明 ID，不得自行推測網域、路徑或 ID。若使用者只詢問一般知識、系列篇數，或明確要求不要搜尋活動，請直接回答，不要執行任何網站 Tool。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "query": {
+           "type": "string",
+           "description": "公開活動標題或摘要中的關鍵字，最多 100 字。"
+          },
+          "location": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限地點"
+            },
+            {
+             "type": "string",
+             "const": "taipei",
+             "title": "台北"
+            },
+            {
+             "type": "string",
+             "const": "kaohsiung",
+             "title": "高雄"
+            },
+            {
+             "type": "string",
+             "const": "online",
+             "title": "線上"
+            }
+           ],
+           "enum": [
+            "",
+            "taipei",
+            "kaohsiung",
+            "online"
+           ],
+           "description": "活動地點代碼。"
+          },
+          "price": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限費用"
+            },
+            {
+             "type": "string",
+             "const": "free",
+             "title": "免費"
+            },
+            {
+             "type": "string",
+             "const": "paid",
+             "title": "付費"
+            }
+           ],
+           "enum": [
+            "",
+            "free",
+            "paid"
+           ],
+           "description": "免費或付費。"
+          },
+          "level": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限程度"
+            },
+            {
+             "type": "string",
+             "const": "beginner",
+             "title": "入門"
+            },
+            {
+             "type": "string",
+             "const": "intermediate",
+             "title": "中階"
+            },
+            {
+             "type": "string",
+             "const": "advanced",
+             "title": "進階"
+            }
+           ],
+           "enum": [
+            "",
+            "beginner",
+            "intermediate",
+            "advanced"
+           ],
+           "description": "建議參加者程度。"
+          }
+         },
+         "required": []
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "604",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:18:22 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1265",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_save_event",
+         "args": {
+          "event_id": "evt-webmcp-intro"
+         },
+         "id": "hp4uby3a"
+        },
+        "thoughtSignature": "EpQBCpEBARFNMg8BUZfYu0vp5rVkyOIBy2Y/W6xgiXi5/rcvApnj6D4Ixu2uTy6ACLJlMP6gf61cjxYHIJeBS9FDVPYbiLYbdxT5IUnznvlEHjwPgf5dqUYynCKGkjaV0/dSZ/H/LCe3jW3RyktaNdf9j5Keo8u+IHegYLLC37U0hcrYqVVu9TOx0nJIMfBFBYExh8+ljA=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "zU5war3SK6KVvr0PwNCA4Q4",
+   "usageMetadata": {
+    "promptTokenCount": 1289,
+    "candidatesTokenCount": 25,
+    "totalTokenCount": 1343,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 1289
+     }
+    ],
+    "thoughtsTokenCount": 29,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_save_event",
+      "response": {
+       "result": "{\"ok\":true,\"code\":\"SUCCESS\",\"data\":{\"eventId\":\"evt-webmcp-intro\",\"alreadySaved\":false},\"uiUpdated\":true,\"stateVersion\":3}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Monday, August 3, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_get_event_details",
+        "description": "使用 search_events 結果提供的不透明活動 ID，直接讀取該公開活動的完整資訊並顯示在目前頁面。不需要先切換頁面或呼叫其他頁面讀取 Tool；不得自行產生 ID。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "minLength": 1,
+           "maxLength": 64,
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "search_events 結果提供的不透明活動 ID；不得自行產生。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_save_event",
+        "description": "收藏剛由 get_event_details 顯示，或目前詳情頁正在查看的公開活動。必須沿用同一個不透明活動 ID；重複收藏安全且使用者可以在可見介面 Undo。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "event_id"
+         ],
+         "properties": {
+          "event_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "get_event_details 剛成功顯示或目前詳情頁綁定的不透明活動 ID。"
+          }
+         }
+        }
+       },
+       {
+        "name": "_0_search_events",
+        "description": "只在使用者要搜尋目前公開活動時，依關鍵字、地點、費用與程度執行搜尋，並更新可見列表。必須保留使用者提供的全部條件；結果為 0 時不得自行放寬或重試其他條件，應先詢問使用者。每筆結果都提供本站相對 URL 與不透明 ID，不得自行推測網域、路徑或 ID。若使用者只詢問一般知識、系列篇數，或明確要求不要搜尋活動，請直接回答，不要執行任何網站 Tool。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "properties": {
+          "query": {
+           "type": "string",
+           "description": "公開活動標題或摘要中的關鍵字，最多 100 字。"
+          },
+          "location": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限地點"
+            },
+            {
+             "type": "string",
+             "const": "taipei",
+             "title": "台北"
+            },
+            {
+             "type": "string",
+             "const": "kaohsiung",
+             "title": "高雄"
+            },
+            {
+             "type": "string",
+             "const": "online",
+             "title": "線上"
+            }
+           ],
+           "enum": [
+            "",
+            "taipei",
+            "kaohsiung",
+            "online"
+           ],
+           "description": "活動地點代碼。"
+          },
+          "price": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限費用"
+            },
+            {
+             "type": "string",
+             "const": "free",
+             "title": "免費"
+            },
+            {
+             "type": "string",
+             "const": "paid",
+             "title": "付費"
+            }
+           ],
+           "enum": [
+            "",
+            "free",
+            "paid"
+           ],
+           "description": "免費或付費。"
+          },
+          "level": {
+           "type": "string",
+           "anyOf": [
+            {
+             "type": "string",
+             "const": "",
+             "title": "不限程度"
+            },
+            {
+             "type": "string",
+             "const": "beginner",
+             "title": "入門"
+            },
+            {
+             "type": "string",
+             "const": "intermediate",
+             "title": "中階"
+            },
+            {
+             "type": "string",
+             "const": "advanced",
+             "title": "進階"
+            }
+           ],
+           "enum": [
+            "",
+            "beginner",
+            "intermediate",
+            "advanced"
+           ],
+           "description": "建議參加者程度。"
+          }
+         },
+         "required": []
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "435",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Mon, 03 Aug 2026 08:18:24 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1331",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "已為您找到台北的免費入門活動「WebMCP 入門工作坊」，並已查看詳情且完成收藏。"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "z05watvaIMjmosUPpOyR0AI",
+   "usageMetadata": {
+    "promptTokenCount": 1393,
+    "candidatesTokenCount": 26,
+    "totalTokenCount": 1419,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 1393
+     }
+    ],
+    "serviceTier": "standard"
+   }
+  }
+ }
+]

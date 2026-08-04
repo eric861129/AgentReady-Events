@@ -1,0 +1,42 @@
+{
+  "caseId": "RECOVERY-01",
+  "attempt": 3,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "prompt": "查看這個活動；如果服務暫時失敗，只告訴我可否重試，不要改做其他動作。",
+  "faultInjection": {
+    "method": "Chrome DevTools request blocking",
+    "target": "/api/events/evt-webmcp-intro"
+  },
+  "observations": {
+    "toolCalls": [
+      "get_event_details"
+    ],
+    "toolCallCount": 1,
+    "input": {},
+    "code": "TEMPORARY_FAILURE",
+    "reason": "EVENT_SERVICE_UNAVAILABLE",
+    "retryable": true,
+    "uiUpdated": false,
+    "calledAlternativeTool": false,
+    "agentAnswer": "OK。目前的活動服務暫時無法使用，您可以稍後重試。"
+  },
+  "evidence": [
+    {
+      "file": "recovery-01-attempt-03-request-blocking-setup.png",
+      "sha256": "c0b50e8ea193717a131e4bb8f8391883cbc85c14de1f3e2f502d6e473b2fa6b4"
+    },
+    {
+      "file": "recovery-01-attempt-03-temporary-failure-pass.png",
+      "sha256": "260286f7f417c79099646a45a5ddce22a213c3eb93d807a6271c6ad458950d93"
+    },
+    {
+      "file": "recovery-01-attempt-03-copy-trace.json",
+      "sha256": "05181fb781946e3be9d65eaca0091326679e63d01eac4039849e1b9af7d8502f"
+    }
+  ],
+  "notes": "單次重測已取得結構化暫時失敗與正確 Agent 回應；依執行規則不再複測。"
+}

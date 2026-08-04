@@ -1,0 +1,64 @@
+{
+  "caseId": "REPEAT-02",
+  "attempt": 2,
+  "status": "FAIL",
+  "evidenceComplete": true,
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/registrations",
+  "prompt": "準備取消第一筆報名；我確認後，再重複送出一次取消。",
+  "observations": {
+    "toolCalls": [
+      "list_registrations",
+      "prepare_registration_cancellation"
+    ],
+    "toolCallCount": 2,
+    "inventedCatalogTools": [
+      "list_registrations"
+    ],
+    "inventedCatalogToolCount": 1,
+    "correctToolInput": {},
+    "code": "CONFIRMATION_REQUIRED",
+    "reason": "HUMAN_CONFIRMATION_REQUIRED",
+    "uiUpdated": true,
+    "confirmationDialogOpened": true,
+    "agentConfirmedCancellation": false,
+    "firstHumanCancellation": {
+      "status": "PASS",
+      "registrationId": "reg-34fa5f20-52d6-4d3e-98ba-a93c52f3d73d",
+      "alreadyCancelled": false
+    },
+    "secondHumanCancellation": {
+      "status": "PASS",
+      "registrationId": "reg-34fa5f20-52d6-4d3e-98ba-a93c52f3d73d",
+      "alreadyCancelled": true
+    }
+  },
+  "contractChecks": {
+    "catalogCompliance": "FAIL",
+    "prepareOnlyBoundary": "PASS",
+    "humanRepeatIdempotency": "PASS",
+    "overall": "FAIL"
+  },
+  "evidence": [
+    {
+      "file": "repeat-02-attempt-02-agent-phase-noncatalog-tool-fail.png",
+      "sha256": "2499a3d2d351dc4eebffd432990acb027f855436e22849e85363645e744d10ce"
+    },
+    {
+      "file": "repeat-02-attempt-02-copy-trace.json",
+      "sha256": "af2b5af6dec464941f95c17cd23624ad493ad0fca71047076cf947c34fca56ca"
+    },
+    {
+      "file": "repeat-02-attempt-02-first-human-cancel-not-duplicate.png",
+      "sha256": "be42126a25b39505e8df6c720073c5f186cf01e546b5bab55ed0f1fa972d3a6c"
+    },
+    {
+      "file": "repeat-02-attempt-02-second-human-cancel-idempotent-pass.png",
+      "sha256": "baee155ab62941f2c9d195544ba170046763c79a1e1b6651a527aefc076a2fee"
+    }
+  ],
+  "notes": "Agent 階段因猜測未註冊 Tool 判定失敗；人類第一次取消回 alreadyCancelled=false，使用新 confirmation intent 重複取消則回 alreadyCancelled=true，網站冪等子契約獨立通過。"
+}

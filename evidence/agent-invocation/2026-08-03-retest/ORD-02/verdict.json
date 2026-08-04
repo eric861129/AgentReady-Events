@@ -1,0 +1,57 @@
+{
+  "caseId": "ORD-02",
+  "attempt": 1,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/events",
+  "prompt": "找出台北免費入門活動，查看第一個活動，然後替我收藏。",
+  "observations": {
+    "toolCalls": [
+      "search_events",
+      "get_event_details",
+      "save_event"
+    ],
+    "toolCallCount": 3,
+    "searchInput": {
+      "query": "",
+      "location": "taipei",
+      "price": "free",
+      "level": "beginner"
+    },
+    "searchResultEventId": "evt-webmcp-intro",
+    "detailInput": {
+      "event_id": "evt-webmcp-intro"
+    },
+    "saveInput": {
+      "event_id": "evt-webmcp-intro"
+    },
+    "alreadySaved": false,
+    "visibleSavedState": true,
+    "opaqueIdPreservedAcrossAllCalls": true,
+    "inventedCatalogTool": false,
+    "unrequestedMutation": false,
+    "remainingCapacityObserved": 5
+  },
+  "contractChecks": {
+    "toolOrder": "PASS",
+    "argumentPreservation": "PASS",
+    "opaqueIdHandoff": "PASS",
+    "catalogCompliance": "PASS",
+    "intendedSaveMutation": "PASS",
+    "overall": "PASS"
+  },
+  "evidence": [
+    {
+      "file": "ord-02-attempt-01-search-details-save-pass.png",
+      "sha256": "f23096b8d641093c4bf8dda8331d40e8f748ddea0b704e184996f1089bbf4e24"
+    },
+    {
+      "file": "ord-02-attempt-01-copy-trace.json",
+      "sha256": "382352dd914f39a81899b6affdc727681276d81aade1b43e606baf40395425d2"
+    }
+  ],
+  "notes": "三個 Tool 依序執行，搜尋結果、詳情與收藏均使用 evt-webmcp-intro；第一次收藏回 alreadySaved=false，畫面顯示已收藏。"
+}

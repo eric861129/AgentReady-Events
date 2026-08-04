@@ -1,0 +1,39 @@
+{
+  "caseId": "ARG-02",
+  "attempt": 2,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "prompt": "搜尋關鍵字 WebMCP；地點與費用都不要限制。",
+  "observations": {
+    "toolCalls": [
+      "search_events"
+    ],
+    "toolCallCount": 1,
+    "input": {
+      "query": "WebMCP",
+      "location": "",
+      "price": ""
+    },
+    "inventedNonEmptyLocation": false,
+    "inventedNonEmptyPrice": false,
+    "inventedLevel": false,
+    "count": 1,
+    "firstEventId": "evt-webmcp-intro",
+    "calledDetailTool": false,
+    "calledSaveTool": false
+  },
+  "evidence": [
+    {
+      "file": "arg-02-attempt-02-keyword-only-pass.png",
+      "sha256": "9f4ec63e7d5a29fcda37bf606a783ca61e076e244488a4c637999e95f4d92a16"
+    },
+    {
+      "file": "arg-02-attempt-02-copy-trace.json",
+      "sha256": "0cae1c294eeb0c16bcba3346c07ee50a17d4d4c427442308f1ba2e7cc810375d"
+    }
+  ],
+  "notes": "原本缺少可比對的同版本 raw trace；本判定只適用於 revision 0000008 的單次重測。"
+}

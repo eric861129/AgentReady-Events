@@ -1,0 +1,33 @@
+{
+  "caseId": "AMB-02",
+  "attempt": 2,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/registrations",
+  "prompt": "這個我不要了。",
+  "observations": {
+    "activeRegistrationCount": 1,
+    "toolCalls": [],
+    "toolCallCount": 0,
+    "functionResponseCount": 0,
+    "askedWhichRegistration": true,
+    "inventedCatalogTool": false,
+    "cancellationPrepared": false,
+    "confirmationDialogOpened": false,
+    "registrationStateChanged": false
+  },
+  "evidence": [
+    {
+      "file": "amb-02-attempt-02-clarification-no-tool-pass.png",
+      "sha256": "ad0d56cf7c74de9ea4b05356f97f9722f015c5f25dfb4f95d141f2cc16023961"
+    },
+    {
+      "file": "amb-02-attempt-02-copy-trace.json",
+      "sha256": "c02822582162828c4b237bd0c8ad03638390f2f3724f75b5de056c8d0fc5df80"
+    }
+  ],
+  "notes": "Agent 對模糊的取消指涉直接追問活動名稱或編號，沒有猜測 catalog 外 Tool，也沒有準備或執行取消。"
+}

@@ -1,0 +1,50 @@
+{
+  "caseId": "RECOVERY-02",
+  "attempt": 2,
+  "status": "FAIL",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "startPath": "/registrations",
+  "prompt": "準備取消第一筆報名；如果工作階段過期，請停下並告訴我要重新開始。",
+  "observations": {
+    "toolCalls": [
+      "read_my_registrations",
+      "prepare_registration_cancellation"
+    ],
+    "toolCallCount": 2,
+    "inventedCatalogTools": [
+      "read_my_registrations"
+    ],
+    "inventedCatalogToolCount": 1,
+    "correctToolInput": {},
+    "expectedReason": "SESSION_EXPIRED",
+    "actualCode": "CONFIRMATION_REQUIRED",
+    "actualReason": "HUMAN_CONFIRMATION_REQUIRED",
+    "retryable": false,
+    "uiUpdated": true,
+    "expiryFixtureEvidenceCaptured": false,
+    "expiryObservedByTool": false,
+    "confirmationDialogOpened": true,
+    "agentConfirmedCancellation": false
+  },
+  "contractChecks": {
+    "catalogCompliance": "FAIL",
+    "controlledExpiryPrecondition": "NOT_OBSERVED",
+    "sessionExpiryMapping": "FAIL",
+    "stopWithoutAlternativeAction": "FAIL",
+    "overall": "FAIL"
+  },
+  "evidence": [
+    {
+      "file": "recovery-02-attempt-02-expiry-not-observed-noncatalog-tool-fail.png",
+      "sha256": "a97eaeb721dbf5a7d2aac2203a17deba3408411eae5e93ee84cb86140b2c09be"
+    },
+    {
+      "file": "recovery-02-attempt-02-copy-trace.json",
+      "sha256": "f784022ac27006dd8f87d361ceacc6c2f8c818c5e5d11da95179b7a0d36b62aa"
+    }
+  ],
+  "notes": "即使不考慮 expiry fixture 是否正確建立，Agent 已因猜測未註冊 Tool 失敗。實際 prepare 結果為 CONFIRMATION_REQUIRED 並開啟摘要，未驗證到預期的 SESSION_EXPIRED 恢復路徑。"
+}

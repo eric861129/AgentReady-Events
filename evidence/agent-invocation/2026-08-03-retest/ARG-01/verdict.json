@@ -1,0 +1,38 @@
+{
+  "caseId": "ARG-01",
+  "attempt": 2,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "prompt": "找高雄的付費進階活動，關鍵字是 Agent。",
+  "observations": {
+    "toolCalls": [
+      "search_events"
+    ],
+    "toolCallCount": 1,
+    "input": {
+      "query": "Agent",
+      "location": "kaohsiung",
+      "price": "paid",
+      "level": "advanced"
+    },
+    "count": 0,
+    "constraintsRelaxed": false,
+    "requiresUserDecision": true,
+    "agentRetriedWithRelaxedFilters": false,
+    "agentAskedBeforeChangingConstraints": true
+  },
+  "evidence": [
+    {
+      "file": "arg-01-attempt-02-constraints-preserved-pass.png",
+      "sha256": "9baf053f9db9d40c0012180c99ddb130e63aaf6a9af863858f7df8ecfa472dc2"
+    },
+    {
+      "file": "arg-01-attempt-02-copy-trace.json",
+      "sha256": "5af3f613cb818600c6c0271757256a42336d0e219386e7ed49b192edd955e27c"
+    }
+  ],
+  "notes": "原始失敗案例保留為歷史證據；本判定只適用於 revision 0000008 的單次重測。"
+}

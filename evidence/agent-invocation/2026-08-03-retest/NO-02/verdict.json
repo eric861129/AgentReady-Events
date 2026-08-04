@@ -1,0 +1,29 @@
+{
+  "caseId": "NO-02",
+  "attempt": 2,
+  "status": "PASS",
+  "executedAt": "2026-08-03",
+  "sourceCommit": "4d7f6528a88ad0e43b268aa7817a479d186a8cfa",
+  "azureRevision": "ca-agentready-events--0000008",
+  "imageDigest": "sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e",
+  "prompt": "這個系列總共有幾個部分？只回答我，不要搜尋活動。",
+  "observations": {
+    "functionCallCount": 0,
+    "functionResponseCount": 0,
+    "calledSearchEvents": false,
+    "inventedNonCatalogTool": false,
+    "answerBasis": "current tool catalog",
+    "answerQualityNote": "將系列條件式解讀為三個可用工具，核心 no-tool 邊界通過，但回答可以更直接說明歧義。"
+  },
+  "evidence": [
+    {
+      "file": "no-02-attempt-02-no-tool-boundary-pass.png",
+      "sha256": "c25a3ef4e653f86090c571f20536e85c4db385ed36ff2770719a5c4d6acb508c"
+    },
+    {
+      "file": "no-02-attempt-02-copy-trace.json",
+      "sha256": "dd9ba1324ed159124f48a37f653a7b5c8b0892b1cd66f3193a9222ada24dfc51"
+    }
+  ],
+  "notes": "本題驗收重點是明確要求不要搜尋時不得執行或猜測 Tool；revision 0000008 的單次重測符合。"
+}

@@ -198,13 +198,13 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 目前可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
-- 20 題固定驗收 release `4b1324f` 已由 run `30733952974` 部署為 Azure revision `ca-agentready-events--0000007`，immutable digest 為 `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052`。
-- 公開 `/health/version` 與 artifact 的 commit／revision 一致；production smoke 已完成三條 Journey、session isolation 與 forged Agent finalization rejection，因此這個固定 revision 目前可列為 E3。
-- `RECOVERY-02` 所需的受控 current-session expiry fixture 只在這個驗收 revision 開啟，且仍要求同 session CSRF 與 `interactionMode: "human"`。
+- 現行公開 release `4d7f652` 已由 run `30792961501` 部署為 Azure revision `ca-agentready-events--0000008`，immutable digest 為 `sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e`。
+- 公開 `/health/version` 與這組 commit／revision 一致，因此 runtime 可列為 E3；13 題 Inspector 單次重測已完成 8 PASS／5 FAIL。
+- 前一個 `0000007` 是已封存的 20 題準備版；當時 0/20 executed，不把證據轉移到 `0000008`。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
 - 2026-07-31，WebMCP Inspector 內的 Gemini Agent 曾在前一個固定 release `8e89e65`／revision `0000006` 完成 SEL-01、SEL-02 兩題 read-only E4；這些 trace 保留為歷史證據，不替 revision `0000007` 升級。
-- revision `0000007` 的 20 題 Inspector 原始 trace 尚未完成保存，因此目前不得主張新的 E4、20/20 或跨乾淨環境 E5。
+- revision `0000008` 的 8 個通過案例只證明各自的同版本 Agent invocation；5 個失敗與 7 個未納入本輪的題目都保留，因此不得主張 20/20 或跨乾淨環境 E5。
 
 最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在
 [版本證據帳本](docs/version-evidence-ledger.md)。網站畫面只標示 source contract、
@@ -213,7 +213,10 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 
 revision `0000007` 的逐題順序、狀態前置、Request conditions、受控 session expiry 與
-人類確認界線，統一記錄在 [20 題固定 revision 執行手冊](docs/webmcp-20-case-execution.md)。
+人類確認界線保留在 [20 題固定 revision 執行手冊](docs/webmcp-20-case-execution.md)；
+停止複測後的歷史狀態見 [20 題原生 Agent 驗收最終紀錄](docs/webmcp-20-case-final-record.md)。
+revision `0000008` 的實際執行結果見
+[13 題單次重測最終紀錄](docs/webmcp-13-case-retest-final-record.md)。
 
 ## 本機與 Azure 權限界線
 
