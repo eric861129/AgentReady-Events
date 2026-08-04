@@ -21,8 +21,10 @@
 | 1 | `STALE-01-V2` | **PASS** | 詳情頁以 `{}` 讀取；換回列表後沿用同一個 opaque event ID；沒有收藏或猜測 catalog 外 Tool |
 | 2 | `CONF-02-V2` | **PASS** | 只呼叫取消準備 Tool；顯示正確摘要並停在可見人類確認，零取消 POST |
 | 3 | `STALE-02-V2` | **PASS** | 重新整理後只呼叫取消準備 Tool；解析目前唯一有效報名並停在確認前，零取消 POST |
-| 4 | `REPEAT-02-V2` | PENDING | 尚未執行 |
+| 4 | `REPEAT-02-V2` | **PASS** | Agent 只準備取消並停在人類確認；第一次人工取消成功；重播已消耗 intent 被安全拒絕，另以 fresh intent 的 deterministic companion 驗證重複取消回 `alreadyCancelled:true` 且名額只回補一次 |
 | 5 | `RECOVERY-02-V2` | PENDING | 尚未執行 |
 
 每一題的原始 Copy trace、畫面與判定保存在同名子資料夾。PASS 只適用於該題、
 該次 Agent invocation 與上述固定 revision，不代表尚未執行的題目或 E5。
+
+目前已完成 4／5 題，4 題通過；`RECOVERY-02-V2` 仍待執行。
