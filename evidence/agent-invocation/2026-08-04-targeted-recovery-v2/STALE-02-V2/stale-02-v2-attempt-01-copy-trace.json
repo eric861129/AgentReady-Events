@@ -1,0 +1,191 @@
+[
+ {
+  "userPrompt": {
+   "message": "請依目前頁面最新狀態，準備取消唯一一筆有效報名；不要替我按最後確認。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Tuesday, August 4, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "為目前頁面的有效報名顯示取消摘要，並停在最終確認對話框。頁面只有一筆有效報名時以空物件直接呼叫；有多筆時傳入頁面提供的 registration_id。此 Tool 只準備摘要，最終取消由使用者確認。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1129",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Tue, 04 Aug 2026 02:23:04 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1699",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_prepare_registration_cancellation",
+         "args": {},
+         "id": "1j0c1qtn"
+        },
+        "thoughtSignature": "Eo4FCosFARFNMg/IFST9CT39MUJgLu+PcE9AyX3zbdQ/aWi+0TRSIp243fWMzAfqikgN+Q81UXoXNMFEMImmLX77bs8km1isnStNuIeKchDuBIzX3X5EMWDsz0mlqnDTEBg+apvWmjqOf2crgbgSG/N+eU/alCPA14pIQgWhG/2PbhpByCx8HExK2P87G94R3684P9ER6b8c+4+YaIP8v4DxsJdBD6MNSc5J49l6Ed3itFSm8Eyy4eV9WoAncHOJ2olRpZ2UmN1gs1YQHLt/7qo9h9o/LV52GydZ7uKLeQZkPcq+M924yEJ4SnicY26KbFi+VCwuhm/x7wVCk7c73dzZLwdFEnzWn6nGUucVXSDPmaamZnFi6Ib0go0IhJawZ6byewnyq16nPrp1WUP0XTIsvXnRiUcrAeOXAoL+iwWhQJMTgZUJRsFSj5KeDez/khqRJK0TuYQWL+9PKT1eW+B6C6wi+eWyxPaXTT4QjlVEsjXmKbqjIZIVPtQ+t7HM58ZQbe4hUNmbMZATNLEqfnG0JL0sFDCLlqFL1NrINY9JVfXqU9R4b+q6zQMiWfI9HHHjUO921+A2Xlr0wNkKJaiohT0EHChBdtPZe7MiPn5AiZbmZlrQ5sQifCIs17MLo/ih/V7ue/nQ1uPqt8299IAMRKIv2GZgG1xYNTBXoBa26Yw5ILNbQ1dP7NRehw0a6vowJuMDkhZpQryMCbtjDkVUjmhptCIdV86DChwqzW/mB3YYYifZjrjx30EPPb7JoYXHQy3COxnA3UVcY3cUwHerwBWnAAV3icIoenETxGcxlHbEoJf/HG9G5nap6EIwnqFMhfUHuQoeTrBqFrxPyme8ieEYS1DhTxE7bhahkkrw"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "Bk1xavavJJKjvr0PjLrf0Q8",
+   "usageMetadata": {
+    "promptTokenCount": 284,
+    "candidatesTokenCount": 15,
+    "totalTokenCount": 445,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 284
+     }
+    ],
+    "thoughtsTokenCount": 146,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_prepare_registration_cancellation",
+      "response": {
+       "result": "{\"ok\":false,\"code\":\"CONFIRMATION_REQUIRED\",\"reason\":\"HUMAN_CONFIRMATION_REQUIRED\",\"message\":\"取消摘要已顯示，等待使用者確認。\",\"nextAction\":\"請使用者閱讀影響，並在可見對話框中自行確認。\",\"retryable\":false,\"uiUpdated\":true,\"stateVersion\":1,\"summary\":{\"registrationId\":\"reg-d3d853a5-8966-49aa-8929-15d5e2db9d91\",\"eventId\":\"evt-webmcp-intro\",\"eventTitle\":\"WebMCP 入門工作坊\",\"startsAt\":\"2027-01-23T10:00:00+08:00\",\"effect\":\"取消後會釋出名額；本 Demo 不會寄送通知。\"},\"guidance\":{\"availableActions\":[],\"currentTarget\":{\"kind\":\"registration\",\"id\":\"reg-d3d853a5-8966-49aa-8929-15d5e2db9d91\"},\"requiresHumanConfirmation\":true}}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Tuesday, August 4, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "為目前頁面的有效報名顯示取消摘要，並停在最終確認對話框。頁面只有一筆有效報名時以空物件直接呼叫；有多筆時傳入頁面提供的 registration_id。此 Tool 只準備摘要，最終取消由使用者確認。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1201",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Tue, 04 Aug 2026 02:23:06 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=2040",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "我已為您準備好取消「WebMCP 入門工作坊」（2027年1月23日）的報名。\n\n目前畫面上已顯示取消摘要，請您核對內容後，自行點擊對話框中的確認按鈕以完成取消。",
+        "thoughtSignature": "ErQECrEEARFNMg8itCifURdTTciuph1NrWHC1hmfIG2PXZmZytYLuLqNJt2Yx77h6PzufvWhxuvQIrfZgcYfvriz7WxhYUh4kokvSWH60lwpgvTyvFsdBQPCcRq8NLZJ6T8tOdQWNW6jz+EmRxTGuDV8nipBX508DcVW+7w1/Loy5l04KymB/znJzjvuWzAWutn5v6wr4nOO67jOykyckDWZnyFMgMI4Yt55jJbXVVf1aMTkEkOG6u1H70AEWcXfTMd9zW/3oWFZNdMJOLT/Q5Y95fxx5sc0nccsefK0QOTYz5Yb1Y/Ehv5ngVVp7tPaR1vcA/ZB3hndS1y2d0V7uYPp/+3EXXD3awUV9c7Al7i85JridWhbUb6KErBVGwhbzXi9ichZG8oecaMc1lfdhlbmjkAyJemQqP190Ga2sa/pGYmj0B3VD54eCIG0rczuQc3rfMcE+atd51qdp+CUXAeMshKmCkGEpNslq1n3ZnSCLQROe00MOibLpcdcsFGAL3VLLxHloPTysJpV2B6J2t3XzIdg5kZ6YTONooK360YCsXq5Dj0u5TnB62p8MAdeB66QFHiuMyUobs/zfYPqveK7CWuqjWLfyPchBzxttp7VwMJPD9AgmppI8M3rdLgf9JAkinMmq/gf/T25N4gWKi7VALLsmXjvKSnYDkCbWPDNge0tlGTrSvQgeAh0Pe8Wat8+QW7rrQH4yPOWGZZFw7STk7AoSLjPYvzFuIvvfecnvItjWj7W"
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "CE1xat2eM9ijvr0P7ryzuA4",
+   "usageMetadata": {
+    "promptTokenCount": 703,
+    "candidatesTokenCount": 60,
+    "totalTokenCount": 901,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 703
+     }
+    ],
+    "thoughtsTokenCount": 138,
+    "serviceTier": "standard"
+   }
+  }
+ }
+]
