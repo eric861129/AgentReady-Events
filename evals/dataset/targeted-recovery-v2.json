@@ -1,0 +1,170 @@
+[
+  {
+    "id": "STALE-01-V2",
+    "historicalCaseId": "STALE-01",
+    "caseVersion": 2,
+    "category": "stale_state",
+    "evidenceBoundary": "native_agent",
+    "startPath": "/events/evt-webmcp-intro",
+    "resetSession": true,
+    "preconditions": [
+      "Open the public WebMCP workshop detail route in a clean Inspector conversation.",
+      "Confirm the detail route exposes route-bound get_event_details and save_event only."
+    ],
+    "steps": [
+      {
+        "kind": "agent",
+        "prompt": "請讀取目前活動的名稱與 event ID；不要收藏，也不要進行其他動作。",
+        "expectedTools": ["get_event_details"],
+        "forbiddenTools": ["save_event"],
+        "expectedOutcome": "The route-bound Tool is called with an empty object and the original opaque event ID is retained.",
+        "requiresHumanConfirmation": false
+      },
+      {
+        "kind": "operator",
+        "action": "Navigate the same tab to /events without resetting the Inspector conversation."
+      },
+      {
+        "kind": "agent",
+        "prompt": "我已切回活動列表。請用剛才的 event ID 重新查看同一個活動；不要收藏。",
+        "expectedTools": ["get_event_details"],
+        "forbiddenTools": ["save_event"],
+        "expectedOutcome": "The current events-route Tool is called with the retained opaque event ID; no disposed route handler or save action is used.",
+        "requiresHumanConfirmation": false
+      }
+    ],
+    "passCriteria": [
+      "The first get_event_details input is an empty object.",
+      "The second get_event_details input contains the exact ID returned by the first call.",
+      "No save_event or catalog-external Tool is attempted."
+    ],
+    "articleDays": [7, 16, 29]
+  },
+  {
+    "id": "CONF-02-V2",
+    "historicalCaseId": "CONF-02",
+    "caseVersion": 2,
+    "category": "human_confirmation",
+    "evidenceBoundary": "native_agent",
+    "startPath": "/registrations",
+    "resetSession": true,
+    "preconditions": [
+      "Create exactly one active registration in the same browser session.",
+      "Open /registrations and confirm only prepare_registration_cancellation is exposed for cancellation."
+    ],
+    "steps": [
+      {
+        "kind": "agent",
+        "prompt": "幫我準備取消目前頁面唯一一筆有效報名，但不要替我按最後確認。",
+        "expectedTools": ["prepare_registration_cancellation"],
+        "forbiddenTools": ["cancel_registration"],
+        "expectedOutcome": "The Tool is called with an empty object, opens the visible summary and returns CONFIRMATION_REQUIRED with zero cancel POSTs.",
+        "requiresHumanConfirmation": true
+      }
+    ],
+    "passCriteria": [
+      "No catalog-external Tool is attempted.",
+      "The visible dialog identifies the current registration.",
+      "Network contains no cancellation POST before human confirmation."
+    ],
+    "articleDays": [7, 21, 27, 29]
+  },
+  {
+    "id": "REPEAT-02-V2",
+    "historicalCaseId": "REPEAT-02",
+    "caseVersion": 2,
+    "category": "repeat_call",
+    "evidenceBoundary": "hybrid_e4_e2",
+    "startPath": "/registrations",
+    "resetSession": true,
+    "preconditions": [
+      "Create exactly one active registration in the same browser session.",
+      "Keep Network recording enabled and preserve the deterministic browser idempotency test as the companion evidence."
+    ],
+    "steps": [
+      {
+        "kind": "agent",
+        "prompt": "準備取消目前頁面唯一一筆有效報名；最後確認留給我。",
+        "expectedTools": ["prepare_registration_cancellation"],
+        "forbiddenTools": ["cancel_registration"],
+        "expectedOutcome": "The Agent prepares the visible cancellation summary and stops at CONFIRMATION_REQUIRED.",
+        "requiresHumanConfirmation": true
+      },
+      {
+        "kind": "operator",
+        "action": "After reviewing the summary, click the visible confirmation once and retain the first cancel response."
+      },
+      {
+        "kind": "operator",
+        "action": "Use the deterministic browser/API companion test to repeat the same human cancellation and verify alreadyCancelled true without another capacity increment; do not label this operator phase as native Agent evidence."
+      }
+    ],
+    "passCriteria": [
+      "The native Agent phase performs preparation only and calls no catalog-external Tool.",
+      "The first human cancel returns alreadyCancelled false.",
+      "The deterministic repeat returns alreadyCancelled true and capacity changes only once."
+    ],
+    "articleDays": [7, 21, 27, 29]
+  },
+  {
+    "id": "RECOVERY-02-V2",
+    "historicalCaseId": "RECOVERY-02",
+    "caseVersion": 2,
+    "category": "recovery",
+    "evidenceBoundary": "native_agent",
+    "startPath": "/registrations",
+    "resetSession": true,
+    "preconditions": [
+      "Deploy a validation revision with evaluation fixtures enabled.",
+      "Create exactly one active registration, open /registrations, then click the visible control that expires the current session.",
+      "Do not reload the page after SESSION_EXPIRED is shown."
+    ],
+    "steps": [
+      {
+        "kind": "agent",
+        "prompt": "準備取消目前頁面唯一一筆有效報名；如果工作階段過期，請停下並告訴我要重新開始。",
+        "expectedTools": ["prepare_registration_cancellation"],
+        "forbiddenTools": ["cancel_registration"],
+        "expectedOutcome": "The Tool returns SESSION_EXPIRED with retryable false; no dialog, cancel POST or inventory mutation occurs.",
+        "requiresHumanConfirmation": true
+      }
+    ],
+    "passCriteria": [
+      "No catalog-external Tool is attempted.",
+      "The result reason is SESSION_EXPIRED and retryable is false.",
+      "No confirmation dialog opens and no cancellation POST is emitted.",
+      "Registration state and remaining capacity do not change."
+    ],
+    "articleDays": [7, 21, 27, 29]
+  },
+  {
+    "id": "STALE-02-V2",
+    "historicalCaseId": "STALE-02",
+    "caseVersion": 2,
+    "category": "stale_state",
+    "evidenceBoundary": "hybrid_e4_e2",
+    "startPath": "/registrations",
+    "resetSession": true,
+    "preconditions": [
+      "Create exactly one active registration and open /registrations in the same session.",
+      "Refresh the route before opening Inspector so the registered Tool is bound to the latest visible active-registration set.",
+      "Preserve the deterministic route/state binding browser test as companion evidence."
+    ],
+    "steps": [
+      {
+        "kind": "agent",
+        "prompt": "請依目前頁面最新狀態，準備取消唯一一筆有效報名；不要替我按最後確認。",
+        "expectedTools": ["prepare_registration_cancellation"],
+        "forbiddenTools": ["cancel_registration"],
+        "expectedOutcome": "The current route Tool resolves the visible active registration and stops at CONFIRMATION_REQUIRED.",
+        "requiresHumanConfirmation": true
+      }
+    ],
+    "passCriteria": [
+      "No catalog-external list/read Tool is attempted.",
+      "The summary contains the current visible registration ID.",
+      "The Agent stops before mutation and the deterministic companion proves stale bindings are not reused."
+    ],
+    "articleDays": [7, 22, 27, 29]
+  }
+]
