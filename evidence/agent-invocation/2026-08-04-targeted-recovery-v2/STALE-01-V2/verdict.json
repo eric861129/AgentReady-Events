@@ -1,0 +1,44 @@
+{
+  "caseId": "STALE-01-V2",
+  "historicalCaseId": "STALE-01",
+  "attempt": 1,
+  "status": "PASS",
+  "executedAt": "2026-08-04",
+  "evidenceBoundary": "native_agent",
+  "sourceCommit": "31202dbbc92904d00dd856eb683c618225e677de",
+  "azureRevision": "ca-agentready-events--0000009",
+  "imageDigest": "sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae",
+  "prompts": [
+    "請讀取目前活動的名稱與 event ID；不要收藏，也不要進行其他動作。",
+    "我已切回活動列表。請用剛才的 event ID 重新查看同一個活動；不要收藏。"
+  ],
+  "componentVerdicts": {
+    "routeLifecycle": "PASS",
+    "opaqueIdContinuity": "PASS",
+    "inventedToolAvoidance": "PASS",
+    "mutationSafety": "PASS"
+  },
+  "observations": {
+    "firstTurnCalls": ["get_event_details"],
+    "firstTurnInput": {},
+    "rememberedEventId": "evt-webmcp-intro",
+    "secondTurnCalls": ["get_event_details"],
+    "secondTurnInput": {
+      "event_id": "evt-webmcp-intro"
+    },
+    "saveEventCalled": false,
+    "inventedNonCatalogTool": false,
+    "remainingCapacityAfterCase": 8
+  },
+  "evidence": [
+    {
+      "file": "stale-01-v2-attempt-01-two-turn-route-rebind-pass.png",
+      "sha256": "de2ef4d5e7e3a856606e193addbbd0ef5529b08c3871fa91d2027d77e12cca14"
+    },
+    {
+      "file": "stale-01-v2-attempt-01-copy-trace.json",
+      "sha256": "41cf45e17c1f3150cbe59d4bf3fe08339f80a9ae034755fde1399f6b1740630c"
+    }
+  ],
+  "notes": "第一回合只呼叫 route-bound get_event_details with {}；同一 Inspector conversation 換回活動列表後，第二回合以原始 evt-webmcp-intro 呼叫新版 route Tool。沒有 save_event、catalog 外 Tool 或 inventory mutation。截圖呈現第二回合結果，兩回合完整內容以 Copy trace 為準。"
+}

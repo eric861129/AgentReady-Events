@@ -12,7 +12,7 @@
 | P0 最終 release | `8e89e6519406388a0de8c456a890d6fcc8cc5544`、`v3-p0-release.1` | `ca-agentready-events--0000006`、run `30549409859`、digest `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41` | E2、E3；完整 smoke 後名額仍為 8；SEL-01、SEL-02 各一題 current-release read-only E4 | 20/20、完整 Journey、write E4、E5 |
 | 20 題固定驗收 release（已封存） | `4b1324f46255ddf5f80628c84a564d37fa6addb3` | `ca-agentready-events--0000007`、run `30733952974`、digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052` | E2、E3；immutable deployment、production smoke、受控 `RECOVERY-02` fixture | 本批次未執行逐題 Inspector 重跑，不得主張任何新 E4、20/20 或 E5 |
 | 13 題單次重測 release | `4d7f6528a88ad0e43b268aa7817a479d186a8cfa` | `ca-agentready-events--0000008`、run `30792961501`、digest `sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e` | E2、E3；13 題同版本 Inspector trace，8 PASS／5 FAIL | 未執行的 7 題、20/20、跨環境成功率、E5 |
-| targeted recovery v2 release | `31202dbbc92904d00dd856eb683c618225e677de` | `ca-agentready-events--0000009`、run `30867599365`、digest `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae` | E2、E3；完整自動化、production smoke、受控 fixture 可見、初始名額 8 | targeted v2 尚未執行，不能主張新 E4、成功率或 E5 |
+| targeted recovery v2 release | `31202dbbc92904d00dd856eb683c618225e677de` | `ca-agentready-events--0000009`、run `30867599365`、digest `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae` | E2、E3；完整自動化、production smoke、受控 fixture 可見、初始名額 8；`STALE-01-V2` 單題 E4 | 其餘 4 題尚未執行，不能主張整批成功率或 E5 |
 
 Machine-readable 版本位於
 [`evidence/version-ledger.json`](../evidence/version-ledger.json)。
@@ -28,8 +28,10 @@ commit 與 revision；evaluation fixture 已啟用，公開頁面可見「受控
 這個版本仍維持五個 Tool：`search_events`、`get_event_details`、`save_event`、
 `prepare_event_registration`、`prepare_registration_cancellation`。新的
 [`targeted-recovery-v2.json`](../evals/dataset/targeted-recovery-v2.json) 是獨立題庫，
-原始 20 題與 revision `0000008` 的 8 PASS／5 FAIL 均未改寫。手動 Inspector
-重測尚未開始，因此目前只列 E2／E3，不先宣告新 E4。
+原始 20 題與 revision `0000008` 的 8 PASS／5 FAIL 均未改寫。`STALE-01-V2`
+已在同版本 Inspector 執行一次並通過；原始 trace 與判定保存在
+[`2026-08-04-targeted-recovery-v2`](../evidence/agent-invocation/2026-08-04-targeted-recovery-v2/README.md)。
+其餘四題仍是 PENDING，不能由這一題推論整批成功率。
 
 ## 歷史 E4 原始資料
 
