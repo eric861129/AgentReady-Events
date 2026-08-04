@@ -139,10 +139,11 @@ npm run evals:validate
 
 Failure Lab 只能由 test code 注入。Query string 或 request header 不能啟用它，避免公開網站出現測試後門。
 
-`RECOVERY-02` 另有一個預設關閉的 current-session fixture。只有設定
-`ENABLE_EVALUATION_FIXTURES=true` 時，`POST /api/session/evaluation/expire-current`
-才存在；呼叫者必須提供目前 session 的 CSRF token 與
-`interactionMode: "human"`。它只能讓呼叫者自己的 session 過期，不能指定或影響
+`RECOVERY-02` 另有一個預設關閉的一鍵 current-session fixture。只有設定
+`ENABLE_EVALUATION_FIXTURES=true` 時，報名頁才會顯示「建立 RECOVERY-02 測試狀態」，
+對應的 `POST /api/session/evaluation/expire-current` 才存在。呼叫者必須提供目前 session
+的 CSRF token 與 `interactionMode: "human"`。這個動作會在呼叫者自己的 session
+準備唯一一筆不占用正式名額的可見報名，再立即讓該 session 過期；不能指定或影響
 其他 session。下一次 Tool request 會收到
 `AUTHENTICATION_REQUIRED / SESSION_EXPIRED / retryable: false`，同時不會開啟取消對話框或
 執行取消 POST。正式日常環境維持關閉，只在受控驗收 revision 明確啟用。

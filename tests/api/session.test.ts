@@ -54,9 +54,39 @@ it("keeps the current-session expiry fixture disabled unless explicitly enabled"
     .post("/api/session/evaluation/expire-current")
     .set("x-csrf-token", enabledToken)
     .send({ interactionMode: "human" });
-  expect(expired.status).toBe(204);
+  expect(expired.status).toBe(200);
+  expect(expired.body.registration).toMatchObject({
+    eventId: "evt-webmcp-intro",
+    attendeeName: "RECOVERY-02 測試讀者",
+    status: "active"
+  });
+  expect(expired.body.instruction).toContain("請勿重新整理");
 
   const afterExpiry = await enabled.get("/api/registrations");
   expect(afterExpiry.status).toBe(401);
   expect(afterExpiry.body.reason).toBe("SESSION_EXPIRED");
+});
+
+it("prepares exactly one visible recovery registration without consuming inventory", async () => {
+  const app = createApp({ enableEvaluationFixtures: true });
+  const operator = request.agent(app);
+  const observer = request.agent(app);
+  const token = (await operator.get("/api/session")).body.csrfToken as string;
+  const before = await observer.get("/api/events/evt-webmcp-intro");
+
+  const prepared = await operator
+    .post("/api/session/evaluation/expire-current")
+    .set("x-csrf-token", token)
+    .send({ interactionMode: "human" });
+
+  expect(prepared.status).toBe(200);
+  expect(prepared.body.registration).toMatchObject({
+    eventId: "evt-webmcp-intro",
+    eventTitle: "WebMCP 入門工作坊",
+    attendeeName: "RECOVERY-02 測試讀者",
+    status: "active"
+  });
+  expect(prepared.body.registration.id).toMatch(/^reg-recovery-/);
+  const after = await observer.get("/api/events/evt-webmcp-intro");
+  expect(after.body.event.remainingCapacity).toBe(before.body.event.remainingCapacity);
 });

@@ -41,7 +41,7 @@ test("preparation opens an accessible dialog and human confirmation performs one
   await expect(page.getByRole("status")).toContainText("已取消報名");
 });
 
-test("visible evaluation control expires the current session before cancellation preparation", async ({ page }) => {
+test("one-click evaluation control prepares the registration and expires the session", async ({ page }) => {
   test.skip(
     Boolean(process.env.PLAYWRIGHT_BASE_URL) && process.env.ENABLE_EVALUATION_FIXTURES !== "true",
     "外部部署必須明確啟用受控 evaluation fixture。"
@@ -58,21 +58,8 @@ test("visible evaluation control expires the current session before cancellation
       }
     });
   });
-  await page.route(/\/api\/registrations$/, async (route) => route.fulfill({
-    contentType: "application/json",
-    body: JSON.stringify({
-      registrations: [{
-        id: "reg-expiry-fixture",
-        eventId: "evt-webmcp-intro",
-        eventTitle: "WebMCP 入門工作坊",
-        startsAt: "2027-01-23T10:00:00+08:00",
-        attendeeName: "工作階段測試讀者",
-        status: "active"
-      }]
-    })
-  }));
   await page.goto("/registrations");
-  const registrationId = (await page.locator(".registration-item code").textContent())!.trim();
+  await expect(page.getByText("目前沒有報名紀錄")).toBeVisible();
   await expect.poll(() => page.evaluate(() => {
     const tools = (window as Window & { __registeredTools?: Record<string, unknown> }).__registeredTools;
     return Boolean(tools?.prepare_registration_cancellation);
@@ -84,15 +71,18 @@ test("visible evaluation control expires the current session before cancellation
   });
   const evaluationControls = page.getByRole("region", { name: "受控測試工具" });
   await expect(evaluationControls).toBeVisible();
-  await evaluationControls.getByRole("button", { name: "讓目前工作階段過期" }).click();
-  await expect(evaluationControls.getByRole("status")).toContainText("SESSION_EXPIRED 已建立");
+  await evaluationControls.getByRole("button", { name: "建立 RECOVERY-02 測試狀態" }).click();
+  await expect(evaluationControls.getByRole("status")).toContainText("RECOVERY-02 已就緒");
+  await expect(page.getByText("目前沒有報名紀錄")).toBeHidden();
+  await expect(page.getByText("RECOVERY-02 測試讀者")).toBeVisible();
+  await expect(page.getByText("報名有效")).toHaveCount(1);
 
-  const result = await page.evaluate(async (id) => {
+  const result = await page.evaluate(async () => {
     const tools = (window as Window & {
       __registeredTools?: Record<string, { execute(input: object): Promise<unknown> }>;
     }).__registeredTools;
-    return tools?.prepare_registration_cancellation?.execute({ registration_id: id });
-  }, registrationId);
+    return tools?.prepare_registration_cancellation?.execute({});
+  });
 
   expect(result).toMatchObject({
     ok: false,

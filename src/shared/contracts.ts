@@ -46,6 +46,11 @@ export type SessionSummary = {
   csrfToken: string;
   evaluationFixturesEnabled: boolean;
 };
+
+export type SessionExpiryEvaluationResponse = {
+  registration: RegistrationListItem;
+  instruction: string;
+};
 export type SaveEventResponse = { eventId: string; alreadySaved: boolean };
 
 export type RegistrationInput = {

@@ -1,4 +1,4 @@
-import type { CancellationSummary } from "../../shared/contracts";
+import type { CancellationSummary, RegistrationListItem } from "../../shared/contracts";
 import {
   cancellationRequest,
   cancellationSummaryRequest,
@@ -66,7 +66,7 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
     updateCancelled(summary.registrationId);
   });
   const showSummary = (summary: CancellationSummary, trigger?: HTMLElement) => dialogApi.show(summary, trigger);
-  for (const registration of registrations) {
+  const createRegistrationItem = (registration: RegistrationListItem): HTMLLIElement => {
     const item = document.createElement("li");
     item.className = "registration-item";
     item.dataset.registrationId = registration.id;
@@ -114,8 +114,9 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
       actions.append(button);
     }
     item.append(cardContent, actions);
-    list.append(item);
-  }
+    return item;
+  };
+  for (const registration of registrations) list.append(createRegistrationItem(registration));
   if (registrations.length === 0) {
     const empty = document.createElement("li");
     empty.className = "empty-state";
@@ -152,22 +153,26 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
     evaluationTitle.id = "evaluation-controls-title";
     evaluationTitle.textContent = "受控測試工具";
     const evaluationDescription = document.createElement("p");
-    evaluationDescription.textContent = "只在 evaluation 模式顯示。用同一個分頁建立 SESSION_EXPIRED 前置條件，再回到 Inspector 執行 RECOVERY-02。";
+    evaluationDescription.textContent = "只在 evaluation 模式顯示。按一次便建立唯一有效報名並讓同一個工作階段過期，再回到 Inspector 執行 RECOVERY-02。";
     evaluationCopy.append(evaluationEyebrow, evaluationTitle, evaluationDescription);
     const evaluationAction = document.createElement("div");
     evaluationAction.className = "evaluation-controls-action";
     const expireButton = document.createElement("button");
     expireButton.type = "button";
     expireButton.className = "button button-secondary";
-    expireButton.textContent = "讓目前工作階段過期";
+    expireButton.textContent = "建立 RECOVERY-02 測試狀態";
     const evaluationStatus = document.createElement("p");
     expireButton.addEventListener("click", async () => {
       expireButton.disabled = true;
       evaluationStatus.setAttribute("role", "status");
       try {
-        await expireCurrentSessionForEvaluationRequest();
+        const prepared = await expireCurrentSessionForEvaluationRequest();
+        activeRegistrationIds.clear();
+        activeRegistrationIds.add(prepared.registration.id);
+        list.replaceChildren(createRegistrationItem(prepared.registration));
+        count.textContent = "1 筆紀錄";
         evaluationStatus.dataset.state = "ready";
-        evaluationStatus.textContent = "SESSION_EXPIRED 已建立。請勿重新整理，直接在 Inspector 執行取消準備。";
+        evaluationStatus.textContent = prepared.instruction;
       } catch (error) {
         expireButton.disabled = false;
         evaluationStatus.dataset.state = "error";
@@ -182,7 +187,7 @@ export async function renderRegistrationsPage(root: HTMLElement): Promise<AnyPro
   if (session.evaluationFixturesEnabled) page.append(evaluationControls);
   page.append(dialogApi.element);
   root.replaceChildren(page);
-  if (activeRegistrationIds.size === 0) return [];
+  if (activeRegistrationIds.size === 0 && !session.evaluationFixturesEnabled) return [];
   return [createPrepareCancellationTool({
     load: cancellationSummaryRequest,
     show: (summary) => showSummary(summary),

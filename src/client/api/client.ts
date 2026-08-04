@@ -1,4 +1,4 @@
-import type { CancellationResponse, CancellationSummary, EventDetail, InteractionMode, RegistrationInput, RegistrationListItem, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionSummary } from "../../shared/contracts";
+import type { CancellationResponse, CancellationSummary, EventDetail, InteractionMode, RegistrationInput, RegistrationListItem, RegistrationResponse, SaveEventResponse, SearchEventsQuery, SearchEventsResponse, SessionExpiryEvaluationResponse, SessionSummary } from "../../shared/contracts";
 
 export class ApiClientError extends Error {
   constructor(readonly status: number, message: string, readonly reason = "HTTP_ERROR") {
@@ -36,14 +36,14 @@ export function sessionRequest(): Promise<SessionSummary> {
   return sessionPromise;
 }
 
-export async function expireCurrentSessionForEvaluationRequest(): Promise<void> {
+export async function expireCurrentSessionForEvaluationRequest(): Promise<SessionExpiryEvaluationResponse> {
   const session = await sessionRequest();
   const response = await fetch("/api/session/evaluation/expire-current", {
     method: "POST",
     headers: { "content-type": "application/json", "x-csrf-token": session.csrfToken },
     body: JSON.stringify({ interactionMode: "human" })
   });
-  if (!response.ok) await readJson<never>(response);
+  return readJson<SessionExpiryEvaluationResponse>(response);
 }
 
 export async function saveEventRequest(eventId: string, context: { mode: InteractionMode }): Promise<SaveEventResponse> {

@@ -116,8 +116,9 @@
     "resetSession": true,
     "preconditions": [
       "Deploy a validation revision with evaluation fixtures enabled.",
-      "Create exactly one active registration, open /registrations, then click the visible control that expires the current session.",
-      "Do not reload the page after SESSION_EXPIRED is shown."
+      "Open /registrations and click the visible one-click RECOVERY-02 setup control.",
+      "Wait until the page shows exactly one active recovery registration and RECOVERY-02 ready status.",
+      "Do not reload the page after the fixture reports that the expired-session state is ready."
     ],
     "steps": [
       {
