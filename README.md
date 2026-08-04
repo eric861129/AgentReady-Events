@@ -199,14 +199,14 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
 - 現行公開 release `31202db` 已由 run `30867599365` 部署為 Azure revision `ca-agentready-events--0000009`，immutable digest 為 `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae`。
-- 公開 `/health/version` 與這組 commit／revision 一致，因此 runtime 可列為 E3；完整自動化與 production smoke 已通過，targeted recovery v2 目前完成 1/5，`STALE-01-V2` 單次執行 PASS。
+- 公開 `/health/version` 與這組 commit／revision 一致，因此 runtime 可列為 E3；完整自動化與 production smoke 已通過，targeted recovery v2 目前完成 2/5，`STALE-01-V2`、`CONF-02-V2` 單次執行 PASS。
 - revision `0000008` 的 13 題單次重測仍固定保留為 8 PASS／5 FAIL，不以 `0000009` 的自動化結果覆寫。
 - 前一個 `0000007` 是已封存的 20 題準備版；當時 0/20 executed，不把證據轉移到 `0000008`。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
 - 2026-07-31，WebMCP Inspector 內的 Gemini Agent 曾在前一個固定 release `8e89e65`／revision `0000006` 完成 SEL-01、SEL-02 兩題 read-only E4；這些 trace 保留為歷史證據，不替 revision `0000007` 升級。
 - revision `0000008` 的 8 個通過案例只證明各自的同版本 Agent invocation；5 個失敗與 7 個未納入本輪的題目都保留，因此不得主張 20/20 或跨乾淨環境 E5。
-- revision `0000009` 使用獨立的 `targeted-recovery-v2.json`；目前只對 `STALE-01-V2` 主張單題同版本 E4，不把結果外推成整批成功率。
+- revision `0000009` 使用獨立的 `targeted-recovery-v2.json`；目前只對 `STALE-01-V2`、`CONF-02-V2` 主張各自的同版本 E4，不把結果外推成最終整批結果。
 
 最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在
 [版本證據帳本](docs/version-evidence-ledger.md)。網站畫面只標示 source contract、

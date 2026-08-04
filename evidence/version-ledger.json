@@ -83,16 +83,16 @@
       "revision": "ca-agentready-events--0000009",
       "workflowRun": "30867599365",
       "imageDigest": "sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae",
-      "evidence": ["E2", "E3", "E4-STALE-01-V2"],
+      "evidence": ["E2", "E3", "E4-STALE-01-V2", "E4-CONF-02-V2"],
       "status": "current-targeted-recovery-in-progress",
-      "evaluationStatus": "1_of_5_executed_once",
-      "executedCases": 1,
-      "passedCases": 1,
+      "evaluationStatus": "2_of_5_executed_once",
+      "executedCases": 2,
+      "passedCases": 2,
       "failedCases": 0,
       "plannedCases": 5,
       "initialRemainingCapacity": 8,
       "controlledEvaluationFixture": true,
-      "claim": "The immutable recovery candidate passed the full automated suite and production smoke. STALE-01-V2 passed one native Inspector execution on this revision; the other four v2 cases remain pending, so no aggregate success rate or E5 claim is made."
+      "claim": "The immutable recovery candidate passed the full automated suite and production smoke. STALE-01-V2 and CONF-02-V2 each passed one native Inspector execution on this revision; the other three v2 cases remain pending, so no final aggregate result or E5 claim is made."
     }
   ]
 }

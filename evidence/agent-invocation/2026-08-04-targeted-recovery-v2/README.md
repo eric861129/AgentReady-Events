@@ -19,7 +19,7 @@
 | 順序 | Case | 狀態 | 備註 |
 | ---: | --- | --- | --- |
 | 1 | `STALE-01-V2` | **PASS** | 詳情頁以 `{}` 讀取；換回列表後沿用同一個 opaque event ID；沒有收藏或猜測 catalog 外 Tool |
-| 2 | `CONF-02-V2` | PENDING | 尚未執行 |
+| 2 | `CONF-02-V2` | **PASS** | 只呼叫取消準備 Tool；顯示正確摘要並停在可見人類確認，零取消 POST |
 | 3 | `STALE-02-V2` | PENDING | 尚未執行 |
 | 4 | `REPEAT-02-V2` | PENDING | 尚未執行 |
 | 5 | `RECOVERY-02-V2` | PENDING | 尚未執行 |
