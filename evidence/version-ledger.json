@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-03",
+  "updatedAt": "2026-08-04",
   "entries": [
     {
       "id": "historical-e3",
@@ -76,6 +76,21 @@
       "failedCases": 5,
       "plannedCases": 13,
       "claim": "Thirteen selected Inspector cases were each executed once against this exact public revision. Eight passed and five failed. The result does not support a 20/20, cross-environment reliability or E5 claim."
+    },
+    {
+      "id": "targeted-recovery-v2-release",
+      "commit": "31202dbbc92904d00dd856eb683c618225e677de",
+      "revision": "ca-agentready-events--0000009",
+      "workflowRun": "30867599365",
+      "imageDigest": "sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae",
+      "evidence": ["E2", "E3"],
+      "status": "current-targeted-recovery-pending",
+      "evaluationStatus": "targeted_recovery_v2_not_started",
+      "executedCases": 0,
+      "plannedCases": 5,
+      "initialRemainingCapacity": 8,
+      "controlledEvaluationFixture": true,
+      "claim": "A new immutable recovery candidate passed the full automated suite and production smoke. The separate targeted-recovery-v2 dataset is ready, but no new Inspector case has been executed and no E4 or E5 upgrade is claimed."
     }
   ]
 }

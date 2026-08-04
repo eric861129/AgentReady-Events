@@ -48,7 +48,11 @@ Each capture records Day, route, fixture, selector, action, assertion, expected 
 
 CI 透過 `npm run evidence:deployment` 寫入 commit、immutable GHCR digest、Azure FQDN、revision、region 與 workflow run URL。`scripts/write-deployment-evidence.ts` 會拒絕 mutable tag、非 GHCR image 與敏感 key。
 
-目前保留的 GitHub run 29179363328 對應 commit `2a2c027`。Artifact 可以證明該 commit 的 container smoke 與 Azure deployment，不能代表目前 local `main` 已部署。
+目前 targeted recovery v2 的 GitHub run `30867599365` 對應 commit
+`31202dbbc92904d00dd856eb683c618225e677de`、revision
+`ca-agentready-events--0000009`。原始 deployment、container smoke 與 production
+smoke artifact 保存在 `github-run-30867599365/`；它們只能證明 E2／E3，不能取代
+尚未執行的 Inspector Agent invocation。
 
 ## 不可寫入 Evidence 的資料
 
