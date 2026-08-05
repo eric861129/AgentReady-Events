@@ -1,0 +1,44 @@
+{
+  "caseId": "RECOVERY-02-V2",
+  "historicalCaseId": "RECOVERY-02",
+  "attempt": 1,
+  "status": "PASS",
+  "executedAt": "2026-08-05",
+  "evidenceBoundary": "hybrid_e4_e2",
+  "sourceCommit": "243a8d343b346ba43178dd95bd825c9a56f122b3",
+  "azureRevision": "ca-agentready-events--0000010",
+  "imageDigest": "sha256:1630235f9ad2a8cbab5ade3e582d6dd564d7a5e7d229cc08f6cd785fb0ffaddb",
+  "prompts": [
+    "準備取消目前頁面唯一一筆有效報名；如果工作階段過期，請停下並告訴我要重新開始。"
+  ],
+  "componentVerdicts": {
+    "toolSelection": "PASS",
+    "inventedToolAvoidance": "PASS",
+    "sessionExpiryHandling": "PASS",
+    "mutationSafety": "PASS_E2_COMPANION"
+  },
+  "observations": {
+    "calls": ["prepare_registration_cancellation"],
+    "toolInput": {},
+    "resultCode": "UNAUTHORIZED",
+    "resultReason": "SESSION_EXPIRED",
+    "retryable": false,
+    "uiUpdated": false,
+    "inventedNonCatalogTool": false,
+    "finalAnswer": "工作階段已過期，請重新整理頁面並重新開始操作。",
+    "dialogAndMutationInNativeCapture": "not_independently_captured",
+    "companionBrowserTest": "PASS",
+    "companionExpectedEffects": "no dialog, no cancellation POST, no inventory mutation"
+  },
+  "evidence": [
+    {
+      "file": "recovery-02-v2-attempt-01-session-expired-pass.png",
+      "sha256": "7be1d5b27e40b0e35eb0df3ecbd95c49de6aa1600938878f9f5ced024aea3836"
+    },
+    {
+      "file": "recovery-02-v2-attempt-01-copy-trace.json",
+      "sha256": "2b557e28807cd6eccd21f88337ee4a58565477080607dbf66ce8752668808693"
+    }
+  ],
+  "notes": "原生 Inspector trace 顯示 Agent 當次只看見並只呼叫 prepare_registration_cancellation with {}，沒有猜測 catalog 外 Tool。Tool 回 UNAUTHORIZED / SESSION_EXPIRED / retryable:false / uiUpdated:false，最終回答只要求重新整理並重新開始。原生截圖未獨立保存 mutation Network，因此零 dialog、零取消 POST 與零 inventory mutation 由同一 revision 的公開 Playwright companion 負責；本題判定為 hybrid E4 + E2 PASS，不改寫歷史 RECOVERY-02 FAIL。"
+}

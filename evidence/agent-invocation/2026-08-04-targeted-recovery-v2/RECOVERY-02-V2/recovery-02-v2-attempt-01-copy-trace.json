@@ -1,0 +1,191 @@
+[
+ {
+  "userPrompt": {
+   "message": "準備取消目前頁面唯一一筆有效報名；如果工作階段過期，請停下並告訴我要重新開始。",
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Wednesday, August 5, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "為目前頁面的有效報名顯示取消摘要，並停在最終確認對話框。頁面只有一筆有效報名時以空物件直接呼叫；有多筆時傳入頁面提供的 registration_id。此 Tool 只準備摘要，最終取消由使用者確認。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "1552",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Wed, 05 Aug 2026 07:19:06 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=2340",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "functionCall": {
+         "name": "_0_prepare_registration_cancellation",
+         "args": {},
+         "id": "csky2dmu"
+        },
+        "thoughtSignature": "EqEICp4IARFNMg8Er35kdoxJFc0CVPWH3KAlxXS2kdK8D/nNIeQwliFcliMpAiPIkTXy5UfVKl6R/IQwZl/ikS+pSpWi+HNrP1Q4L+EnEgSuqX1kD8kzj6uw1BKf3vvudMT8X4hrdNzdBt9D+Q/3FK5Sc/6BB5bct131hYtSiA0kFObX/EksptY8+q1T4YV9+3iFQ27qEv8xCyZ02Oj791CUpmvHrnNWEwjf/o3fuOEldWgmbjtZIX92Uf1EfMlYUK13zJX27KQTTlEwmqita6fyeCCOT+A36uqJrcGcRE5qaJLJei+o/FgiQfo9fMhMgEc4gMiemmJTPaL0rnl2MDqC9I9Ces5xuOY3zBHqn6Wn+uhoedgPg3g2VMQJJgQvqhcWPok6kUZlRVtBB2f+aB4eT1aQ/dexc+Q+wAl8PGd72GG1djSYYk1UvHRvd334W2AwQNbhrxlbTAzvKMxt5kFt3SUPnUpEaFO1MqOPI51UCihtha67t/k07ojeTRxeQTaMtnDqPNI0NfkljsQu2Sh+HsWPGMdyAr7G/dqQCOiOXtoPA4JJSW76ohCZ9g0zTREsoA1zBPfi+4lMMOCd/5mTkLzX+HMh5MXC7sjU8MNVwA+7Sb2llSbe79ZQRk/LL3lTPLuLqYxSdovX9RtJBNzdz4P+kbxgFHx8QuzsymbtJUyX1whwdEfTY70WvQob/m7X5jQX5chXa+eBYqYcr8fpd+TzHk+QdBE6KLjKueRCh1tBDg1vPR8GmUWXlc3jQwn9ClQFkDLclzXPTQaiPb9r/DISBtIw5VwSOmI1xwr7ud84PAR0nHIny8uWjGsE1rypMbjes+0BjY6VMioRA9Ad3m4tqagsMRnl6zKnDqnEfHhZer3WAbc+lh8mwNsoj1VubjweUAmB8CIj8QpAtlEH3F7fps8v3IFAj0hu7fgofyo65h+kxRV9B8iNlKNREy0d2Bcz3FmTrZ3R08xTpnNnijzHEexohIBIugHKTh8qPfLjLl9XKIgcpu9bxUSgsluOjXbMi2nf0XHVhDRMEjzlsC99d8caSDxH6y7eOXydi3sUJNoGE8us1L/X3+VbFm6qhNjLIkkIXDU694A7qFMmx1F6wpTimKFJA6t+LOqQsBiFRYv1O6XE08/XziMrPG+JXQ0f+tnfjOFek/dV0H0bvqXPxWOg3ySuZGHm/2K7fHM605wLfviAZuk6E8Pu+3ndDkLNMguWNfgLs6TTGtseIE2nuiwtMbg+D1F7tCzCR2LmSMNxbCMBJis5r6OnB/DHM/uYRYbuPE8MsB4aWIkqtPp9PiqUJC6VoszdPfQMWpdiTkUQUFOQCgm5DtpwNJy+DG/rRE47A0pXnvQdvQNtN1EXr1m5GORIToQ5JH2odJea+E0v6JZYAMk54iOkYzlXag=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "6ONyasuDI7TS1e8PmKiY-Ao",
+   "usageMetadata": {
+    "promptTokenCount": 287,
+    "candidatesTokenCount": 15,
+    "totalTokenCount": 524,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 287
+     }
+    ],
+    "thoughtsTokenCount": 222,
+    "serviceTier": "standard"
+   }
+  }
+ },
+ {
+  "userPrompt": {
+   "message": [
+    {
+     "functionResponse": {
+      "name": "_0_prepare_registration_cancellation",
+      "response": {
+       "result": "{\"ok\":false,\"code\":\"UNAUTHORIZED\",\"reason\":\"SESSION_EXPIRED\",\"message\":\"工作階段已過期。\",\"nextAction\":\"請重新整理頁面，重新開始這次操作。\",\"retryable\":false,\"uiUpdated\":false,\"stateVersion\":1}"
+      }
+     }
+    }
+   ],
+   "config": {
+    "systemInstruction": [
+     "You are an assistant embedded in a browser tab.",
+     "User prompts typically refer to the current tab unless stated otherwise.",
+     "Use the provided tools to query page content when you need it.",
+     "Today's date is: Wednesday, August 5, 2026",
+     "CRITICAL RULE: Whenever the user provides a relative date (e.g., \"next Monday\", \"tomorrow\", \"in 3 days\"),  you must calculate the exact calendar date based on today's date.",
+     "CRITICAL RULE: Do not try to use other tools than the available ones."
+    ],
+    "tools": [
+     {
+      "functionDeclarations": [
+       {
+        "name": "_0_prepare_registration_cancellation",
+        "description": "為目前頁面的有效報名顯示取消摘要，並停在最終確認對話框。頁面只有一筆有效報名時以空物件直接呼叫；有多筆時傳入頁面提供的 registration_id。此 Tool 只準備摘要，最終取消由使用者確認。",
+        "parametersJsonSchema": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "registration_id": {
+           "type": "string",
+           "pattern": "^[a-z0-9_-]+$",
+           "description": "選填。只有多筆有效報名時，才使用我的報名列表提供的不透明報名 ID；不得自行產生。"
+          }
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "response": {
+   "sdkHttpResponse": {
+    "headers": {
+     "access-control-allow-origin": "chrome-extension://gbpdfapgefenggkahomfgkhfehlcenpd",
+     "access-control-expose-headers": "x-gemini-service-tier,vary,vary,vary,content-encoding,date,server,content-length",
+     "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+     "content-encoding": "gzip",
+     "content-length": "960",
+     "content-type": "application/json; charset=UTF-8",
+     "date": "Wed, 05 Aug 2026 07:19:09 GMT",
+     "server": "scaffolding on HTTPServer2",
+     "server-timing": "gfet4t7; dur=1782",
+     "vary": "Origin, X-Origin, Referer",
+     "x-content-type-options": "nosniff",
+     "x-frame-options": "SAMEORIGIN",
+     "x-gemini-service-tier": "standard",
+     "x-xss-protection": "0"
+    }
+   },
+   "candidates": [
+    {
+     "content": {
+      "parts": [
+       {
+        "text": "工作階段已過期，請重新整理頁面並重新開始操作。",
+        "thoughtSignature": "EtUDCtIDARFNMg+RPsP5YXzlt1OL1VUW76eHFRrXCy2EQec3lJQ0myDGEcNF3Rfp+skl8/n2k3m5f5CLltNj6nHQMHxfJiCaTWl0NtkqcXQtV5d5eUznvY4x2C7eS5QO0yN5sfF9u1FNIe7nw1lazehaWz+4McTFl5hz9OYs53FaevnfuN6NsiwLW4iE/jXRu5nS7ext0PlpkJDEFz54PihWKZTQEFfIM/6RtgKRopdHklTE5vrdDS5kKKxWVV5thot4/302h442ybfj1FpgKIBkEi+04qoejBh5kSf6WN1jRdqvVLTEGAohReM+bPQgMqJinWvPRVX9/T86ba2m4uXPXQF5z8Y6bcE4Ga2YpkIHrKg8SeqbZFSgzMiDBjRotdfx35eY/Bjd0dR5AvINgnG1ju9XjenesYRUAGxKJa1tMbNV1G5SA41F1ctZWFPoFtVmjqx2EmF5PAuoiR/5xvAWcEo6zYmr01brz+a402jZVT6Lo4YjmS9drxrKkhTU7Ol6dYi+NIclAY8wSGxE69JU7XLnXMnzIOS3cC3+klKGQBNTcN+tCupSphGUK5+YbwraQz6ine0WPgOrPid3+4B4nh8BzyoFoW1Md1sxAguA71UsbNYKQg=="
+       }
+      ],
+      "role": "model"
+     },
+     "finishReason": "STOP",
+     "index": 0
+    }
+   ],
+   "modelVersion": "gemini-3-flash-preview",
+   "responseId": "6-NyaqG2G4aG1e8Pn_KzkQg",
+   "usageMetadata": {
+    "promptTokenCount": 598,
+    "candidatesTokenCount": 16,
+    "totalTokenCount": 703,
+    "promptTokensDetails": [
+     {
+      "modality": "TEXT",
+      "tokenCount": 598
+     }
+    ],
+    "thoughtsTokenCount": 89,
+    "serviceTier": "standard"
+   }
+  }
+ }
+]
