@@ -1,7 +1,8 @@
 # 版本證據帳本
 
-> 更新日期：2026-08-04
+> 更新日期：2026-08-05
 > 原則：commit、Azure revision、image digest、Inspector trace 必須對到同一個 source state，否則不得互相升級證據。
+> 不可變文件快照：`v3-evidence-release.1`。這個 tag 封存帳本與 trace，不代表 Azure runtime 的 source commit；公開 runtime 仍以表格中的 commit、revision 與 digest 為準。
 
 | 用途 | 精確 commit | 部署座標 | 可主張 | 不可主張 |
 | --- | --- | --- | --- | --- |
@@ -12,12 +13,13 @@
 | P0 最終 release | `8e89e6519406388a0de8c456a890d6fcc8cc5544`、`v3-p0-release.1` | `ca-agentready-events--0000006`、run `30549409859`、digest `sha256:8f43bff7fad16300e6eb534cbacda4f4e1969112da0be2e0997773cff77aee41` | E2、E3；完整 smoke 後名額仍為 8；SEL-01、SEL-02 各一題 current-release read-only E4 | 20/20、完整 Journey、write E4、E5 |
 | 20 題固定驗收 release（已封存） | `4b1324f46255ddf5f80628c84a564d37fa6addb3` | `ca-agentready-events--0000007`、run `30733952974`、digest `sha256:d812498aa038787bda92654cf885d9e4af2c2c082aa9262129d158ccdd4d7052` | E2、E3；immutable deployment、production smoke、受控 `RECOVERY-02` fixture | 本批次未執行逐題 Inspector 重跑，不得主張任何新 E4、20/20 或 E5 |
 | 13 題單次重測 release | `4d7f6528a88ad0e43b268aa7817a479d186a8cfa` | `ca-agentready-events--0000008`、run `30792961501`、digest `sha256:40e21d6951f77068bd2b161553ef050694e78ac8da6d3b3793cb146ac6e2411e` | E2、E3；13 題同版本 Inspector trace，8 PASS／5 FAIL | 未執行的 7 題、20/20、跨環境成功率、E5 |
-| targeted recovery v2 release | `31202dbbc92904d00dd856eb683c618225e677de` | `ca-agentready-events--0000009`、run `30867599365`、digest `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae` | E2、E3；完整自動化、production smoke、受控 fixture 可見、初始名額 8；`STALE-01-V2`、`CONF-02-V2`、`STALE-02-V2` 各一題同版本 Agent invocation 證據 | 其餘 2 題尚未執行；`STALE-02-V2` 的 deterministic stale-binding 保證屬 companion browser test；不能主張最終整批結果或 E5 |
+| targeted recovery v2 前四題 | `31202dbbc92904d00dd856eb683c618225e677de` | `ca-agentready-events--0000009`、run `30867599365`、digest `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae` | E2、E3；完整自動化、production smoke、受控 fixture 可見、初始名額 8；`STALE-01-V2`、`CONF-02-V2`、`STALE-02-V2`、`REPEAT-02-V2` 各有記錄 | `STALE-02-V2` 與 `REPEAT-02-V2` 的 deterministic 保證含 companion test；不能外推為 E5 |
+| targeted recovery v2 最後一題／目前公開版 | `243a8d343b346ba43178dd95bd825c9a56f122b3` | `ca-agentready-events--0000010`、run `30893507987`、digest `sha256:1630235f9ad2a8cbab5ade3e582d6dd564d7a5e7d229cc08f6cd785fb0ffaddb` | E2、E3；`RECOVERY-02-V2` 的 Inspector trace 與同版本 browser companion；目前公開 `/health/version` 對上此座標 | targeted recovery v2 的 5／5 只適用於各題記錄的 `0000009`／`0000010`；不覆寫 `0000008` 的 8 PASS／5 FAIL，也不是 E5 |
 
 Machine-readable 版本位於
 [`evidence/version-ledger.json`](../evidence/version-ledger.json)。
 
-## Targeted recovery v2 release
+## Targeted recovery v2 campaign
 
 run `30867599365` 將 commit `31202dbbc92904d00dd856eb683c618225e677de`
 以 immutable digest `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae`
@@ -25,14 +27,28 @@ run `30867599365` 將 commit `31202dbbc92904d00dd856eb683c618225e677de`
 commit 與 revision；evaluation fixture 已啟用，公開頁面可見「受控測試工具」，初始
 `remainingCapacity` 為 8。
 
-這個版本仍維持五個 Tool：`search_events`、`get_event_details`、`save_event`、
+這兩個版本都維持五個 Tool：`search_events`、`get_event_details`、`save_event`、
 `prepare_event_registration`、`prepare_registration_cancellation`。新的
 [`targeted-recovery-v2.json`](../evals/dataset/targeted-recovery-v2.json) 是獨立題庫，
-原始 20 題與 revision `0000008` 的 8 PASS／5 FAIL 均未改寫。`STALE-01-V2`、
-`CONF-02-V2` 與 `STALE-02-V2` 已在同版本 Inspector 各執行一次並通過；原始 trace 與判定保存在
+原始 20 題與 revision `0000008` 的 8 PASS／5 FAIL 均未改寫。前四題在 revision
+`0000009` 記錄；`RECOVERY-02-V2` 因受控 expiry fixture 的調整，改在 revision
+`0000010` 記錄。五題均完成一次並通過，原始 trace 與判定保存在
 [`2026-08-04-targeted-recovery-v2`](../evidence/agent-invocation/2026-08-04-targeted-recovery-v2/README.md)。
-其餘兩題仍是 PENDING，不能由目前結果推論最終整批結果。`STALE-02-V2`
-另外依賴 companion browser test 證明 deterministic stale-binding，不把該 E2 保證誤標為原生 Agent E4。
+
+這個 5／5 是跨兩個明確版本的 targeted recovery campaign 結果，不是單一 revision
+成功率。`STALE-02-V2`、`REPEAT-02-V2` 與 `RECOVERY-02-V2` 另外使用 companion test
+證明 deterministic 邊界；這些 E2 證據不會被誤標成原生 Agent invocation，也不能
+外推為 E5。
+
+目前公開 `/health/version` 回傳 commit
+`243a8d343b346ba43178dd95bd825c9a56f122b3` 與 revision
+`ca-agentready-events--0000010`，與本帳本的目前公開版一致。
+
+若目前公開版需要回滾，前一個已知良好座標是 commit
+`31202dbbc92904d00dd856eb683c618225e677de`、revision
+`ca-agentready-events--0000009` 與 digest
+`sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae`。
+這只是可查核的 rollback candidate；是否仍能直接切回舊 revision，必須在操作當下重新確認。
 
 ## 歷史 E4 原始資料
 

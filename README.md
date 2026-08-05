@@ -199,19 +199,23 @@ Evidence 分成四個獨立軸：`runtime_integration`、`webmcp_capability`、`
 目前可查核狀態：
 
 - 本機 verification record 是 E2 test harness，不代表 Agent invocation。
-- 現行公開 release `31202db` 已由 run `30867599365` 部署為 Azure revision `ca-agentready-events--0000009`，immutable digest 為 `sha256:f9737a54d079d5a5af4fb23b9e933855cbae89a0f9c8c75fce9f46db2e4257ae`。
-- 公開 `/health/version` 與這組 commit／revision 一致，因此 runtime 可列為 E3；完整自動化與 production smoke 已通過，targeted recovery v2 目前完成 3/5，`STALE-01-V2`、`CONF-02-V2`、`STALE-02-V2` 單次執行 PASS。
+- 現行公開 release `243a8d34` 已由 run `30893507987` 部署為 Azure revision `ca-agentready-events--0000010`，immutable digest 為 `sha256:1630235f9ad2a8cbab5ade3e582d6dd564d7a5e7d229cc08f6cd785fb0ffaddb`。
+- 公開 `/health/version` 與這組 commit／revision 一致，因此 runtime 可列為 E3；完整自動化與 production smoke 已通過。
 - revision `0000008` 的 13 題單次重測仍固定保留為 8 PASS／5 FAIL，不以 `0000009` 的自動化結果覆寫。
 - 前一個 `0000007` 是已封存的 20 題準備版；當時 0/20 executed，不把證據轉移到 `0000008`。
 - 公開站可由 HTTPS 開啟；2026-07-29 回應包含 `Permissions-Policy: tools=(self)` 與 `Origin-Agent-Cluster: ?1`，沒有 `Origin-Trial` header。
 - 20 題固定 Eval 定義已通過 schema 驗證，分布在 10 個類別；這只代表題目可執行，不代表 20 題 Agent 測試已通過。
 - 2026-07-31，WebMCP Inspector 內的 Gemini Agent 曾在前一個固定 release `8e89e65`／revision `0000006` 完成 SEL-01、SEL-02 兩題 read-only E4；這些 trace 保留為歷史證據，不替 revision `0000007` 升級。
 - revision `0000008` 的 8 個通過案例只證明各自的同版本 Agent invocation；5 個失敗與 7 個未納入本輪的題目都保留，因此不得主張 20/20 或跨乾淨環境 E5。
-- revision `0000009` 使用獨立的 `targeted-recovery-v2.json`；目前只對 `STALE-01-V2`、`CONF-02-V2`、`STALE-02-V2` 主張各自的同版本 Agent invocation 證據，不把結果外推成最終整批結果；`STALE-02-V2` 的 deterministic stale-binding 保證仍由 companion browser test 提供。
+- revision `0000009` 與 `0000010` 使用獨立的 `targeted-recovery-v2.json`；五題各執行一次並通過。前四題記錄在 `0000009`，`RECOVERY-02-V2` 記錄在 `0000010`；需要 deterministic 邊界的題目仍明確標示 companion test，不把 E2 證據寫成原生 Agent E4。
+- targeted recovery v2 的跨版本結果為 5／5；它不覆寫 revision `0000008` 的 8 PASS／5 FAIL，也不外推為 20／20、跨環境可靠度或 E5。
 
 最新版的 commit、revision、image digest 與 Inspector trace 必須成組記錄在
 [版本證據帳本](docs/version-evidence-ledger.md)。網站畫面只標示 source contract、
 目前瀏覽器 capability 與逐 case 的 current revision invocation 狀態；歷史 SEL-01、SEL-02 的 E4 必須連同它們原本的 revision 一起解讀。
+
+正式發布時請使用不可變證據快照 `v3-evidence-release.1`。這個 tag 封存文件與 trace，
+但不取代公開 runtime 的精確 source commit、Azure revision 與 image digest。
 
 請依 [runtime rerun record](docs/webmcp-runtime-rerun.md) 保留固定 Prompt、工具輸入、原始回傳與失敗分類。Fake ModelContext、testing API、DevTools 手動 execution 或直接 `executeTool()` 都不能取代真實 Agent invocation。
 
